@@ -138,8 +138,19 @@ $(document).ready(function () {
 															//alert(month+"_"+year);
 															onPersonalMonthlyBudget(month+"_"+year);
 															//$('#hidden').val(month+"_"+year);
+														},
+														beforeShow: function() {
+														   if ((selDate = $(this).val()).length > 0) 
+														   {
+															  iYear = selDate.substring(selDate.length - 4, selDate.length);
+															  iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), 
+																	   $(this).datepicker('option', 'monthNames'));
+															  $(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+															  $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+														   }
 														}
 													});
+													$('.date-picker').datepicker('setDate', new Date());
 												});
 												</script>
 												<style>
