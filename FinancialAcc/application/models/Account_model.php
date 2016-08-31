@@ -520,9 +520,9 @@ class Account_model extends CI_Model {
 					<td><a  href="<?php echo site_url('pages/editGoal/'.$row['id']); ?>"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;
 					<a  href="javascript:void(0)" onclick="deleteGoal('<?php echo $row['id']; ?>')" ><span class="glyphicon glyphicon-remove"></span></a>&nbsp;<?php echo $goaldetails['name']; ?></td>
 					<td class="hidden-xs hidden-sm"><?php echo $termdetails['name']; ?></td>
-					<td>$<?php echo $row['cost']; ?></td>
-					<td class="hidden-xs hidden-sm">$<?php echo $row['monthly_target']; ?></td>
-					<td>$<?php echo $row['currently_saved']; ?></td>
+					<td>$<?php echo $this->currencyconverter($row['cost']); ?></td>
+					<td class="hidden-xs hidden-sm">$<?php echo $this->currencyconverter($row['monthly_target']); ?></td>
+					<td>$<?php echo $this->currencyconverter($row['currently_saved']); ?></td>
 					<td class="hidden-xs hidden-sm"><?php echo $row['target_date']; ?></td>
 				</tr>
 				<?php
@@ -1255,7 +1255,7 @@ class Account_model extends CI_Model {
 			$row = $query->row_array();
 			$totalincome = $row['totalincome'];
 		}
-		$b['totalincome'] = $totalincome;
+		$b['totalincome'] = $this->currencyconverter($totalincome);
 		$sql = "
 		select 
 			retirement 			 
@@ -1301,9 +1301,9 @@ class Account_model extends CI_Model {
 			$row = $query->row_array();
 			$totalexpenses = $row['totalexpenses'];
 		}
-		$b['totalexpenses'] = $totalexpenses;
+		$b['totalexpenses'] = $this->currencyconverter($totalexpenses);
 		$leftover = $totalincome - $totalexpenses;
-		$b['leftover'] = $leftover;
+		$b['leftover'] = $this->currencyconverter($leftover);
 		
 		$a = array();
 		array_push($a,$b);
