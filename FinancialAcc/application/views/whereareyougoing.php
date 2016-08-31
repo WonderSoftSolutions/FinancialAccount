@@ -2,13 +2,14 @@
 function yearselect(sad){
 
 	if(sad != 'NAN'){
-		if(<?php echo substr(date("Y"),2,2); ?> == sad)
-		{
-			location.reload();
-		}else{
-			//$('.years').html(sad);		
-			getWhereAreYouGoing(sad);
-		}
+		window.location.href = baseHref+"Pages/whereareyougoing/"+sad;
+		// if(<?php echo substr(date("Y"),2,2); ?> == sad)
+		// {
+			// location.reload();
+		// }else{
+			// //$('.years').html(sad);		
+			// getWhereAreYouGoing(sad);
+		// }
 	}
 	else{
 		// var date = new Date();
@@ -48,7 +49,8 @@ function getWhereAreYouGoing(year)
                     
 				<?php
 				for($i = 2000; $i < date("Y")+84; $i++){
-					if(substr($i,2,2) == substr(date("Y"),2,2)){
+					//if(substr($i,2,2) == substr(date("Y"),2,2)){
+					if(substr($i,2,2) == $contryear){
 						echo '<option selected value="'. substr($i,2,2).'">'.$i.'</option>';
 					}
 					else
@@ -82,7 +84,8 @@ function getWhereAreYouGoing(year)
 					
 						<tbody id="tablecontent">
 						<?php
-							$param['year'] = substr(date("Y"),2,2);
+							//$contryear
+							$param['year'] = $contryear;//substr(date("Y"),2,2);
 							$param['user_id'] = $this->session->userdata('usr_id');
 							//print_r($param); die();
 							$this->include_model->getWhereAreYouGoaing($param);

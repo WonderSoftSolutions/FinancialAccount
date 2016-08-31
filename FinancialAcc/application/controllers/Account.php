@@ -293,7 +293,8 @@ class Account extends CI_Controller {
 	{
 		$param['year'] = $this->input->post('year'); 
 		$param['user_id'] = $this->session->userdata('usr_id');
-		$this->include_model->getWhereAreYouGoaingAjax($param);
+		//$this->include_model->getWhereAreYouGoaingAjax($param);
+		$this->include_model->getWhereAreYouGoaing($param);
 	}
 	function onPersonalMonthlyBudget()
 	{

@@ -41,8 +41,19 @@ class Pages extends CI_Controller {
 		$this->load->view('whereyoustand',$this->data);
 		$this->load->view('footer',$this->data);
 	}
-	public function whereareyougoing()
-	{
+	// public function whereareyougoing()
+	// {
+		// $this->load->view('header',$this->data);
+		// $this->load->view('whereareyougoing',$this->data);
+		// $this->load->view('footer',$this->data);
+	// }
+	public function whereareyougoing($id = 0)
+	{	
+		if($id==0)
+		{
+			$id = date('y');
+		}
+		$this->data['contryear'] = $id;
 		$this->load->view('header',$this->data);
 		$this->load->view('whereareyougoing',$this->data);
 		$this->load->view('footer',$this->data);
