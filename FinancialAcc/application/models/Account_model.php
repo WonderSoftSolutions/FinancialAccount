@@ -1318,40 +1318,40 @@ class Account_model extends CI_Model {
 		
 		$sql = "select expenses.month as 'Month', (revenue.wife_revenue+revenue.husband_revenue+revenue.bonuses+revenue.dividend+revenue.other) as 'TotalIncome' 
 
-,(expenses.retirement 			 
-			+ expenses.mortgage 			
-			+ expenses.home_repairs 		
-			+ expenses.home_insurance 		
-			+ expenses.garbage				
-			+ expenses.electricity			
-			+ expenses.water 				
-			+ expenses.gas 				
-			+ expenses.internet 			
-			+ expenses.telephone			
-			+ expenses.cable_tv 			
-			+ expenses.public_transportation
-			+ expenses.car_payment			
-			+ expenses.license_plates		
-			+ expenses.car_repairs 		
-			+ expenses.insurance 			
-			+ expenses.charitable 			
-			+ expenses.child_care			
-			+ expenses.clothing 			
-			+ expenses.entertainment		
-			+ expenses.groceries 			
-			+ expenses.medical 			
-			+ expenses.personal_barber		
-			+ expenses.dry_cleaning
-			+ expenses.tithing 			
-			+ expenses.offerings		
-			+ expenses.charities 			
-			+ expenses.personal_loan 			
-			+ expenses.credit_card		
-			+ expenses.student_loan				
-			)
+			,(expenses.retirement 			 
+				+ expenses.mortgage 			
+				+ expenses.home_repairs 		
+				+ expenses.home_insurance 		
+				+ expenses.garbage				
+				+ expenses.electricity			
+				+ expenses.water 				
+				+ expenses.gas 				
+				+ expenses.internet 			
+				+ expenses.telephone			
+				+ expenses.cable_tv 			
+				+ expenses.public_transportation
+				+ expenses.car_payment			
+				+ expenses.license_plates		
+				+ expenses.car_repairs 		
+				+ expenses.insurance 			
+				+ expenses.charitable 			
+				+ expenses.child_care			
+				+ expenses.clothing 			
+				+ expenses.entertainment		
+				+ expenses.groceries 			
+				+ expenses.medical 			
+				+ expenses.personal_barber		
+				+ expenses.dry_cleaning
+				+ expenses.tithing 			
+				+ expenses.offerings		
+				+ expenses.charities 			
+				+ expenses.personal_loan 			
+				+ expenses.credit_card		
+				+ expenses.student_loan				
+				)
 			as 'TotalExpenses'
 			
-from revenue left join expenses on revenue.month = expenses.month and expenses.year = revenue.year  where revenue.year = '$year' and revenue.user_id = '$user_id' group by month ";
+from revenue left join expenses on revenue.month = expenses.month and expenses.year = revenue.year  where revenue.year = '$year' and revenue.user_id = '$user_id' and expenses.year = '$year' and expenses.user_id = '$user_id' group by month ";
 
 		$query = $this->db->query($sql);
 		//return json_encode($query->result_array());

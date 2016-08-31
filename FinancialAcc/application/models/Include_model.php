@@ -590,7 +590,15 @@ class Include_model extends CI_Model {
 	}
 	function revenueTotalcalc($month,$revenues)
 	{
-		return $revenues[$month]['wife_revenue'] + $revenues[$month]['husband_revenue'] + $revenues[$month]['bonuses'] + $revenues[$month]['dividend'] + $revenues[$month]['other']; 
+		
+		if($revenues[$month] == true)
+		{
+			return $revenues[$month]['wife_revenue'] + $revenues[$month]['husband_revenue'] + $revenues[$month]['bonuses'] + $revenues[$month]['dividend'] + $revenues[$month]['other']; 
+		}
+		else{
+			return '0';
+		}
+		
 	}
 	
 	function expensesTotalcalc($month,$expenses)
@@ -620,7 +628,6 @@ class Include_model extends CI_Model {
 		$expenses[$month]['medical'] + 
 		$expenses[$month]['personal_barber'] + 
 		$expenses[$month]['dry_cleaning'] +
-		
 		$expenses[$month]['tithing'] + 
 		$expenses[$month]['offerings'] + 
 		$expenses[$month]['charities'] + 
@@ -633,6 +640,7 @@ class Include_model extends CI_Model {
 	function getWhereAreYouGoaing($param)
 	{
 		$revenues = $this->getRevenue($param);
+		//print_r($revenues);
 		$expenses = $this->getExpenses($param);
 	?>
 		<tr>
