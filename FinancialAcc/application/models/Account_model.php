@@ -138,7 +138,7 @@ class Account_model extends CI_Model {
 	function do_loginAPI($users)
 	{
 		$this->db->where('email', $users['user_login']);
-		$this->db->where('pwd', $users['user_pass']);
+		$this->db->where('pwd', md5($users['user_pass']));
 		$this->db->where('status',1);
 		$query=$this->db->get("users");
 		if($query->num_rows() > 0)
@@ -1404,6 +1404,12 @@ from revenue left join expenses on revenue.month = expenses.month and expenses.y
 
 		// return the JSON data
 		return $jsonTable;
+	}
+	
+	function currencyconverter($number)
+	{
+		setlocale(LC_MONETARY, 'en_IN');
+		return number_format($number, 2);
 	}
 	
 }
