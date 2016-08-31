@@ -1412,4 +1412,31 @@ from revenue left join expenses on revenue.month = expenses.month and expenses.y
 		return number_format($number, 2);
 	}
 	
+	function debtpayment($param)//nosnowball
+	{
+		// $param['amount'] = "27141.00";
+		// $param['rate'] = "0.0499";
+		// $param['payment'] = "450.00";
+		
+		// $param['postmonth'] = $this->input->post('month');
+		// $param['postselectYear'] = $this->input->post('selectYear');
+		
+		$param['interestamount'] = $param['rate'] / 12;
+		$param['firststep'] = ($param['amount'] * $param['interestamount'])/$param['payment'];
+		$param['firstlog'] = 1 - $param['firststep'];
+		$param['log10'] = log10($param['firstlog']);
+		$param['2ndstep'] = "start";
+		$param['calclog'] = $param['interestamount'] + 1;
+		$param['ndlog10'] = log10($param['calclog']);
+		
+		
+		$param['months'] = round( -($param['log10'] / $param['ndlog10']));
+		$time = strtotime(date("Y/m/d"));
+		//$param['futuredate'] = date('F Y', strtotime("+".$param['months']." month", $time));
+		
+		$param['futuredate'] = date('F Y', mktime(0,0,0,$param['months'], 1, date($param['postselectYear'])));
+		echo json_encode($param);
+		
+	}
+	
 }

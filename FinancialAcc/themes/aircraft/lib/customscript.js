@@ -2139,7 +2139,53 @@ $(document).ready(function ()
 		  }
 		  $('#totalpayment').val(a);
 		  $('#mininumpayment').val(a);
+		  
+		//var currentvalue = $('.payment').val();	
+		//alert(currentvalue);
+		var dataid = $("#"+this.id).data('id');
+	  
+		  
+		  debtpaymentcalc(dataid);
 	 });
+	 
+	 //GRV
+		function debtpaymentcalc(dataid)
+		{
+			
+			var selectYear = $('#selectYear').val();
+			var month = $('#sel1').val();
+			var creditor = $('#creditor'+dataid).val();
+			var balance = $('#balance'+dataid).val();
+			var rate = $('#rate'+dataid).val();
+			var payment = $('#payment'+dataid).val();
+			
+			$.ajax({
+				type: "post",
+				url: baseHref+"account/debtpaymentcalc",
+				data: {
+					selectYear: selectYear,
+					month: month,
+					creditor: creditor,
+					balance: balance,
+					rate: rate,
+					payment: payment
+				},
+				success: function(data){
+					alert(data);
+					localdata = JSON.parse(data);
+					console.log(localdata);
+					// $('.totalincome').html(localdata[0].totalincome);
+					$('#creditor_'+dataid).html(localdata.creditor);
+					$('#balance_'+dataid).html(localdata.amount);
+					$('#months_'+dataid).html(localdata.months);
+					$('#date_'+dataid).html(localdata.futuredate);
+					$('#interest_'+dataid).html("coming soon");
+					// $('.totalexpenses').html(localdata[0].totalexpenses);
+					// $('.leftovermoney').html('$ '+localdata[0].leftover);
+				}
+			});	
+		}
+	 //GRV
 });
 
 //End Debt Payment//

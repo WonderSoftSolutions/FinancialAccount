@@ -6,15 +6,20 @@ $('#selectYear').change(function(){
 $('#sel1').change(function(){
     $('#sel1').attr('disabled', 'disabled');
 });
+$('#selectYear').blur(function(){
+    $('#selectYear').attr('disabled', 'disabled');
+});
+$('#sel1').blur(function(){
+    $('#sel1').attr('disabled', 'disabled');
+});
+
 });
 
 </script>
-
  <div class="content contentcstm">
 		<div class="main-content">
 				<div class="col-md-12">
 				<div class="table-responsive">
-				  
 				<div class="col-md-12">
 	
 					<div class="col-md-2 col-md-offset-6" style="font-size: 22px;">
@@ -48,11 +53,11 @@ $('#sel1').change(function(){
 							$printmonth = substr($month,0,3);
 							if(date("n") == $m ){
 						?>
-						 <option selected value="<?php echo $m; ?>_<?php echo date("y"); ?>"><?php echo $printmonth; ?></option>
+						 <option selected value="<?php echo $m; ?>"><?php echo $printmonth; ?></option>
 						 <?php
 						 }
 						 else {?>
-						 <option value="<?php echo $m; ?>_<?php echo date("y"); ?>"><?php echo $printmonth; ?></option>
+						 <option value="<?php echo $m; ?>"><?php echo $printmonth; ?></option>
 						 <?php
 						 }
 						}?> 
@@ -82,45 +87,45 @@ $('#sel1').change(function(){
 						</tr>
 					  </tfoot>
 					  <tbody>
-							<tr>
+							<!--<tr>
 							  <th scope="row">1</th>
-							  <td><input type="text"  name="creditor" class="form-control " id="creditor" value= "Car Payment"></td>
-							  <td><input type="number" min="0" name="balance"  class="form-control balance" id="balance"  value= "0"></td>
-							  <td><input type="text" name="rate"     class="form-control " id="rate"     value= "4.99"></td>
-							  <td><input type="number" min="0" name="payment"  class="form-control payment" id="payment"  value= "0"></td>
+							  <td><input type="text"  name="creditor" class="form-control " data-id="1"  id="creditor1" value= "Car Payment"></td>
+							  <td><input type="number" min="0" name="balance"  data-id="1"  class="form-control balance" id="balance1"  value="0"></td>
+							  <td><input type="text" name="rate"     class="form-control " data-id="1"  id="rate1"     value= "4.99"></td>
+							  <td><input type="number" min="0" name="payment" data-id="1" class="form-control payment" id="payment1"  value="0"></td>
 							</tr>
 							<tr>
 							  <th scope="row">2</th>
-							  <td><input type="text" name="creditor" class="form-control" id="creditor" value= "Student Loan"></td>
-							  <td><input type="number" min="0" name="balance"  class="form-control balance" id="balance"  value= "0"></td>
-							  <td><input type="text" name="rate"     class="form-control" id="rate"     value= "3.99"></td>
-							  <td><input type="number" min="0" name="payment"  class="form-control payment" id="payment"  value= "0"></td>
+							  <td><input type="text" name="creditor" class="form-control" data-id="2"  id="creditor2" value= "Student Loan"></td>
+							  <td><input type="number" min="0" name="balance"  class="form-control balance" data-id="2"  id="balance2"  value= "0"></td>
+							  <td><input type="text" name="rate"     class="form-control" id="rate2"  data-id="2"    value= "3.99"></td>
+							  <td><input type="number" min="0" name="payment"  class="form-control payment" id="payment2"  data-id="2"  value= "0"></td>
 							</tr>
 							<tr>
 							  <th scope="row">3</th>
-							  <td><input type="text" name="creditor" class="form-control" id="creditor" value= "Personal Loan"></td>
-							  <td><input type="number" min="0" name="balance"  class="form-control balance" id="balance"  value= "0"></td>
-							  <td><input type="text" name="rate"     class="form-control" id="rate"     value= "13.99"></td>
-							  <td><input type="number" min="0" name="payment"  class="form-control payment" id="payment"  value= "0"></td>
+							  <td><input type="text" name="creditor" class="form-control" id="creditor3"  data-id="3" value= "Personal Loan"></td>
+							  <td><input type="number" min="0" name="balance"  class="form-control balance" id="balance3"  data-id="3"  value= "0"></td>
+							  <td><input type="text" name="rate"     class="form-control" id="rate3"  data-id="3"     value= "13.99"></td>
+							  <td><input type="number" min="0" name="payment"  class="form-control payment" id="payment3"  data-id="3"  value= "0"></td>
 							</tr>
 							<tr>
 							  <th scope="row">4</th>
-							  <td><input type="text" name="creditor" class="form-control" id="creditor" value= "Credit Cards"></td>
-							  <td><input type="number" min="0" name="balance"  class="form-control balance" id="balance"  value= "0"></td>
-							  <td><input type="text" name="rate"     class="form-control" id="rate"     value= "18.99"></td>
-							  <td><input type="number" min="0" name="payment"  class="form-control payment" id="payment"  value= "0"></td>
+							  <td><input type="text" name="creditor" class="form-control" id="creditor4"  data-id="4" value= "Credit Cards"></td>
+							  <td><input type="number" min="0" name="balance"  class="form-control balance" id="balance4"  data-id="4"   value= "0"></td>
+							  <td><input type="text" name="rate"     class="form-control" id="rate4"  data-id="4"      value= "18.99"></td>
+							  <td><input type="number" min="0" name="payment"  class="form-control payment" id="payment4"  data-id="4"   value= "0"></td>
 							
-							</tr>
+							</tr>-->
 							<?php
-							for($i = 5; $i <= 10; $i++)		
+							for($i = 1; $i <= 10; $i++)		
 							{
 								?>
 								<tr>
 								<th scope="row"><?php echo $i; ?></th>
-								<td><input type="text" name="creditor" class="form-control" id="creditor" value= ""></td>
-								<td><input type="number" min="0" name="balance"  class="form-control balance" id="balance"  value= "0"></td>
-								<td><input type="text" name="rate"     class="form-control" id="rate"     value= ""></td>
-								<td><input type="number" min="0" name="payment"  class="form-control payment" id="payment"  value= "0"></td>
+								<td><input type="text" name="creditor" class="form-control" id="creditor<?php echo $i; ?>"  data-id="<?php echo $i; ?>"  value= ""></td>
+								<td><input type="number" min="0" name="balance"  class="form-control balance" id="balance<?php echo $i; ?>"  data-id="<?php echo $i; ?>"  value= "0"></td>
+								<td><input type="text" name="rate"     class="form-control" id="rate<?php echo $i; ?>"  data-id="<?php echo $i; ?>"     value= ""></td>
+								<td><input type="number" min="0" name="payment"  class="form-control payment" id="payment<?php echo $i; ?>"  data-id="<?php echo $i; ?>"  value= "0"></td>
 								</tr>
 								<?php
 							}
@@ -175,6 +180,7 @@ $('#sel1').change(function(){
 							</tr>
 						  </tfoot>
 						  <tbody>
+						  <!--
 							<tr>
 							  <th scope="row">1</th>
 							  <td>Personal Loan</td>
@@ -206,12 +212,19 @@ $('#sel1').change(function(){
 							  <td>16</td>
 							  <td>September/2017</td>
 							  <td> $1,395.41 </td>
-							</tr>
+							</tr>-->
 							<?php
-							for($i = 5; $i <= 10; $i++)		
+							for($i = 1; $i <= 10; $i++)		
 							{
 								?>
-								<tr><th scope="row"><?php echo $i; ?></th><td></td><td></td><td></td><td></td><td></td></tr>
+								<tr>
+									<th scope="row"><?php echo $i; ?></th>
+									<td id="creditor_<?php echo $i; ?>"></td>
+									<td id="balance_<?php echo $i; ?>"></td>
+									<td id="months_<?php echo $i; ?>"></td>
+									<td id="date_<?php echo $i; ?>"></td>
+									<td id="interest_<?php echo $i; ?>"></td>
+								</tr>
 								<?php
 							}
 							?>

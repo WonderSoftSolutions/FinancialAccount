@@ -320,5 +320,16 @@ class Account extends CI_Controller {
 		// $param['user_id'] = $this->input->post('userid'); 
 		//echo $this->account_model->graph($param);	
 	}
-	
+		
+	function debtpaymentcalc()
+	{
+		$param['postmonth'] = $this->input->post('month');
+		$param['postselectYear'] = $this->input->post('selectYear');
+		
+		$param['creditor'] = $this->input->post('creditor');
+		$param['amount'] = $this->input->post('balance');
+		$param['rate'] = $this->input->post('rate') / 100;
+		$param['payment'] = $this->input->post('payment');
+		$this->account_model->debtpayment($param);
+	}
 }
