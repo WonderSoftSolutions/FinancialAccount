@@ -73,9 +73,7 @@ $(document).ready(function () {
 
                                    <div class="form-group">
                                             
-                                            <select class="form-control" id="sel1" style="
-    margin-top: 20px;
-">
+                                            <select class="form-control" id="sel1" >
                                               <option>Select Month</option>
                                             </select>
                                           </div>
@@ -137,6 +135,10 @@ $(document).ready(function () {
 															var month = inst.selectedMonth + 1;
 															//alert(month+"_"+year);
 															onPersonalMonthlyBudget(month+"_"+year);
+																
+															
+																 //$('.date-picker').attr('readonly',true).datepicker("destroy");
+															   
 															//$('#hidden').val(month+"_"+year);
 														},
 														beforeShow: function() {
@@ -179,11 +181,11 @@ $(document).ready(function () {
 												}
 												//$amount = $json1['0']['totalincome'];
 												$ttl = $json1['0']['totalincome'];
-												$totalincome =$this->account_model->currencyconverter($ttl);
+												$totalincome = $ttl;
 												$ttle = $json1['0']['totalexpenses'];
-												$totalexpenses = $this->account_model->currencyconverter($ttle); 
+												$totalexpenses = $ttle; 
 												$left = $json1['0']['leftover'];
-												$leftover = $this->account_model->currencyconverter($left); 
+												$leftover = $left; 
 												//$totalincome = $json1['0']['totalincome'] ;//number_format(($json1['0']['totalincome']/100), 2); //money_format('%i', $json1['0']['totalincome']);
 												// USD 1,234.56
 
