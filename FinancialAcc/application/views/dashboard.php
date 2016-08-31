@@ -116,7 +116,7 @@ $(document).ready(function () {
 												$param['user_id'] = $this->session->userdata('usr_id');
 												$json = $this->account_model->onPersonalMonthlyBudget($param);
 												 $json1 = json_decode($json,true);
-												 //var_dump($json1['0']['totalincome']);
+												 //var_dump($json1);
 												 // echo $json1['0']['totalincome'];
 												 // echo $json1['0']['totalexpenses'];
 												
@@ -176,16 +176,27 @@ $(document).ready(function () {
 												 <option value="<?php echo $m; ?>_<?php echo date("y"); ?>"><?php echo $printmonth; ?></option>
 												 <?php
 												 }
-												}?> 
+												}
+												//$amount = $json1['0']['totalincome'];
+												$ttl = $json1['0']['totalincome'];
+												$totalincome =$this->account_model->currencyconverter($ttl);
+												$ttle = $json1['0']['totalexpenses'];
+												$totalexpenses = $this->account_model->currencyconverter($ttle); 
+												$left = $json1['0']['leftover'];
+												$leftover = $this->account_model->currencyconverter($left); 
+												//$totalincome = $json1['0']['totalincome'] ;//number_format(($json1['0']['totalincome']/100), 2); //money_format('%i', $json1['0']['totalincome']);
+												// USD 1,234.56
+
+												?> 
 												
                                             </select>-->
                                           </div>
 										  
                                 <div class="col-md-7 col-xs-7 col-sm-7 col-lg-7" style="background-color: #7fb345;  margin-top: 8px; "><p style="font-size: 9px;/* padding-top: 6px; */margin-top: 7px;line-height: 11px;width: 57px;margin-left: -6px;">Total Income:</p></div>
-                                <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 8px;"><p style="font-size: 9px;color: black;padding-top: 6px;text-align: right;margin-left: -12px;" class="totalincome"><?php  echo $json1['0']['totalincome']; ?></p></div>
+                                <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 8px;"><p style="font-size: 9px;color: black;padding-top: 6px;text-align: right;margin-left: -12px;" class="totalincome">$<?php  echo $totalincome; ?></p></div>
                                 
                                 <div class="col-md-7 col-xs-7 col-sm-7 col-lg-7" style="background-color: #7fb345;  margin-top: 5px; "><p style="font-size: 9px;/* padding-top: 6px; */margin-top: 7px;line-height: 11px;width: 66px;margin-left: -13px;">Total Expenses:</p></div>
-                                <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 5px;"><p style="font-size: 9px;color: black;padding-top: 6px;text-align: right;margin-left: -12px;" class="totalexpenses" ><?php  echo $json1['0']['totalexpenses']; ?></p></div>
+                                <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 5px;"><p style="font-size: 9px;color: black;padding-top: 6px;text-align: right;margin-left: -12px;" class="totalexpenses" >$<?php  echo $totalexpenses; ?></p></div>
 								
 								
 							
@@ -196,12 +207,14 @@ $(document).ready(function () {
 							
 							<div class="col-md-12 knob-container hidden-md hidden-lg" style="background-color: green;text-align: center;color:white;margin-top: 81px;">
 							  <h5 style="border-bottom: 1px solid white;padding-bottom: 2px;font-size: 13px;margin-top: 10px;">Left Over Money</h5>
-								<h5 style="" class="leftovermoney">$ <?php  echo $json1['0']['leftover']; ?></h5>
+								<h5 style="" class="leftovermoney">$ <?php  
+								echo $leftover;
+								//echo $json1['0']['leftover']; ?></h5>
                             </div>
 							
 							<div class="col-md-12 knob-container hidden-xs hidden-sm" style="background-color: green;text-align: center;color:white;">
 							  <h5 style="border-bottom: 1px solid white;padding-bottom: 10px;font-size: 13px;margin-top: 10px;">Left Over Money</h5>
-								<h5 style="" class="leftovermoney">$ <?php  echo $json1['0']['leftover']; ?></h5>
+								<h5 style="" class="leftovermoney">$ <?php  echo $leftover; ?></h5>
                             </div>
 							
 							
