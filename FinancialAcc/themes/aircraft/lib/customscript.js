@@ -2111,7 +2111,7 @@ function onPersonalMonthlyBudget(id){
 			$('.totalincome').html(localdata[0].totalincome);
 			$('.totalexpenses').html(localdata[0].totalexpenses);
 			$('.leftovermoney').html('$ '+localdata[0].leftover);
-			hideloader();
+			//hideloader();
 		}
 	});	
 }

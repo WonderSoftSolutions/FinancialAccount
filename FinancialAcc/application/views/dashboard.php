@@ -136,8 +136,8 @@ $(document).ready(function () {
 															//alert(month+"_"+year);
 															onPersonalMonthlyBudget(month+"_"+year);
 																
-															
-																 //$('.date-picker').attr('readonly',true).datepicker("destroy");
+															onMonthlyGraphChange(year);
+															//$('.date-picker').attr('readonly',true).datepicker("destroy");
 															   
 															//$('#hidden').val(month+"_"+year);
 														},
@@ -480,47 +480,14 @@ $(document).ready(function () {
 	 //***2 
 	google.charts.setOnLoadCallback(drawTrendlines);
 	function drawTrendlines() {
-		var arraydata;
-		// $.ajax({
-			// type: "post",
-			// url: baseHref+"account/monthlygraph",
-			// // data: {
-				// // monthyear: id
-			// // },
-			// success: function(data){
-				 // var data = google.visualization.arrayToDataTable(data);
-				 // alert(data);
-			// }
-		// });	
-		//alert("{ year: <?php echo date('y'); ?> , userid: <?php echo $this->session->userdata('usr_id'); ?> }");
+		
 	 var jsonData = $.ajax({
-          //url: baseHref+"account/monthlygraph",
-		  url: baseHref+"account/monthlygraph/<?php echo date('y'); ?>/<?php echo $this->session->userdata('usr_id'); ?>",
-		  //data: { year: <?php echo date('y'); ?>, userid: <?php echo $this->session->userdata('usr_id'); ?>},
-          dataType: "json",
+          url: baseHref+"account/monthlygraph/<?php echo date('y'); ?>/<?php echo $this->session->userdata('usr_id'); ?>",
+		  dataType: "json",
           async: false
           }).responseText;
-		//var arraydata = monthlygraph();
-	
+		
 		var data = new google.visualization.DataTable(jsonData);
-		console.log(jsonData);
-		  // var data = google.visualization.arrayToDataTable([
-			  // ['Month', 'Total Income', 'Total Expenses'],
-			  // ['Jan',  1000,      400],
-			  // ['Feb',  1170,      460],
-			  // ['Mar',  660,       1120],
-			  // ['Apr',  1030,      540],
-			  // ['May',  800,      540],
-			  // ['June',  730,      540],
-			  // ['July',  430,      540],
-			  // ['Aug',  530,      540],
-			  // ['Sept',  930,      540],
-			  // ['Oct',  230,      540],
-			  // ['Nov',  130,      540],
-			  // ['Dec',  630,      540]
-			  
-			// ]);
-
 		  var options = {
 			title: 'MONTHLY BUDGET',
 			trendlines: {
@@ -553,8 +520,50 @@ $(document).ready(function () {
 			window.attachEvent('onresize', resizeHandler);
 		}
 		
+	}
+	google.charts.setOnLoadCallback(onMonthlyGraphChange(year));
+	function onMonthlyGraphChange(year)
+	{
+		var jsonData = $.ajax({
+			url: baseHref+"account/monthlygraph/"+year+"/<?php echo $this->session->userdata('usr_id'); ?>",
+			dataType: "json",
+			async: false
+		}).responseText;
+		
+		
+		var data = new google.visualization.DataTable(jsonData);
+		
+		  var options = {
+			title: 'MONTHLY BUDGET',
+			trendlines: {
+			  0: {type: 'linear', lineWidth: 5, opacity: .3},
+			  1: {type: 'exponential', lineWidth: 10, opacity: .3}
+			},
+			hAxis: {
+				title: 'Month',
+				viewWindow: {
+					min: [7, 30, 0],
+					max: [17, 30, 0]
+			  }
+			},
+			vAxis: {
+			  //title: 'Rating (scale of 1-10)'
+			}
+		  };
+
+		  var chart = new google.visualization.ColumnChart(document.getElementById('chart_div_column'));
+		  chart.draw(data, options);
+		  hideloader();
+		function resizeHandler () {
+			chart.draw(data, options);
 		}
-	
+		if (window.addEventListener) {
+			window.addEventListener('resize', resizeHandler, false);
+		}
+		else if (window.attachEvent) {
+			window.attachEvent('onresize', resizeHandler);
+		}
+	}
     </script>
 	<?php //var_dump($this->account_model->graph()); ?>
 	<script type="text/javascript">
