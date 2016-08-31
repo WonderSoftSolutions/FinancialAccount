@@ -1,4 +1,14 @@
+<script type="text/javascript">
+$(document).ready(function () {
+$('#selectYear').change(function(){
+    $('#selectYear').attr('disabled', 'disabled');
+});
+$('#sel1').change(function(){
+    $('#sel1').attr('disabled', 'disabled');
+});
+});
 
+</script>
 
  <div class="content contentcstm">
 		<div class="main-content">
