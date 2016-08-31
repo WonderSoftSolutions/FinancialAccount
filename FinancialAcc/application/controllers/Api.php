@@ -55,50 +55,41 @@ class Api extends REST_Controller {
 	{
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
-		//print_r($this->post());
 		$error = false;
 		$userAPIdata; 
-		$this->url_elements = explode('&', $this->post()[0]);
-		//print_r($this->url_elements);
-		for($i = 0; $i < sizeof($this->url_elements); $i++)
-		{
-			
-			$array = explode('=', $this->url_elements[$i]);
-			//print_r($array);
-			//echo 'key '.$array[0].' value '.$array[1];
-			$key = $array[0];
-			if((trim(urldecode($key)) == 'firstname') || (trim(urldecode($key)) == 'lastname'))
-			{
-				if($this->namevalidation($array[1]) == false)
-				{
-					$b['msg'] = 'Validation fails!!!';
-					$b['short'] = 'false';
-					$b['description'] = $key. ' validation fails '.$array[1];
-					array_push($a[$this->router->fetch_method()],$b);
-					$error = true;
-					//break;
-				}
-			}
-			if((trim(urldecode($key)) == 'pwd'))
-			{
-				$key = 'password';
-			}
-			// if($key == 'email')
-			// {
-				// $eresult = $this->account_model->check_email($array[1]);
-				// if($eresult == true)
-				// {
-					// $b['msg'] = 'Email already in our database';
-					// $b['short'] = 'false';
-					// $b['description'] = $key. ' database duplicate value';
-					// array_push($a[$this->router->fetch_method()],$b);
-					// $error = true;
-					// //break;
-				// }
-			// }
-			$userAPIdata[trim(urldecode($key))] = $array[1];
-		}
 		
+		
+		$firstname = trim(urldecode($_REQUEST['firstname']));
+		$lastname = trim(urldecode($_REQUEST['lastname']));
+		$email = trim(urldecode($_REQUEST['email']));
+		$password= trim(urldecode($_REQUEST['password']));
+		$cpassword=trim(urldecode($_REQUEST['cpassword']));
+		$Registermethod=trim(urldecode($_REQUEST['Registermethod']));
+	
+		if($this->namevalidation($firstname) == false)
+		{
+			$b['msg'] = 'Validation fails!!!';
+			$b['short'] = 'false';
+			$b['description'] = 'firstname validation fails '.$firstname;
+			array_push($a[$this->router->fetch_method()],$b);
+			$error = true;
+			//break;
+		}
+		if($this->namevalidation($lastname) == false)
+		{
+			$b['msg'] = 'Validation fails!!!';
+			$b['short'] = 'false';
+			$b['description'] = 'lastname validation fails '.$lastname;
+			array_push($a[$this->router->fetch_method()],$b);
+			$error = true;
+			//break;
+		}
+		$userAPIdata['firstname'] = $firstname;
+		$userAPIdata['lastname'] = $lastname;
+		$userAPIdata['email'] = $email;
+		$userAPIdata['password'] = $password;
+		$userAPIdata['cpassword'] = $cpassword;
+		$userAPIdata['Registermethod'] = $Registermethod;
 		
 		//print_r($userAPIdata);
 		if($error == false){
@@ -145,21 +136,8 @@ class Api extends REST_Controller {
 		
 	function get_user_profile_post()
 	{
-	
-		$id;
+		$id = trim(urldecode($_REQUEST['usr_id']));
 		
-		//$this->url_elements = explode('&', $this->post());
-		//print_r($this->post()[0]);
-		
-		$array = explode('=', $this->post()[0]);
-		//echo 'key '.$array[0].' value '.$array[1];
-		$key = $array[0];
-		if(trim(urldecode($key)) == 'usr_id')
-		{
-			$id = $array[1];
-		}
-		
-	
 		//$id = $this->input->post('usr_id');
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -171,20 +149,10 @@ class Api extends REST_Controller {
 	
 	function changepassword_post()
 	{
-		$password; 
-		$this->url_elements = explode('&', $this->post()[0]);
-		for($i = 0; $i < sizeof($this->url_elements); $i++)
-		{
-			$array = explode('=', $this->url_elements[$i]);
-			//echo 'key '.$array[0].' value '.$array[1];
-			$key = $array[0];
-			if(trim(urldecode($key)) == 'usr_id')
-			{
-				$key = 'id';
-			}
-			$password[$key] = $array[1];
-		}
-		//print_r($password);
+		$password['id'] = trim(urldecode($_REQUEST['usr_id']));
+		$password['currentpassword'] = trim(urldecode($_REQUEST['currentpassword']));
+		$password['npassword'] = trim(urldecode($_REQUEST['npassword']));
+		$password['cpassword'] = trim(urldecode($_REQUEST['cpassword']));
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -243,18 +211,7 @@ class Api extends REST_Controller {
 	function check_email_post()
 	{
 	
-		$email = ''; 
-		
-		//$this->url_elements = explode('&', $this->post());
-		//print_r($this->post()[0]);
-		
-		$array = explode('=', $this->post()[0]);
-		//echo 'key '.$array[0].' value '.$array[1];
-		$key = $array[0];
-		if(trim(urldecode($key)) == 'email')
-		{
-			$email = urldecode($array[1]);
-		}
+		$email = trim(urldecode($_REQUEST['email']));
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -274,20 +231,7 @@ class Api extends REST_Controller {
 	}
 	function logout_post()
 	{
-	
-		$id = null; 
-		
-		//$this->url_elements = explode('&', $this->post());
-		//print_r($this->post()[0]);
-		
-		$array = explode('=', $this->post()[0]);
-		//echo 'key '.$array[0].' value '.$array[1];
-		$key = $array[0];
-		if(trim(urldecode($key)) == 'usr_id')
-		{
-			$id = urldecode($array[1]);
-		}
-		
+		$id = trim(urldecode($_REQUEST['usr_id']));
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -318,19 +262,7 @@ class Api extends REST_Controller {
 	
 	function recover_post() {
 	
-		$email = ''; 
-		//$this->url_elements = explode('&', $this->post());
-		//print_r($this->post()[0]);
-		
-		$array = explode('=', $this->post()[0]);
-		//echo 'key '.$array[0].' value '.$array[1];
-		$key = $array[0];
-		if(trim(urldecode($key)) == 'email')
-		{
-			$email = urldecode($array[1]);
-		}
-		
-		//print_r($email);
+		$email = trim(urldecode($_REQUEST['email']));	
 	
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -371,44 +303,6 @@ class Api extends REST_Controller {
 		}
 		array_push($a[$this->router->fetch_method()],$b);
 		echo json_encode($a);
-		/* old code 
-		$a[$this->router->fetch_method()]=array();
-		$b=array();
-		$users; 
-		$this->url_elements = explode('&', $this->post()[0]);
-		for($i = 0; $i < sizeof($this->url_elements); $i++)
-		{
-			$array = explode('=', $this->url_elements[$i]);
-			$key = $array[0];
-			if(trim(urldecode($key)) == 'email')
-			{
-				$key = 'user_login';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'password')
-			{
-				$key = 'user_pass';
-				$users[$key] = md5(trim(urldecode($array[1])));
-			}
-		}
-		$logresult = $this->account_model->do_loginAPI($users);
-		if($logresult != false){
-				
-			$userid = $logresult;
-			$b['msg'] = 'Logged In!!!';
-			$b['short'] = 'true';
-			$b['userid'] = $userid;
-			array_push($a[$this->router->fetch_method()],$b);
-		}
-		else
-		{
-			$b['msg'] = 'Internal server error!!!';
-			$b['short'] = 'false';
-			$b['description'] ='Login details wrong or may be account not activated';
-			array_push($a[$this->router->fetch_method()],$b);
-		}
-		echo json_encode($a);
-		//Old code */
 	}
 	
 	function allterms_post()
@@ -416,13 +310,8 @@ class Api extends REST_Controller {
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
 		
-		$array = explode('=', $this->post()[0]);
-		$key = $array[0];
-		$status = 0;
-		if(trim(urldecode($key)) == 'status')
-		{
-			$status = urldecode($array[1]);
-		}
+		$status = trim(urldecode($_REQUEST['status']));	
+		
 		$alltemrs = $this->account_model->getactiveTerms($status);//1 active, 0 deactive
 		array_push($a[$this->router->fetch_method()],$alltemrs);
 		echo json_encode($a);
@@ -432,44 +321,14 @@ class Api extends REST_Controller {
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
-		$this->url_elements = explode('&', $this->post()[0]);
-		$users;
-		for($i = 0; $i < sizeof($this->url_elements); $i++)
-		{
-			$array = explode('=', $this->url_elements[$i]);
-			//echo 'key '.$array[0].' value '.$array[1];
-			$key = $array[0];
-			if(trim(urldecode($key)) == 'goalname')
-			{
-				$key = 'id_goal';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'termid')
-			{
-				$key = 'id_term';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'cost')
-			{
-				$key = 'id_cost';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'currentsaved')
-			{
-				$key = 'id_currentsaved';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'targetdate')
-			{
-				$key = 'id_datetimepicker1';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'usr_id')
-			{
-				$key = 'user_id';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-		}
+		
+		$users['id_goal'] = trim(urldecode($_REQUEST['goalname']));	
+		$users['id_term'] = trim(urldecode($_REQUEST['termid']));	
+		$users['id_cost'] = trim(urldecode($_REQUEST['cost']));	
+		$users['id_currentsaved'] = trim(urldecode($_REQUEST['currentsaved']));	
+		$users['id_datetimepicker1'] = trim(urldecode($_REQUEST['targetdate']));	
+		$users['user_id'] = trim(urldecode($_REQUEST['usr_id']));	
+		
 		$param['targetdate'] = $users['id_datetimepicker1'];
 		$param['cost'] = $users['id_cost'];
 		$param['saved'] = $users['id_currentsaved'];
@@ -501,29 +360,10 @@ class Api extends REST_Controller {
 	{
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
-		$this->url_elements = explode('&', $this->post()[0]);
-		$user_goals;
-		for($i = 0; $i < sizeof($this->url_elements); $i++)
-		{
-			$array = explode('=', $this->url_elements[$i]);
-			//echo 'key '.$array[0].' value '.$array[1];
-			$key = $array[0];
-			if(trim(urldecode($key)) == 'user_goal_id')
-			{
-				$key = 'id';
-				$user_goals[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'user_id')
-			{
-				$key = 'user_id';
-				$user_goals[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'status')
-			{
-				$key = 'goal_status';
-				$user_goals[$key] = trim(urldecode($array[1]));
-			}
-		}
+		
+		$user_goals['id'] = trim(urldecode($_REQUEST['user_goal_id']));	
+		$user_goals['user_id'] = trim(urldecode($_REQUEST['user_id']));	
+		$user_goals['goal_status'] = trim(urldecode($_REQUEST['status']));	
 		
 		$result = $this->account_model->goaldeleteAPI($user_goals);
 		$b['msg'] = 'Your Goal updated Successfully!!!';
@@ -537,50 +377,15 @@ class Api extends REST_Controller {
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
-		$this->url_elements = explode('&', $this->post()[0]);
-		$users;
-		for($i = 0; $i < sizeof($this->url_elements); $i++)
-		{
-			$array = explode('=', $this->url_elements[$i]);
-			//echo 'key '.$array[0].' value '.$array[1];
-			$key = $array[0];
-			if(trim(urldecode($key)) == 'usr_id')
-			{
-				$key = 'user_id';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'user_goal_id')
-			{
-				$key = 'usergoalid';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'goalname')
-			{
-				$key = 'id_goal';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'termid')
-			{
-				$key = 'id_term';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'cost')
-			{
-				$key = 'id_cost';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'currentsaved')
-			{
-				$key = 'id_currentsaved';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'targetdate')
-			{
-				$key = 'id_datetimepicker1';
-				$users[$key] = trim(urldecode($array[1]));
-			}
+		
+		$users['user_id'] = trim(urldecode($_REQUEST['usr_id']));	
+		$users['usergoalid'] = trim(urldecode($_REQUEST['user_goal_id']));	
+		$users['id_goal'] = trim(urldecode($_REQUEST['goalname']));	
+		$users['id_term'] = trim(urldecode($_REQUEST['termid']));	
+		$users['id_cost'] = trim(urldecode($_REQUEST['cost']));	
+		$users['id_currentsaved'] = trim(urldecode($_REQUEST['currentsaved']));	
+		$users['id_datetimepicker1'] = trim(urldecode($_REQUEST['targetdate']));	
 			
-		}
 		$param['targetdate'] = $users['id_datetimepicker1'];
 		$param['cost'] = $users['id_cost'];
 		$param['saved'] = $users['id_currentsaved'];
@@ -611,13 +416,8 @@ class Api extends REST_Controller {
 	}
 	function overallprogress_post()
 	{
-		$userid = ''; 
-		$array = explode('=', $this->post()[0]);
-		$key = $array[0];
-		if(trim(urldecode($key)) == 'usr_id')
-		{
-			$userid = urldecode($array[1]);
-		}
+		$userid = trim(urldecode($_REQUEST['usr_id']));	
+		
 		$a[$this->router->fetch_method()]=array();
 		$b['msg'] = $this->account_model->getoverallprogress($userid);
 		$b['short'] = 'true';
@@ -630,53 +430,15 @@ class Api extends REST_Controller {
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
-		$this->url_elements = explode('&', $this->post()[0]);
-		$users;
-		for($i = 0; $i < sizeof($this->url_elements); $i++)
-		{
-			$array = explode('=', $this->url_elements[$i]);
-			$key = $array[0];
-			if(trim(urldecode($key)) == 'usr_id')
-			{
-				$key = 'user_id';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'wife_revenue')
-			{
-				$key = 'wife_revenue';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'husband_revenue')
-			{
-				$key = 'husband_revenue';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'bonuses')
-			{
-				$key = 'bonuses';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'dividend')
-			{
-				$key = 'dividend';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'other')
-			{
-				$key = 'other';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'year')
-			{
-				$key = 'year';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'month')
-			{
-				$key = 'month';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-		}
+		
+		$users['usr_id'] = trim(urldecode($_REQUEST['usr_id']));	
+		$users['wife_revenue'] = trim(urldecode($_REQUEST['wife_revenue']));	
+		$users['husband_revenue'] = trim(urldecode($_REQUEST['husband_revenue']));	
+		$users['bonuses'] = trim(urldecode($_REQUEST['bonuses']));	
+		$users['dividend'] = trim(urldecode($_REQUEST['dividend']));	
+		$users['other'] = trim(urldecode($_REQUEST['other']));	
+		$users['year'] = trim(urldecode($_REQUEST['year']));	
+		$users['month'] = trim(urldecode($_REQUEST['month']));	
 		
 		$result = $this->account_model->insert_revenue($users);
 		
@@ -691,177 +453,38 @@ class Api extends REST_Controller {
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
-		$this->url_elements = explode('&', $this->post()[0]);
-		$users;
-		for($i = 0; $i < sizeof($this->url_elements); $i++)
-		{
-			$array = explode('=', $this->url_elements[$i]);
-			$key = $array[0];
-			if(trim(urldecode($key)) == 'usr_id')
-			{
-				$key = 'user_id';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'retirement')
-			{
-				$key = 'retirement';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'mortgage')
-			{
-				$key = 'mortgage';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'home_repairs')
-			{
-				$key = 'home_repairs';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'home_insurance')
-			{
-				$key = 'home_insurance';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'garbage')
-			{
-				$key = 'garbage';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'electricity')
-			{
-				$key = 'electricity';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'water')
-			{
-				$key = 'water';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'gas')
-			{
-				$key = 'gas';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'internet')
-			{
-				$key = 'internet';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'telephone')
-			{
-				$key = 'telephone';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'cable_tv')
-			{
-				$key = 'cable_tv';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'public_transportation')
-			{
-				$key = 'public_transportation';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'car_payment')
-			{
-				$key = 'car_payment';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'license_plates')
-			{
-				$key = 'license_plates';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'car_repairs')
-			{
-				$key = 'car_repairs';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'insurance')
-			{
-				$key = 'insurance';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'charitable')
-			{
-				$key = 'charitable';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'child_care')
-			{
-				$key = 'child_care';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'clothing')
-			{
-				$key = 'clothing';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'entertainment')
-			{
-				$key = 'entertainment';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'groceries')
-			{
-				$key = 'groceries';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'medical')
-			{
-				$key = 'medical';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'personal_barber')
-			{
-				$key = 'personal_barber';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'dry_cleaning')
-			{
-				$key = 'dry_cleaning';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'tithing')
-			{
-				$key = 'tithing';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'offerings')
-			{
-				$key = 'offerings';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'charities')
-			{
-				$key = 'charities';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'personal_loan')
-			{
-				$key = 'personal_loan';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'credit_card')
-			{
-				$key = 'credit_card';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			if(trim(urldecode($key)) == 'student_loan')
-			{
-				$key = 'student_loan';
-				$users[$key] = trim(urldecode($array[1]));
-			}
-			
-			
-			// $param['tithing'] = $this->input->post('tithing'); 
-			// $param['offerings'] = $this->input->post('offerings'); 
-			// $param['charities'] = $this->input->post('charities'); 
-			// $param['personal_loan'] = $this->input->post('personal_loan'); 
-			// $param['credit_card'] = $this->input->post('credit_card'); 
-			// $param['student_loan'] = $this->input->post('student_loan');
-			
-		}
+		
+		$users['user_id'] = trim(urldecode($_REQUEST['usr_id']));
+		$users['retirement'] = trim(urldecode($_REQUEST['retirement']));
+		$users['mortgage'] = trim(urldecode($_REQUEST['mortgage']));
+		$users['home_repairs'] = trim(urldecode($_REQUEST['home_repairs']));
+		$users['home_insurance'] = trim(urldecode($_REQUEST['home_insurance']));
+		$users['garbage'] = trim(urldecode($_REQUEST['garbage']));
+		$users['electricity'] = trim(urldecode($_REQUEST['electricity']));
+		$users['water'] = trim(urldecode($_REQUEST['water']));
+		$users['gas'] = trim(urldecode($_REQUEST['gas']));
+		$users['internet'] = trim(urldecode($_REQUEST['internet']));
+		$users['telephone'] = trim(urldecode($_REQUEST['telephone']));
+		$users['cable_tv'] = trim(urldecode($_REQUEST['cable_tv']));
+		$users['public_transportation'] = trim(urldecode($_REQUEST['public_transportation']));
+		$users['car_payment'] = trim(urldecode($_REQUEST['car_payment']));
+		$users['license_plates'] = trim(urldecode($_REQUEST['license_plates']));
+		$users['car_repairs'] = trim(urldecode($_REQUEST['car_repairs']));
+		$users['insurance'] = trim(urldecode($_REQUEST['insurance']));
+		$users['charitable'] = trim(urldecode($_REQUEST['charitable']));
+		$users['child_care'] = trim(urldecode($_REQUEST['child_care']));
+		$users['clothing'] = trim(urldecode($_REQUEST['clothing']));	
+		$users['entertainment'] = trim(urldecode($_REQUEST['entertainment']));	
+		$users['groceries'] = trim(urldecode($_REQUEST['groceries']));	
+		$users['medical'] = trim(urldecode($_REQUEST['medical']));	
+		$users['personal_barber'] = trim(urldecode($_REQUEST['personal_barber']));	
+		$users['dry_cleaning'] = trim(urldecode($_REQUEST['dry_cleaning']));	
+		$users['tithing'] = trim(urldecode($_REQUEST['tithing']));	
+		$users['offerings'] = trim(urldecode($_REQUEST['offerings']));	
+		$users['charities'] = trim(urldecode($_REQUEST['charities']));	
+		$users['personal_loan'] = trim(urldecode($_REQUEST['personal_loan']));	
+		$users['credit_card'] = trim(urldecode($_REQUEST['credit_card']));	
+		$users['student_loan'] = trim(urldecode($_REQUEST['student_loan']));	
 		
 		$result = $this->account_model->insert_expenses($users);
 		
