@@ -124,7 +124,7 @@ $('#sel1').blur(function(){
 								<th scope="row"><?php echo $i; ?></th>
 								<td><input type="text" name="creditor" class="form-control" id="creditor<?php echo $i; ?>"  data-id="<?php echo $i; ?>"  value= ""></td>
 								<td><input type="number" min="0" name="balance"  class="form-control balance" id="balance<?php echo $i; ?>"  data-id="<?php echo $i; ?>"  value= "0"></td>
-								<td><input type="text" name="rate"     class="form-control" id="rate<?php echo $i; ?>"  data-id="<?php echo $i; ?>"     value= ""></td>
+								<td><input type="text" name="rate"     class="form-control" id="rate<?php echo $i; ?>"  data-id="<?php echo $i; ?>"     value= "0"></td>
 								<td><input type="number" min="0" name="payment"  class="form-control payment" id="payment<?php echo $i; ?>"  data-id="<?php echo $i; ?>"  value= "0"></td>
 								</tr>
 								<?php
@@ -173,10 +173,10 @@ $('#sel1').blur(function(){
 							<tr>
 							<th></th>
 							  <td>Total</td>
-							  <td> $72,903.00 </td>
+							  <td> $<span  id="balance_total">00.00</span> </td>
 							  <td></td>
 							  <td></td>
-							  <td> $3,353.85 </td>
+							  <td> </td>
 							</tr>
 						  </tfoot>
 						  <tbody>

@@ -2120,38 +2120,34 @@ function onPersonalMonthlyBudget(id){
 $(document).ready(function ()
 {  
 	 $(".balance").focusout(function(){
-		  var ids = $('.balance');
-		  var a = 0;
-		  for($i = 0; $i < ids.length; $i++)
-		  {
-			a = parseFloat(a) + parseFloat(ids[$i].value);
-		  }
-		  $('#totalbalance').val(a);
+			var ids = $('.balance');
+			var a = 0;
+			for($i = 0; $i < ids.length; $i++)
+			{
+				a = parseFloat(a) + parseFloat(ids[$i].value);
+			}
+			$('#totalbalance').val(a);
+			var dataid = $("#"+this.id).data('id');
+			debtpaymentcalc(dataid);
 	 });
  
 	 $(".payment").focusout(function(){
-		  var ids = $('.payment');
-		  var a = 0;
-		  for($i = 0; $i < ids.length; $i++)
-		  {
-			a = parseFloat(a) + parseFloat(ids[$i].value);
-			
-		  }
-		  $('#totalpayment').val(a);
-		  $('#mininumpayment').val(a);
-		  
-		//var currentvalue = $('.payment').val();	
-		//alert(currentvalue);
-		var dataid = $("#"+this.id).data('id');
-	  
-		  
-		  debtpaymentcalc(dataid);
+			var ids = $('.payment');
+			var a = 0;
+			for($i = 0; $i < ids.length; $i++)
+			{
+				a = parseFloat(a) + parseFloat(ids[$i].value);
+			}
+			$('#totalpayment').val(a);
+			$('#mininumpayment').val(a);
+			var dataid = $("#"+this.id).data('id');
+			debtpaymentcalc(dataid);
 	 });
 	 
 	 //GRV
 		function debtpaymentcalc(dataid)
 		{
-			
+			var error = false;
 			var selectYear = $('#selectYear').val();
 			var month = $('#sel1').val();
 			var creditor = $('#creditor'+dataid).val();
@@ -2159,31 +2155,80 @@ $(document).ready(function ()
 			var rate = $('#rate'+dataid).val();
 			var payment = $('#payment'+dataid).val();
 			
-			$.ajax({
-				type: "post",
-				url: baseHref+"account/debtpaymentcalc",
-				data: {
-					selectYear: selectYear,
-					month: month,
-					creditor: creditor,
-					balance: balance,
-					rate: rate,
-					payment: payment
-				},
-				success: function(data){
-					alert(data);
-					localdata = JSON.parse(data);
-					console.log(localdata);
-					// $('.totalincome').html(localdata[0].totalincome);
-					$('#creditor_'+dataid).html(localdata.creditor);
-					$('#balance_'+dataid).html(localdata.amount);
-					$('#months_'+dataid).html(localdata.months);
-					$('#date_'+dataid).html(localdata.futuredate);
-					$('#interest_'+dataid).html("coming soon");
-					// $('.totalexpenses').html(localdata[0].totalexpenses);
-					// $('.leftovermoney').html('$ '+localdata[0].leftover);
-				}
-			});	
+			if(creditor == '' || creditor == '0')
+			{
+				$('#creditor'+dataid).focus();
+				swtalertwarningmsg('Creditor Invalid',"Please enter valid Creditor value");
+				error = true;
+				return false;
+			}
+			if(balance == '' || balance == '0')
+			{
+				$('#balance'+dataid).focus();
+				swtalertwarningmsg('Balance Invalid',"Please enter valid Balance value");
+				error = true;
+				return false;
+			}
+			if(rate == '' || rate == '0')
+			{
+				$('#rate'+dataid).focus();
+				swtalertwarningmsg('Rate Invalid',"Please enter valid Rate value");
+				error = true;
+				return false;
+			}
+			if(payment == '' || payment == '0')
+			{
+				$('#payment'+dataid).focus();
+				swtalertwarningmsg('Payment Invalid',"Please enter valid Payment value");
+				error = true;
+				return false;
+			}
+			if(error == false)
+			{
+				$.ajax({
+					type: "post",
+					url: baseHref+"account/debtpaymentcalc",
+					data: {
+						selectYear: selectYear,
+						month: month,
+						creditor: creditor,
+						balance: balance,
+						rate: rate,
+						payment: payment
+					},
+					success: function(data){
+						localdata = JSON.parse(data);
+						console.log(localdata);
+						// $('.totalincome').html(localdata[0].totalincome);
+						$('#creditor_'+dataid).html(localdata.creditor);
+						$('#balance_'+dataid).html(localdata.amount);
+						$('#months_'+dataid).html(localdata.months);
+						$('#date_'+dataid).html(localdata.futuredate);
+						$('#interest_'+dataid).html("coming soon");
+						// $('.totalexpenses').html(localdata[0].totalexpenses);
+						// $('.leftovermoney').html('$ '+localdata[0].leftover);
+						balancecalcbottom();
+					}
+				});	
+			}
+		}
+		function balancecalcbottom()
+		{
+		$ttl = 0;
+		for($i = 1; $i <= 10; $i++)
+		{
+			if($('#balance_'+$i).html() != '' && $('#balance_'+$i).html() != 'NaN')
+			{
+				console.log(parseFloat($ttl) + $('#balance_'+$i).html());
+				$ttl = parseFloat($ttl) + parseFloat($('#balance_'+$i).html());
+			}
+		}
+		//alert($ttl);
+			$("#balance_total").text($ttl);
+			
+// parseFloat($('#balance_1').html()) + parseFloat($('#balance_2').html()) + parseFloat($('#balance_3').html()) + parseFloat($('#balance_4').html()) + parseFloat($('#balance_5').html()) + parseFloat($('#balance_6').html()) + parseFloat($('#balance_7').html()) + parseFloat($('#balance_8').html()) + parseFloat($('#balance_9').html()) + parseFloat($('#balance_10').html())
+			// );
+			
 		}
 	 //GRV
 });
