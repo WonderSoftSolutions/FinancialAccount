@@ -351,7 +351,27 @@ class Api extends REST_Controller {
 	
 	function login_post()
 	{
-	
+		$a[$this->router->fetch_method()]=array();
+		$b=array();
+		$users; 
+		$users['user_login'] = trim(urldecode($_REQUEST['email']));//$this->post()[0]
+		$users['user_pass'] = trim(urldecode($_REQUEST['password']));//$this->post()[0]
+		$logresult = $this->account_model->do_loginAPI($users);
+		if($logresult != false){
+			$userid = $logresult;
+			$b['msg'] = 'Logged In!!!';
+			$b['short'] = 'true';
+			$b['userid'] = $userid;
+		}
+		else
+		{
+			$b['msg'] = 'Internal server error!!!';
+			$b['short'] = 'false';
+			$b['description'] ='Login details wrong or may be account not activated';
+		}
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+		/* old code 
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
 		$users; 
@@ -359,7 +379,6 @@ class Api extends REST_Controller {
 		for($i = 0; $i < sizeof($this->url_elements); $i++)
 		{
 			$array = explode('=', $this->url_elements[$i]);
-			//echo 'key '.$array[0].' value '.$array[1];
 			$key = $array[0];
 			if(trim(urldecode($key)) == 'email')
 			{
@@ -371,10 +390,7 @@ class Api extends REST_Controller {
 				$key = 'user_pass';
 				$users[$key] = md5(trim(urldecode($array[1])));
 			}
-			
 		}
-		
-		
 		$logresult = $this->account_model->do_loginAPI($users);
 		if($logresult != false){
 				
@@ -392,7 +408,7 @@ class Api extends REST_Controller {
 			array_push($a[$this->router->fetch_method()],$b);
 		}
 		echo json_encode($a);
-		
+		//Old code */
 	}
 	
 	function allterms_post()
