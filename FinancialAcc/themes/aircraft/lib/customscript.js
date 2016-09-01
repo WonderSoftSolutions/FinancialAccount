@@ -471,31 +471,40 @@ $(document).ready(function () {
 		}
 	}
 	//
-//Where you stand jquery calculations//
+	
+	//Where you stand jquery calculations//
+	
 	//CASH
-	$("#checkingaccount").focusout(function(){
-		var check = $("#checkingaccount").val();
-		var save = $("#savingaccount").val();
-		var mutualfunds = $("#mutualfunds").val();
-		cashcalc(check,save,mutualfunds);
+	$(".checking_account").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var checking_account = $('#checking_account_'+dataid).val();	
+		var savings_account = $('#savings_account_'+dataid).val();	
+		var mutual_funds = $('#mutual_funds_'+dataid).val();	
+		//alert(parseFloat(checking_account)+parseFloat(savings_account)+parseFloat(mutual_funds));
+		totalcashcalc(checking_account,savings_account,mutual_funds,dataid);  
 	});
-	$("#savingaccount").focusout(function(){
-		var check = $("#checkingaccount").val();
-		var save = $("#savingaccount").val();
-		var mutualfunds = $("#mutualfunds").val();
-		cashcalc(check,save,mutualfunds);
+	$(".savings_account").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var checking_account = $('#checking_account_'+dataid).val();	
+		var savings_account = $('#savings_account_'+dataid).val();	
+		var mutual_funds = $('#mutual_funds_'+dataid).val();	
+		//alert(parseFloat(checking_account)+parseFloat(savings_account)+parseFloat(mutual_funds));
+		totalcashcalc(checking_account,savings_account,mutual_funds,dataid);  
 	});
-	$("#mutualfunds").focusout(function(){
-		var check = $("#checkingaccount").val();
-		var save = $("#savingaccount").val();
-		var mutualfunds = $("#mutualfunds").val();
-		cashcalc(check,save,mutualfunds);
+	$(".mutual_funds").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var checking_account = $('#checking_account_'+dataid).val();	
+		var savings_account = $('#savings_account_'+dataid).val();	
+		var mutual_funds = $('#mutual_funds_'+dataid).val();	
+		//alert(parseFloat(checking_account)+parseFloat(savings_account)+parseFloat(mutual_funds));
+		totalcashcalc(checking_account,savings_account,mutual_funds,dataid);  
 	});
-	function cashcalc(check,save,mutualfunds)
+	
+	function totalcashcalc(checking_account,savings_account,mutual_funds,dataid)
 	{
-		if(check != '' && save != '' && mutualfunds != '')
+		if(checking_account != '' && savings_account != '' && mutual_funds != '')
 		{
-			$('#totalcash').text(parseFloat(check) + parseFloat(save) + parseFloat(mutualfunds));
+			$('#totalcash_'+dataid).text(Math.round(parseFloat(checking_account) + parseFloat(savings_account) + parseFloat(mutual_funds)));
 		}
 	}
 	
@@ -2155,34 +2164,34 @@ $(document).ready(function ()
 			var rate = $('#rate'+dataid).val();
 			var payment = $('#payment'+dataid).val();
 			
-			// if(creditor == '' || creditor == '0')
-			// {
-				// $('#creditor'+dataid).focus();
-				// swtalertwarningmsg('Creditor Invalid',"Please enter valid Creditor value");
-				// error = true;
-				// return false;
-			// }
-			// if(balance == '' || balance == '0')
-			// {
-				// $('#balance'+dataid).focus();
-				// swtalertwarningmsg('Balance Invalid',"Please enter valid Balance value");
-				// error = true;
-				// return false;
-			// }
-			// if(rate == '' || rate == '0')
-			// {
-				// $('#rate'+dataid).focus();
-				// swtalertwarningmsg('Rate Invalid',"Please enter valid Rate value");
-				// error = true;
-				// return false;
-			// }
-			// if(payment == '' || payment == '0')
-			// {
-				// $('#payment'+dataid).focus();
-				// swtalertwarningmsg('Payment Invalid',"Please enter valid Payment value");
-				// error = true;
-				// return false;
-			// }
+			if(creditor == '' || creditor == '0')
+			{
+				$('#creditor'+dataid).focus();
+				swtalertwarningmsg('Creditor Invalid',"Please enter valid Creditor value");
+				error = true;
+				return false;
+			}
+			if(balance == '' || balance == '0')
+			{
+				$('#balance'+dataid).focus();
+				swtalertwarningmsg('Balance Invalid',"Please enter valid Balance value");
+				error = true;
+				return false;
+			}
+			if(rate == '' || rate == '0')
+			{
+				$('#rate'+dataid).focus();
+				swtalertwarningmsg('Rate Invalid',"Please enter valid Rate value");
+				error = true;
+				return false;
+			}
+			if(payment == '' || payment == '0')
+			{
+				$('#payment'+dataid).focus();
+				swtalertwarningmsg('Payment Invalid',"Please enter valid Payment value");
+				error = true;
+				return false;
+			}
 			if(error == false)
 			{
 				$.ajax({
