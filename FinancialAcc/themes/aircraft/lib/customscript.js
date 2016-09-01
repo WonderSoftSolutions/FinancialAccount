@@ -2155,34 +2155,34 @@ $(document).ready(function ()
 			var rate = $('#rate'+dataid).val();
 			var payment = $('#payment'+dataid).val();
 			
-			if(creditor == '' || creditor == '0')
-			{
-				$('#creditor'+dataid).focus();
-				swtalertwarningmsg('Creditor Invalid',"Please enter valid Creditor value");
-				error = true;
-				return false;
-			}
-			if(balance == '' || balance == '0')
-			{
-				$('#balance'+dataid).focus();
-				swtalertwarningmsg('Balance Invalid',"Please enter valid Balance value");
-				error = true;
-				return false;
-			}
-			if(rate == '' || rate == '0')
-			{
-				$('#rate'+dataid).focus();
-				swtalertwarningmsg('Rate Invalid',"Please enter valid Rate value");
-				error = true;
-				return false;
-			}
-			if(payment == '' || payment == '0')
-			{
-				$('#payment'+dataid).focus();
-				swtalertwarningmsg('Payment Invalid',"Please enter valid Payment value");
-				error = true;
-				return false;
-			}
+			// if(creditor == '' || creditor == '0')
+			// {
+				// $('#creditor'+dataid).focus();
+				// swtalertwarningmsg('Creditor Invalid',"Please enter valid Creditor value");
+				// error = true;
+				// return false;
+			// }
+			// if(balance == '' || balance == '0')
+			// {
+				// $('#balance'+dataid).focus();
+				// swtalertwarningmsg('Balance Invalid',"Please enter valid Balance value");
+				// error = true;
+				// return false;
+			// }
+			// if(rate == '' || rate == '0')
+			// {
+				// $('#rate'+dataid).focus();
+				// swtalertwarningmsg('Rate Invalid',"Please enter valid Rate value");
+				// error = true;
+				// return false;
+			// }
+			// if(payment == '' || payment == '0')
+			// {
+				// $('#payment'+dataid).focus();
+				// swtalertwarningmsg('Payment Invalid',"Please enter valid Payment value");
+				// error = true;
+				// return false;
+			// }
 			if(error == false)
 			{
 				$.ajax({
@@ -2197,6 +2197,7 @@ $(document).ready(function ()
 						payment: payment
 					},
 					success: function(data){
+						//console.log(data);
 						localdata = JSON.parse(data);
 						console.log(localdata);
 						// $('.totalincome').html(localdata[0].totalincome);
@@ -2204,7 +2205,7 @@ $(document).ready(function ()
 						$('#balance_'+dataid).html(localdata.amount);
 						$('#months_'+dataid).html(localdata.months);
 						$('#date_'+dataid).html(localdata.futuredate);
-						$('#interest_'+dataid).html("coming soon");
+						$('#interest_'+dataid).html(localdata.interestpaid);
 						// $('.totalexpenses').html(localdata[0].totalexpenses);
 						// $('.leftovermoney').html('$ '+localdata[0].leftover);
 						balancecalcbottom();
@@ -2219,7 +2220,7 @@ $(document).ready(function ()
 		{
 			if($('#balance_'+$i).html() != '' && $('#balance_'+$i).html() != 'NaN')
 			{
-				console.log(parseFloat($ttl) + $('#balance_'+$i).html());
+				//console.log(parseFloat($ttl) + $('#balance_'+$i).html());
 				$ttl = parseFloat($ttl) + parseFloat($('#balance_'+$i).html());
 			}
 		}

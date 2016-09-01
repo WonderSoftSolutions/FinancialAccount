@@ -35,8 +35,13 @@ class Pages extends CI_Controller {
 		$this->load->view('footer',$this->data);
 	}
 	
-	public function whereyoustand()
+	public function whereyoustand($id = 0)
 	{
+		if($id==0)
+		{
+			$id = date('y');
+		}
+		$this->data['contryear'] = $id;
 		$this->load->view('header',$this->data);
 		$this->load->view('whereyoustand',$this->data);
 		$this->load->view('footer',$this->data);
