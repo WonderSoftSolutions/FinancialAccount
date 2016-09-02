@@ -473,7 +473,7 @@ $(document).ready(function () {
 	//
 	
 	//Where you stand jquery calculations//
-	
+	//GRV sept 2 2016
 	//CASH
 	$(".checking_account").focusout(function(){
 		var dataid = $("#"+this.id).data('id');
@@ -500,116 +500,235 @@ $(document).ready(function () {
 		totalcashcalc(checking_account,savings_account,mutual_funds,dataid);  
 	});
 	
+	
 	function totalcashcalc(checking_account,savings_account,mutual_funds,dataid)
 	{
 		if(checking_account != '' && savings_account != '' && mutual_funds != '')
 		{
 			$('#totalcash_'+dataid).text(Math.round(parseFloat(checking_account) + parseFloat(savings_account) + parseFloat(mutual_funds)));
+			totalAssets(dataid);
 		}
 	}
 	
 	//INVESTMENT
-	$("#securities").focusout(function(){
-		var securities = $("#securities").val();
-		var otherinvestments = $("#otherinvestments").val();
-		investmentcalc(securities,otherinvestments);
+	$(".securities").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var securities = $('#securities_'+dataid).val();	
+		var other_investments = $('#other_investments_'+dataid).val();	
+		investmentcalc(securities,other_investments,dataid);  
 	});
-	$("#otherinvestments").focusout(function(){
-		var securities = $("#securities").val();
-		var otherinvestments = $("#otherinvestments").val();
-		investmentcalc(securities,otherinvestments);
+	
+	$(".other_investments").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var securities = $('#securities_'+dataid).val();	
+		var other_investments = $('#other_investments_'+dataid).val();	
+		investmentcalc(securities,other_investments,dataid);  
 	});
-	function investmentcalc(securities,otherinvestments)
+	
+	function investmentcalc(securities,other_investments,dataid) 
 	{
-		if(securities != '' && otherinvestments != '' )
+		if(securities != '' && other_investments != '')
 		{
-			$('#totalinvestments').text(parseFloat(securities) + parseFloat(otherinvestments) );
+			$('#totalinvestment_'+dataid).text(Math.round(parseFloat(securities) + parseFloat(other_investments)));
+			totalAssets(dataid);
 		}
 	}
 	
+	
 	//retirementfunds
-	$("#retirementfunds").focusout(function(){
-		var retirementfunds = $("#retirementfunds").val();
-		$('#totalretirement').text(parseFloat(retirementfunds));
+	$(".retirement_funds").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var retirement_funds = $('#retirement_funds_'+dataid).val();	
+		$('#totalretirement_'+dataid).text(parseFloat(retirement_funds));
+		totalAssets(dataid);
 	});
 	
 	//Personal Property
-	$("#building").focusout(function(){
-		var building = $("#building").val();
-		var cars = $("#cars").val();
-		var otherproperty = $("#otherproperty").val();
-		propertycalc(building,cars,otherproperty);
+	$(".building").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var building = $('#building_'+dataid).val();	
+		var cars = $('#cars_'+dataid).val();	
+		var other_property = $('#other_property_'+dataid).val();	
+		//$('#totalretirement_'+dataid).text(parseFloat(retirement_funds));
+		propertycalc(building,cars,other_property,dataid);
 	});
-	$("#cars").focusout(function(){
-		var building = $("#building").val();
-		var cars = $("#cars").val();
-		var otherproperty = $("#otherproperty").val();
-		propertycalc(building,cars,otherproperty);
+	$(".cars").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var building = $('#building_'+dataid).val();	
+		var cars = $('#cars_'+dataid).val();	
+		var other_property = $('#other_property_'+dataid).val();	
+		//$('#totalretirement_'+dataid).text(parseFloat(retirement_funds));
+		propertycalc(building,cars,other_property,dataid);
 	});
-	$("#otherproperty").focusout(function(){
-		var building = $("#building").val();
-		var cars = $("#cars").val();
-		var otherproperty = $("#otherproperty").val();
-		propertycalc(building,cars,otherproperty);
+	$(".other_property").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var building = $('#building_'+dataid).val();	
+		var cars = $('#cars_'+dataid).val();	
+		var other_property = $('#other_property_'+dataid).val();	
+		//$('#totalretirement_'+dataid).text(parseFloat(retirement_funds));
+		propertycalc(building,cars,other_property,dataid);
 	});
-	function propertycalc(check,save,mutualfunds)
+	
+	
+	function propertycalc(building,cars,other_property,dataid)
 	{
-		if(check != '' && save != '' && mutualfunds != '')
+		if(building != '' && cars != '' && other_property != '')
 		{
-			$('#totalproperty').text(parseFloat(check) + parseFloat(save) + parseFloat(mutualfunds));
+			$('#totalproperty_'+dataid).text(parseFloat(building) + parseFloat(cars) + parseFloat(other_property));
+			totalAssets(dataid);
 		}
+	}
+	
+	function totalAssets(dataid)
+	{
+		$('#totalassets_'+dataid).text(	
+			parseFloat($('#totalproperty_'+dataid).html())+
+			parseFloat($('#totalretirement_'+dataid).html())+
+			parseFloat($('#totalinvestment_'+dataid).html())+
+			parseFloat($('#totalcash_'+dataid).html())
+		);
+		setTimeout(function(){ totalassets_changemom(dataid); totalliabilities_changemom(dataid); }, 1000);
+		totalNetworth(dataid);
+		totalassestUpdates(dataid);
+	}
+	function totalassets_changemom(dataid)
+	{
+		var counter = 12 - dataid; 
+		for($i = dataid; $i <= dataid+counter; $i++)
+		{
+			var current = parseFloat($('#totalassets_'+$i).html());
+			var prev = parseFloat($('#totalassets_'+($i-1)).html());
+			$('#assetsmom_'+$i).text(prev - current);
+		}
+	}
+	
+	//Working //	
+	function totalassestUpdates(dataid)
+	{
+		var checking_account 		= parseFloat($('#checking_account_'+dataid).val());
+		var savings_account 		= parseFloat($('#savings_account_'+dataid).val());
+		var mutual_funds 			= parseFloat($('#mutual_funds_'+dataid).val());
+		var securities 				= parseFloat($('#securities_'+dataid).val());
+		var other_investments 		= parseFloat($('#other_investments_'+dataid).val());
+		var retirement_funds 		= parseFloat($('#retirement_funds_'+dataid).val());
+		var building 				= parseFloat($('#building_'+dataid).val());
+		var cars 					= parseFloat($('#cars_'+dataid).val());
+		var other_property 			= parseFloat($('#other_property_'+dataid).val());
+		
+		$.ajax({
+			type: "post",
+			url: baseHref+"account/totalassestUpdates",
+			data: {
+				checking_account: checking_account,
+				savings_account: savings_account,
+				mutual_funds: mutual_funds,
+				securities: securities,
+				other_investments: other_investments,
+				retirement_funds: retirement_funds,
+				building: building,
+				cars: cars,
+				other_property: other_property,
+				selectYear : $('#selectYear').val(),
+				monthid : dataid
+			},
+			success: function(data){
+				//alert(data);
+				//hideloader();
+			}
+		});		
+		
 	}
 	
 	//Liabilities - Investment Debt
-	$("#mortgage").focusout(function(){
-		var mortgage = $("#mortgage").val();
-		var studentloandebt = $("#studentloandebt").val();
-		var carloans = $("#carloans").val();
-		var creditcarddebt = $("#creditcarddebt").val();
-		var otherliabilities = $("#otherliabilities").val();
-		liabilitiescalc(mortgage,studentloandebt,carloans,creditcarddebt,otherliabilities);
+	
+	$(".mortgage").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var mortgage = $('#mortgage_'+dataid).val();	
+		var student_debt = $('#student_debt_'+dataid).val();	
+		var car_loans = $('#car_loans_'+dataid).val();	
+		var credit_card = $('#credit_card_'+dataid).val();	
+		var other_liabilities = $('#other_liabilities_'+dataid).val();	
+		liabilitiescalc(mortgage,student_debt,car_loans,credit_card,other_liabilities,dataid);
 	});
-	$("#studentloandebt").focusout(function(){
-		var mortgage = $("#mortgage").val();
-		var studentloandebt = $("#studentloandebt").val();
-		var carloans = $("#carloans").val();
-		var creditcarddebt = $("#creditcarddebt").val();
-		var otherliabilities = $("#otherliabilities").val();
-		liabilitiescalc(mortgage,studentloandebt,carloans,creditcarddebt,otherliabilities);
+	$(".student_debt").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var mortgage = $('#mortgage_'+dataid).val();	
+		var student_debt = $('#student_debt_'+dataid).val();	
+		var car_loans = $('#car_loans_'+dataid).val();	
+		var credit_card = $('#credit_card_'+dataid).val();	
+		var other_liabilities = $('#other_liabilities_'+dataid).val();	
+		liabilitiescalc(mortgage,student_debt,car_loans,credit_card,other_liabilities,dataid);
 	});
-	$("#carloans").focusout(function(){
-		var mortgage = $("#mortgage").val();
-		var studentloandebt = $("#studentloandebt").val();
-		var carloans = $("#carloans").val();
-		var creditcarddebt = $("#creditcarddebt").val();
-		var otherliabilities = $("#otherliabilities").val();
-		liabilitiescalc(mortgage,studentloandebt,carloans,creditcarddebt,otherliabilities);
+	$(".car_loans").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var mortgage = $('#mortgage_'+dataid).val();	
+		var student_debt = $('#student_debt_'+dataid).val();	
+		var car_loans = $('#car_loans_'+dataid).val();	
+		var credit_card = $('#credit_card_'+dataid).val();	
+		var other_liabilities = $('#other_liabilities_'+dataid).val();	
+		liabilitiescalc(mortgage,student_debt,car_loans,credit_card,other_liabilities,dataid);
 	});
-	$("#creditcarddebt").focusout(function(){
-		var mortgage = $("#mortgage").val();
-		var studentloandebt = $("#studentloandebt").val();
-		var carloans = $("#carloans").val();
-		var creditcarddebt = $("#creditcarddebt").val();
-		var otherliabilities = $("#otherliabilities").val();
-		liabilitiescalc(mortgage,studentloandebt,carloans,creditcarddebt,otherliabilities);
+	$(".libcredit_card").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var mortgage = $('#mortgage_'+dataid).val();	
+		var student_debt = $('#student_debt_'+dataid).val();	
+		var car_loans = $('#car_loans_'+dataid).val();	
+		var credit_card = $('#credit_card_'+dataid).val();	
+		var other_liabilities = $('#other_liabilities_'+dataid).val();	
+		liabilitiescalc(mortgage,student_debt,car_loans,credit_card,other_liabilities,dataid);
 	});
-	$("#otherliabilities").focusout(function(){
-		var mortgage = $("#mortgage").val();
-		var studentloandebt = $("#studentloandebt").val();
-		var carloans = $("#carloans").val();
-		var creditcarddebt = $("#creditcarddebt").val();
-		var otherliabilities = $("#otherliabilities").val();
-		liabilitiescalc(mortgage,studentloandebt,carloans,creditcarddebt,otherliabilities);
+	$(".other_liabilities").focusout(function(){
+		var dataid = $("#"+this.id).data('id');
+		var mortgage = $('#mortgage_'+dataid).val();	
+		var student_debt = $('#student_debt_'+dataid).val();	
+		var car_loans = $('#car_loans_'+dataid).val();	
+		var credit_card = $('#credit_card_'+dataid).val();	
+		var other_liabilities = $('#other_liabilities_'+dataid).val();	
+		liabilitiescalc(mortgage,student_debt,car_loans,credit_card,other_liabilities,dataid);
 	});
 	
-	function liabilitiescalc(mortgage,studentloandebt,carloans,creditcarddebt,otherliabilities)
+	function liabilitiescalc(mortgage,student_debt,car_loans,credit_card,other_liabilities,dataid)
 	{
-		if(mortgage != '' && studentloandebt != '' && carloans != '' && creditcarddebt != '' && otherliabilities != '')
+		if(mortgage != '' && student_debt != '' && car_loans != '' && credit_card != '' && other_liabilities != '')
 		{
-			$('#totalliabilities').text(parseFloat(mortgage) + parseFloat(studentloandebt) + parseFloat(carloans)+ parseFloat(creditcarddebt) + parseFloat(otherliabilities));
+			$('#totalliabilities_'+dataid).text(parseFloat(mortgage) + parseFloat(student_debt) + parseFloat(car_loans)+ parseFloat(credit_card) + parseFloat(other_liabilities));
+			setTimeout(function(){ totalassets_changemom(dataid); totalliabilities_changemom(dataid); }, 1000);
+			totalNetworth(dataid);
+		}
+	}
+	function totalliabilities_changemom(dataid)
+	{
+		var counter = 12 - dataid; 
+		for($i = dataid; $i <= dataid+counter; $i++)
+		{
+			var current = parseFloat($('#totalliabilities_'+$i).html());
+			var prev = parseFloat($('#totalliabilities_'+($i-1)).html());
+			$('#totalliabilitiesmom_'+$i).text(prev - current);
+		}
+	}
+	function totalNetworth(dataid)
+	{
+		//alert(dataid);
+		var totalassest = parseFloat($('#totalassets_'+dataid).html());
+		var totalliabilities = parseFloat($('#totalliabilities_'+dataid).html());
+		// alert(totalassest);
+		// alert(totalliabilities);
+		$('#totalnetworth_'+dataid).text(totalassest - totalliabilities);
+		totalNetworth_changemom(dataid);
+	}
+	function totalNetworth_changemom(dataid)
+	{
+		var counter = 12 - dataid; 
+		for($i = dataid; $i <= dataid+counter; $i++)
+		{
+			var current = parseFloat($('#totalnetworth_'+$i).html());
+			var prev = parseFloat($('#totalnetworth_'+($i-1)).html());
+			$('#totalNetworthmom_'+$i).text(prev - current);
 		}
 	}
 	
+	
+		
 //Where you stand jquery calculations//
 
 //where are you going//
@@ -2121,6 +2240,25 @@ function onPersonalMonthlyBudget(id){
 			$('.totalexpenses').html(localdata[0].totalexpenses);
 			$('.leftovermoney').html('$ '+localdata[0].leftover);
 			//hideloader();
+		}
+	});	
+}
+
+function onNetWorth(id){
+	showloader();
+	$.ajax({
+		type: "post",
+		url: baseHref+"account/onNetWorth",
+		data: {
+			monthyear: id
+		},
+		success: function(data){
+			localdata = JSON.parse(data);
+			//console.log(localdata);
+			$('.totalassets').html(localdata[0].totalassets);
+			$('.totalliabilities').html(localdata[0].totalliabilities);
+			$('.networth').html('$ '+localdata[0].networth);
+			hideloader();
 		}
 	});	
 }

@@ -67,21 +67,72 @@ $(document).ready(function () {
 					
                   
                         <div class="col-md-2-new" style="background-color: blue;">
+						<?php 
+						
+						$param['monthyear'] = date("n").'_'.date("y");
+						$param['user_id'] = $this->session->userdata('usr_id');
+						$json = $this->account_model->onNetWorth($param);
+						$json1 = json_decode($json,true);
+						//var_dump($json1);
+					
+					
+						$totalassets = $json1['0']['totalassets'];
+						$totalliabilities = $json1['0']['totalliabilities'];
+						$networth = $json1['0']['networth'];
+						
+						
+						?>
+						<script>
+							$(function() {
+								$('.date-picker1').datepicker( {
+									changeMonth: true,
+									changeYear: true,
+									showButtonPanel: false,
+									dateFormat: 'MM yy',
+									onClose: function(dateText, inst) { 
+										$(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+										var year = inst.selectedYear.toString().substring(2, 4);
+										var month = inst.selectedMonth + 1;
+										
+										onNetWorth(month+"_"+year);
+										onNetWorthGraphChange(year);
+										
+									},
+									beforeShow: function() {
+									   if ((selDate = $(this).val()).length > 0) 
+									   {
+										  iYear = selDate.substring(selDate.length - 4, selDate.length);
+										  iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), 
+										  $(this).datepicker('option', 'monthNames'));
+										  $(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+										  $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+									   }
+									}
+								});
+								$('.date-picker1').datepicker('setDate', new Date());
+							});
+							</script>
+							<style>
+							.ui-datepicker-calendar {
+								display: none;
+							}
+							</style>
+							
+						
+						
                             <div class="col-md-12 knob-container" style="background-color: blue;text-align: center;color:white;">
                                 <h5 style="border-bottom: 1px solid white; padding-bottom: 10px; font-size: 13px;">Net Worth</h5>
 <!--                                <input class="knob" data-width="200" data-min="0" data-max="4500" data-displayPrevious="true" value="3299" data-fgColor="#efbf59" data-readOnly=true;>-->
 
                                    <div class="form-group">
+                                            <input class="form-control date-picker1" name="startnetworthDate" id="startnetworthDate"  />
                                             
-                                            <select class="form-control" id="sel1" >
-                                              <option>Select Month</option>
-                                            </select>
                                           </div>
                                 <div class="col-md-7 col-xs-7 col-sm-7 col-lg-7" style="background-color: cornflowerblue;margin-top: 8px;"><p style="font-size: 9px;/* padding-top: 6px; */margin-top: 7px;line-height: 11px;width: 49px;">Total Asset:</p></div>
-                                <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 8px;"><p style="font-size: 9px;color: black;padding-top: 6px;width: 45px;text-align: right;margin-left: -12px;">204,496.00</p></div>
+                                <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 8px;"><p style="font-size: 9px;color: black;padding-top: 6px;width: 45px;text-align: right;margin-left: -12px;" class="totalassets"><?php echo $totalassets; ?></p></div>
                                 
                                 <div class="col-md-7 col-xs-7 col-sm-7 col-lg-7" style="background-color: cornflowerblue;margin-top: 5px;"><p style="font-size: 9px;/* padding-top: 6px; */margin-top: 6px;line-height: 12px;width: 73px;margin-left: -17px;">Total Liability:</p></div>
-                                <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 5px;"><p style="font-size: 9px;color: black;padding-top: 6px;width: 45px;text-align: right;margin-left: -12px;">204,496.00</p></div>
+                                <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 5px;"><p style="font-size: 9px;color: black;padding-top: 6px;width: 45px;text-align: right;margin-left: -12px;"  class="totalliabilities"><?php echo $totalliabilities; ?></p></div>
 
 								
 								
@@ -90,11 +141,11 @@ $(document).ready(function () {
                             </div>
 								<div class="col-md-12 knob-container hidden-md hidden-lg" style="background-color: blue;text-align: center;color:white;margin-top: 81px;">
 							  <h5 style="border-bottom: 1px solid white;padding-bottom: 10px;font-size: 13px;margin-top: 10px;">Net Worth</h5>
-								<h5 style="">$25,620.00</h5>
+								<h5 style="" class="networth">$<?php echo $networth; ?></h5>
                             </div>
 							<div class="col-md-12 knob-container  hidden-xs hidden-sm" style="background-color: blue;text-align: center;color:white;">
 							  <h5 style="border-bottom: 1px solid white;padding-bottom: 10px;font-size: 13px;margin-top: 10px;">Net Worth</h5>
-								<h5 style="">$25,620.00</h5>
+								<h5 style="" class="networth">$<?php echo $networth; ?></h5>
                             </div>
                         </div>
 
@@ -109,18 +160,11 @@ $(document).ready(function () {
                                             
 												<?php 
 												
-												//$param['monthyear'] = '3_16';//date("n").'_'.date("y");
 												$param['monthyear'] = date("n").'_'.date("y");
 												$param['user_id'] = $this->session->userdata('usr_id');
 												$json = $this->account_model->onPersonalMonthlyBudget($param);
-												 $json1 = json_decode($json,true);
-												 //var_dump($json1);
-												 // echo $json1['0']['totalincome'];
-												 // echo $json1['0']['totalexpenses'];
+												$json1 = json_decode($json,true);
 												
-												//var_dump($json1);
-												//echo $json1[0]->['totalincome'];
-												//echo $json->['totalincome'];
 												?>
 												<script>
 												$(function() {
@@ -438,25 +482,55 @@ $(document).ready(function () {
  -->
     <script type="text/javascript">
 	//***1
-      google.charts.load('current', {packages: ['corechart', 'bar']});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-			  ['Month', 'Net Worth'],
-			  ['Jan',  1000],
-			  ['Feb',  1170],
-			  ['Mar',  660],
-			  ['Apr',  1030],
-			  ['May',  800],
-			  ['June',  730],
-			  ['July',  430],
-			  ['Aug',  530],
-			  ['Sept',  930],
-			  ['Oct',  230],
-			  ['Nov',  130],
-			  ['Dec',  630]
-			]);
+	google.charts.load('current', {packages: ['corechart', 'bar']});
+	// google.charts.setOnLoadCallback(drawChart);
+	// function drawChart() {
+        // var data = google.visualization.arrayToDataTable([
+			  // ['Month', 'Net Worth'],
+			  // ['Jan',  1000],
+			  // ['Feb',  1170],
+			  // ['Mar',  660],
+			  // ['Apr',  1030],
+			  // ['May',  800],
+			  // ['June',  730],
+			  // ['July',  430],
+			  // ['Aug',  530],
+			  // ['Sept',  930],
+			  // ['Oct',  230],
+			  // ['Nov',  130],
+			  // ['Dec',  630]
+			// ]);
 
+        // var options = {
+          // title: 'NET WORTH',
+          // hAxis: {title: 'Month',  titleTextStyle: {color: '#333'}},
+          // vAxis: {minValue: 0}
+        // };
+
+        // var chart = new google.visualization.AreaChart(document.getElementById('chart_div_area'));
+        // chart.draw(data, options);
+		
+		// function resizeHandler () {
+			// chart.draw(data, options);
+		// }
+		// if (window.addEventListener) {
+			// window.addEventListener('resize', resizeHandler, false);
+		// }
+		// else if (window.attachEvent) {
+			// window.attachEvent('onresize', resizeHandler);
+		// }
+	// }
+	google.charts.setOnLoadCallback(drawChart);
+	function drawChart() {
+	
+		var jsonData = $.ajax({
+			  url: baseHref+"account/networthgraph/<?php echo date('y'); ?>/<?php echo $this->session->userdata('usr_id'); ?>",
+			  dataType: "json",
+			  async: false
+		}).responseText;
+	
+		var data = new google.visualization.DataTable(jsonData);
+		//var data = new google.visualization.arrayToDataTable(jsonData);
         var options = {
           title: 'NET WORTH',
           hAxis: {title: 'Month',  titleTextStyle: {color: '#333'}},
@@ -475,13 +549,44 @@ $(document).ready(function () {
 		else if (window.attachEvent) {
 			window.attachEvent('onresize', resizeHandler);
 		}
-			
-      }
-	 //***2 
+	}
+	
+	//google.charts.setOnLoadCallback(onNetWorthGraphChange());
+	function onNetWorthGraphChange(year) {
+	
+	var jsonData = $.ajax({
+          url: baseHref+"account/networthgraph/"+year+"/<?php echo $this->session->userdata('usr_id'); ?>",
+		  dataType: "json",
+          async: false
+          }).responseText;
+		  
+		var data = new google.visualization.DataTable(jsonData);
+		console.log(data);
+        var options = {
+          title: 'NET WORTH',
+          hAxis: {title: 'Month',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div_area'));
+        chart.draw(data, options);
+		
+		function resizeHandler () {
+			chart.draw(data, options);
+		}
+		if (window.addEventListener) {
+			window.addEventListener('resize', resizeHandler, false);
+		}
+		else if (window.attachEvent) {
+			window.attachEvent('onresize', resizeHandler);
+		}
+	}
+	
+	 //***2 page load
 	google.charts.setOnLoadCallback(drawTrendlines);
 	function drawTrendlines() {
 		
-	 var jsonData = $.ajax({
+	var jsonData = $.ajax({
           url: baseHref+"account/monthlygraph/<?php echo date('y'); ?>/<?php echo $this->session->userdata('usr_id'); ?>",
 		  dataType: "json",
           async: false
@@ -521,7 +626,8 @@ $(document).ready(function () {
 		}
 		
 	}
-	google.charts.setOnLoadCallback(onMonthlyGraphChange(year));
+	
+	//google.charts.setOnLoadCallback(onMonthlyGraphChange());
 	function onMonthlyGraphChange(year)
 	{
 		var jsonData = $.ajax({
@@ -564,73 +670,6 @@ $(document).ready(function () {
 			window.attachEvent('onresize', resizeHandler);
 		}
 	}
+	
     </script>
-	<?php //var_dump($this->account_model->graph()); ?>
-	<script type="text/javascript">
-        /*var can, ctx,
-            minVal, maxVal,
-            xScalar, yScalar,
-            numSamples, y;
-        // data sets -- set literally or obtain from an ajax call
-        var dataName = [ "" ];
-        var dataValue = [ 78 ];
- 
-        function init() {
-            // set these values for your data
-            numSamples = 4;
-            maxVal = 100;
-            var stepSize = 20;
-            var colHead = 50;
-            var rowHead = 60;
-            var margin = 10;
-            var header = ""
-            can = document.getElementById("can");
-            ctx = can.getContext("2d");
-            ctx.fillStyle = "white"
-            yScalar = (can.height - colHead - margin) / (maxVal);
-            xScalar = (can.width - rowHead) / (numSamples + 1);
-            ctx.strokeStyle = "rgba(255,255,255, 0.5)";//"rgba(128,128,255, 0.5)"; // light blue line
-            ctx.beginPath();
-            // print  column header
-            ctx.font = "7pt Helvetica"
-            ctx.fillText(header, 0, colHead - margin);
-            // print row header and draw horizontal grid lines
-            ctx.font = "6pt Helvetica"
-            var count =  0;
-            for (scale = maxVal; scale >= 0; scale -= stepSize) {
-                y = colHead + (yScalar * count * stepSize);
-                ctx.fillText(scale, margin,y + margin);
-                ctx.moveTo(rowHead, y)
-                //ctx.lineTo(can.width, y)
-                count++;
-            }
-            ctx.stroke();
-			 // label samples
-            ctx.font = "7pt Helvetica";
-            ctx.textBaseline = "bottom";
-            for (i = 0; i < 4; i++) {
-                calcY(dataValue[i]);
-                ctx.fillText(dataName[i], xScalar * (i + 1), y - margin);
-            }
-            // set a color and a shadow
-            ctx.fillStyle = "#fff";
-            //ctx.shadowColor = 'rgba(128,128,128, 0.5)';
-            ctx.shadowOffsetX = 20;
-            ctx.shadowOffsetY = 1;
-            // translate to bottom of graph and scale x,y to match data
-            ctx.translate(0, can.height - margin);
-            ctx.scale(xScalar, -1 * yScalar);
-            // draw bars
-            for (i = 0; i < 4; i++) {
-                ctx.fillRect(i + 1, 0, 0.5, dataValue[i]);
-            }
-        }
- 
-        function calcY(value) {
-            y = can.height - value * yScalar;
-        }
-		
-		$(document).ready(function(){
-			init();
-		});*/
-    </script>
+	

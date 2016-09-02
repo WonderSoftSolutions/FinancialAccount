@@ -1238,6 +1238,54 @@ class Account_model extends CI_Model {
 		);
 		$this->db->insert_batch('expenses', $data); 
 	}
+	
+	function onNetWorth($param)
+	{
+		$b=array();
+		$array = explode('_',$param['monthyear']);
+		
+		$month = $array[0];
+		$year = $array[1];
+		
+		$query = $this->db->query("SELECT checking_account+savings_account+mutual_funds+securities+other_investments+retirement_funds+building+cars+other_property as totalassets FROM `assets` where year = '$year' and month = '$month' and user_id = '".$param['user_id']."' ");
+		
+		
+ 		$totalassets = 0;
+		if($query->num_rows() > 0)
+		{	
+			$row = $query->row_array();
+			$totalassets = $row['totalassets'];
+		}
+		$b['totalassets'] = $this->currencyconverter($totalassets);
+		$sql = "
+		select 
+			mortgage 			 
+			+ student_debt 			
+			+ car_loans 		
+			+ credit_card 		
+			+ other_liabilities
+			
+			as totalliabilities
+			 FROM `liabilities` where year = '$year' and month = '$month' and user_id = '".$param['user_id']."' 
+		";
+		
+		$query = $this->db->query($sql);
+		
+		$totalliabilities = 0;
+		if($query->num_rows() > 0)
+		{	
+			$row = $query->row_array();
+			$totalliabilities = $row['totalliabilities'];
+		}
+		$b['totalliabilities'] = $this->currencyconverter($totalliabilities);
+		$networth = $totalassets - $totalliabilities;
+		$b['networth'] = $this->currencyconverter($networth);
+		
+		$a = array();
+		array_push($a,$b);
+		return  json_encode($a);
+	}
+	
 	function onPersonalMonthlyBudget($param)
 	{
 		$b=array();
@@ -1406,21 +1454,411 @@ from revenue left join expenses on revenue.month = expenses.month and expenses.y
 		return $jsonTable;
 	}
 	
+	function networthgraph($param)
+	{
+		$user_id = $param['user_id'];
+		$year = $param['year'];
+		
+		$sql = "select assets.month as 'Month', (checking_account+savings_account+mutual_funds+securities+other_investments+retirement_funds+building+cars+other_property) 
+			-
+			( mortgage 			 
+			+ student_debt 			
+			+ car_loans 		
+			+ credit_card 		
+			+ other_liabilities		
+				)
+			as 'networth'
+from liabilities left join assets on liabilities.month = assets.month and assets.year = liabilities.year  where liabilities.year = '$year' and liabilities.user_id = '$user_id' and assets.year = '$year' and assets.user_id = '$user_id' group by month ";
+
+
+		$query = $this->db->query($sql);
+		//return json_encode($query->result_array());
+		//$data = $query->result_array();
+			//print_r($this->db->last_query());
+		$table = array();
+		$table['cols'] = array(
+			/* define your DataTable columns here
+			 * each column gets its own array
+			 * syntax of the arrays is:
+			 * label => column label
+			 * type => data type of column (string, number, date, datetime, boolean)
+			 */
+			// I assumed your first column is a "string" type
+			// and your second column is a "number" type
+			// but you can change them if they are not
+			array('label' => 'Month', 'type' => 'string'),
+			array('label' => 'Net Worth', 'type' => 'number')
+			
+		);
+		
+		$rows = array();
+		$reuslt = $query->result_array();
+		//print_r($reuslt); die();
+		foreach($reuslt as $r) {
+		
+			$temp = array();
+			// each column needs to have data inserted via the $temp array
+			$month = date('F', mktime(0,0,0,$r['Month'], 1, date('Y')));
+			$temp[] = array("v"=>substr($month,0,3));
+			$temp[] = array("v"=>(int)$r['networth']);
+			
+			// insert the temp array into $rows
+			$rows[] = array('c' => $temp);
+		}
+		// populate the table with rows of data
+		$table['rows'] = $rows;
+
+		// encode the table as JSON
+		$jsonTable = json_encode($table);
+		// set up header; first two prevent IE from caching queries
+
+		header('Cache-Control: no-cache, must-revalidate');
+		header('Content-type: application/json');
+
+		// return the JSON data
+		return $jsonTable;
+	}
+	
 	function currencyconverter($number)
 	{
 		setlocale(LC_MONETARY, 'en_IN');
 		return number_format($number, 2);
 	}
 	
+	function totalassestUpdates($users)
+	{
+		$this->db->where('user_id', $users['user_id']);
+		$this->db->where('year', $users['year']);
+		$this->db->where('month', $users['month']);
+		$query = $this->db->get('assets');
+		
+		//$query = $this->db->query("select * from revenue where user_id = '$userid' and year= '".$users['year']."' and month= '".$users['month']."' ");
+		$users['status'] = 1;
+		if($query->num_rows() > 0)
+		{
+			$this->db->where('user_id', $users['user_id']);
+			$this->db->where('year', $users['year']);
+			$this->db->where('month', $users['month']);
+			$this->db->update('assets', $users);
+		}
+		else{
+			$this->assetesDummy($users);
+			$this->insertDummyliabilities($users);
+			
+			$this->db->where('user_id', $users['user_id']);
+			$this->db->where('year', $users['year']);
+			$this->db->where('month', $users['month']);
+			$this->db->update('assets', $users);
+		}
+		
+	}
+	
+	function insertDummyliabilities($users)
+	{
+		$zero = '0';
+		$data = array(
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '1' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '2' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '3' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '4' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '5' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '6' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '7' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '8' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '9' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '10' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '11' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'mortgage' => $zero ,
+				'student_debt' => $zero ,
+				'car_loans' => $zero,
+				'credit_card' => $zero,
+				'other_liabilities' => $zero,
+				'year' => $users['year'] ,
+				'month' => '12' ,
+				'user_id' => $users['user_id']
+			)				
+		);
+		$this->db->insert_batch('liabilities', $data); 
+	}
+	
+	function assetesDummy($users)
+	{
+		$zero = '0';
+		$data = array(
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '1' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '2' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '3' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '4' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '5' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '6' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '7' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '8' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '9' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '10' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '11' ,
+				'user_id' => $users['user_id']
+			),
+			array(
+				'checking_account' => $zero ,
+				'savings_account' => $zero ,
+				'mutual_funds' => $zero,
+				'securities' => $zero,
+				'other_investments' => $zero,
+				'retirement_funds' => $zero,
+				'building' => $zero,
+				'cars' => $zero,
+				'other_property' => $zero,
+				'year' => $users['year'] ,
+				'month' => '12' ,
+				'user_id' => $users['user_id']
+			)				
+		);
+		$this->db->insert_batch('assets', $data); 
+	}
+	
 	function debtpayment($param)//nosnowball
 	{
-		// $param['amount'] = "27141.00";
-		// $param['rate'] = "0.0499";
-		// $param['payment'] = "450.00";
-		
-		// $param['postmonth'] = $this->input->post('month');
-		// $param['postselectYear'] = $this->input->post('selectYear');
-		
 		$param['interestamount'] = $param['rate'] / 12;
 		$param['firststep'] = ($param['amount'] * $param['interestamount'])/$param['payment'];
 		$param['firstlog'] = 1 - $param['firststep'];
@@ -1428,15 +1866,53 @@ from revenue left join expenses on revenue.month = expenses.month and expenses.y
 		$param['2ndstep'] = "start";
 		$param['calclog'] = $param['interestamount'] + 1;
 		$param['ndlog10'] = log10($param['calclog']);
-		
-		
 		$param['months'] = round( -($param['log10'] / $param['ndlog10']));
 		$time = strtotime(date("Y/m/d"));
 		//$param['futuredate'] = date('F Y', strtotime("+".$param['months']." month", $time));
-		
 		$param['futuredate'] = date('F Y', mktime(0,0,0,$param['months'], 1, date($param['postselectYear'])));
+		
+		//Rate//
+		
+		$param['interestpaid'] = ($param['interestamount']  * $param['amount']);
+		
+		// for($i = 0; $i <= $param['months'];$i++)
+		// {
+			// //$param['$i'.$i] = "Amount-".$param['amount'] ."interest-". $param['interestpaid'] ."balance-".$param['amount'] - ($param['payment'] - $param['interestpaid']);
+			// //Step 1
+			
+			// $newamount = $param['amount'] - ($param['payment'] - $param['interestpaid']);
+			// $balance = $newamount - ($param['interestamount']  * $newamount);
+			// $param[$i.'-interest-for-'.$newamount ] = 'Interest-'.($param['interestamount']  * $newamount)."-Balance-".$balance;
+		// }
+
 		echo json_encode($param);
 		
+		
+		
+// first amount = 8000 
+
+// 295 - 93.27 = 201.73 
+
+// 8000- 201.73   = 7798.27 for next month balance ammount 
+
+// (.1399/12) * 7798.27 = for next month interest = 90.91
+
+	}
+	
+	function debtpaymentsnowballlowest($param)//snowballlowest
+	{
+		$param['interestamount'] = $param['rate'] / 12;
+		$param['firststep'] = ($param['amount'] * $param['interestamount'])/$param['payment'];
+		$param['firstlog'] = 1 - $param['firststep'];
+		$param['log10'] = log10($param['firstlog']);
+		$param['2ndstep'] = "start";
+		$param['calclog'] = $param['interestamount'] + 1;
+		$param['ndlog10'] = log10($param['calclog']);
+		$param['months'] = round( -($param['log10'] / $param['ndlog10']));
+		$time = strtotime(date("Y/m/d"));
+		//$param['futuredate'] = date('F Y', strtotime("+".$param['months']." month", $time));
+		$param['futuredate'] = date('F Y', mktime(0,0,0,$param['months'], 1, date($param['postselectYear'])));
+		return json_encode($param);
 	}
 	
 }

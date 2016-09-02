@@ -303,6 +303,31 @@ class Account extends CI_Controller {
 		echo $this->account_model->onPersonalMonthlyBudget($param);
 	}
 	
+	function onNetWorth()
+	{
+		$param['monthyear'] = $this->input->post('monthyear'); 
+		$param['user_id'] = $this->session->userdata('usr_id');
+		echo $this->account_model->onNetWorth($param);
+	}
+	
+	function networthgraph($year,$user)
+	{
+		if($year == '' && $year == null && $year == '0')
+		$year = date('y');
+		
+		if($user != '' && $user != null && $user != '0')
+		{
+			$param['year'] = $year;
+			$param['user_id'] = $user;
+			echo $this->account_model->networthgraph($param);			
+		}
+		else{
+		
+		}
+		
+	}
+	
+	
 	function monthlygraph($year,$user)
 	{
 		if($year == '' && $year == null && $year == '0')
@@ -316,10 +341,6 @@ class Account extends CI_Controller {
 			$param['user_id'] = $user;
 			echo $this->account_model->graph($param);			
 		}
-		
-		// $param['year'] = $this->input->post('year'); 
-		// $param['user_id'] = $this->input->post('userid'); 
-		//echo $this->account_model->graph($param);	
 	}
 		
 	function debtpaymentcalc()
@@ -333,4 +354,26 @@ class Account extends CI_Controller {
 		$param['payment'] = $this->input->post('payment');
 		$this->account_model->debtpayment($param);
 	}
+	
+	function totalassestUpdates()
+	{
+		$param['checking_account'] = $this->input->post('checking_account');
+		$param['savings_account'] = $this->input->post('savings_account');
+		$param['mutual_funds'] = $this->input->post('mutual_funds');
+		$param['securities'] = $this->input->post('securities');
+		$param['other_investments'] = $this->input->post('other_investments');
+		$param['retirement_funds'] = $this->input->post('retirement_funds');
+		$param['building'] = $this->input->post('building');
+		$param['cars'] = $this->input->post('cars');
+		$param['other_property'] = $this->input->post('other_property');
+		$param['year'] = $this->input->post('selectYear');
+		$param['month'] = $this->input->post('monthid');
+		$param['user_id'] = $this->session->userdata('usr_id');
+		$this->account_model->totalassestUpdates($param);
+		//echo json_encode($this->input->post());
+		//$this->assetesDummy()
+	}
+	
+	
+	
 }
