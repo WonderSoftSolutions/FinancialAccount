@@ -8,7 +8,7 @@ class Api extends REST_Controller {
 	{
 		parent::__construct();	
 		$this->load->model('account_model','email_model');
-		$this->methods['changepassword_post']['limit'] = 100; // 100 requests per hour per user/key		
+		
 	}
 	
 	public $data = array();
@@ -51,7 +51,7 @@ class Api extends REST_Controller {
 		return $emailErr;
 	}
 	
-	public function register_post()
+	public function user_register_post()
 	{
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -59,12 +59,13 @@ class Api extends REST_Controller {
 		$userAPIdata; 
 		
 		
-		$firstname = trim(urldecode($_REQUEST['firstname']));
-		$lastname = trim(urldecode($_REQUEST['lastname']));
+		$firstname = trim(urldecode($_REQUEST['first_name']));
+		$lastname = trim(urldecode($_REQUEST['last_name']));
 		$email = trim(urldecode($_REQUEST['email']));
 		$password= trim(urldecode($_REQUEST['password']));
-		$cpassword=trim(urldecode($_REQUEST['cpassword']));
-		$Registermethod=trim(urldecode($_REQUEST['Registermethod']));
+		//$cpassword=trim(urldecode($_REQUEST['cpassword']));
+		$cpassword=$password;
+		$Registermethod=trim(urldecode($_REQUEST['platform']));
 	
 		if($this->namevalidation($firstname) == false)
 		{
@@ -133,10 +134,20 @@ class Api extends REST_Controller {
 		
 		echo json_encode($a);
 	}
-		
-	function get_user_profile_post()
+	function goal_get_list_post()//API
 	{
-		$id = trim(urldecode($_REQUEST['usr_id']));
+		$status = trim(urldecode($_REQUEST['status']));
+		$user_id = trim(urldecode($_REQUEST['user_id']));
+		$a[$this->router->fetch_method()]=array();
+		$b = array();
+		$b = $this->account_model->getAllgoalsAjax($status,$user_id);
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	
+	function user_get_profile_post()
+	{
+		$id = trim(urldecode($_REQUEST['user_id']));
 		
 		//$id = $this->input->post('usr_id');
 		$a[$this->router->fetch_method()]=array();
@@ -147,12 +158,12 @@ class Api extends REST_Controller {
 		echo json_encode($a);
 	}
 	
-	function changepassword_post()
+	function user_change_password_post()
 	{
-		$password['id'] = trim(urldecode($_REQUEST['usr_id']));
-		$password['currentpassword'] = trim(urldecode($_REQUEST['currentpassword']));
-		$password['npassword'] = trim(urldecode($_REQUEST['npassword']));
-		$password['cpassword'] = trim(urldecode($_REQUEST['cpassword']));
+		$password['id'] = trim(urldecode($_REQUEST['user_id']));
+		$password['currentpassword'] = trim(urldecode($_REQUEST['current_password']));
+		$password['npassword'] = trim(urldecode($_REQUEST['new_password']));
+		$password['cpassword'] = $password['npassword']; //trim(urldecode($_REQUEST['cpassword']));
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -171,8 +182,8 @@ class Api extends REST_Controller {
 						$utemp = $this->account_model->get_user_profile($password['id']);
 						if($utemp != null)
 						{
-							$user['fname'] = $utemp['fname'];
-							$user['lname'] = $utemp['lname'];
+							$user['fname'] = $utemp['first_name'];
+							$user['lname'] = $utemp['last_name'];
 							$user['email'] = $utemp['email'];
 							$email['mailbody'] = $this->email_model->ChangePwdHTML($user);
 							$email['subject'] = 'Password Changed Notification - Advecion';
@@ -208,9 +219,8 @@ class Api extends REST_Controller {
 		echo json_encode($a);
 	}
 	
-	function check_email_post()
+	function user_check_email_post()
 	{
-	
 		$email = trim(urldecode($_REQUEST['email']));
 		
 		$a[$this->router->fetch_method()]=array();
@@ -229,9 +239,9 @@ class Api extends REST_Controller {
 		}
 		echo json_encode($a);
 	}
-	function logout_post()
+	function user_logout_post()
 	{
-		$id = trim(urldecode($_REQUEST['usr_id']));
+		$id = trim(urldecode($_REQUEST['user_id']));
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -260,7 +270,7 @@ class Api extends REST_Controller {
 		echo json_encode($a);
 	}
 	
-	function recover_post() {
+	function user_recover_post() {
 	
 		$email = trim(urldecode($_REQUEST['email']));	
 	
@@ -281,7 +291,7 @@ class Api extends REST_Controller {
 		echo json_encode($a);
 	}
 	
-	function login_post()
+	function user_login_post()
 	{
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -305,7 +315,7 @@ class Api extends REST_Controller {
 		echo json_encode($a);
 	}
 	
-	function allterms_post()
+	function goal_all_terms_post()
 	{
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
@@ -317,17 +327,17 @@ class Api extends REST_Controller {
 		echo json_encode($a);
 		
 	}
-	function goaladdingbyuser_post(){
+	function goal_add_item_post(){
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
 		
-		$users['id_goal'] = trim(urldecode($_REQUEST['goalname']));	
-		$users['id_term'] = trim(urldecode($_REQUEST['termid']));	
+		$users['id_goal'] = trim(urldecode($_REQUEST['goal_name']));	
+		$users['id_term'] = trim(urldecode($_REQUEST['term_id']));	
 		$users['id_cost'] = trim(urldecode($_REQUEST['cost']));	
-		$users['id_currentsaved'] = trim(urldecode($_REQUEST['currentsaved']));	
-		$users['id_datetimepicker1'] = trim(urldecode($_REQUEST['targetdate']));	
-		$users['user_id'] = trim(urldecode($_REQUEST['usr_id']));	
+		$users['id_currentsaved'] = trim(urldecode($_REQUEST['current_saved']));	
+		$users['id_datetimepicker1'] = trim(urldecode($_REQUEST['target_date']));	
+		$users['user_id'] = trim(urldecode($_REQUEST['user_id']));	
 		
 		$param['targetdate'] = $users['id_datetimepicker1'];
 		$param['cost'] = $users['id_cost'];
@@ -344,79 +354,104 @@ class Api extends REST_Controller {
 			//success
 			$b['msg'] = 'Your Goal is Added Successfully!!!';
 			$b['short'] = 'true';
-			$b['usergoalid'] = $result;
+			$b['goal_id'] = $result;
+			$b['result'] = 'add';
 			array_push($a[$this->router->fetch_method()],$b);
 		}
 		else if($result == 'alreadyexists'){
 			$b['msg'] = 'Goal Aready Exists!!!';
 			$b['short'] = 'false';
 			$b['description'] ='This Goal Already Exists in your list!';
+			$b['result'] = 'none';
 			array_push($a[$this->router->fetch_method()],$b);
 		}
 		echo json_encode($a);
 	}
 	
-	function goaldelete_post()
+	function goal_delete_item_post()
 	{
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
 		
-		$user_goals['id'] = trim(urldecode($_REQUEST['user_goal_id']));	
+		$user_goals['id'] = trim(urldecode($_REQUEST['goal_id']));	
+		//$user_goals['goal_id'] = trim(urldecode($_REQUEST['goal_id']));	
 		$user_goals['user_id'] = trim(urldecode($_REQUEST['user_id']));	
 		$user_goals['goal_status'] = trim(urldecode($_REQUEST['status']));	
 		
 		$result = $this->account_model->goaldeleteAPI($user_goals);
-		$b['msg'] = 'Your Goal updated Successfully!!!';
+		$b['msg'] = 'Your Goal deleted Successfully!!!';
 		$b['short'] = 'true';
-		$b['usergoalid'] = $result;
+		//$b['usergoalid'] = $result;
+		$b['result'] = 'delete/deactive';
 		array_push($a[$this->router->fetch_method()],$b);
 		echo json_encode($a);
 	}
 	
-	function goaleditingbyuser_post(){
+	function goal_update_item_post(){
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
 		
-		$users['user_id'] = trim(urldecode($_REQUEST['usr_id']));	
-		$users['usergoalid'] = trim(urldecode($_REQUEST['user_goal_id']));	
-		$users['id_goal'] = trim(urldecode($_REQUEST['goalname']));	
-		$users['id_term'] = trim(urldecode($_REQUEST['termid']));	
+		$users['user_id'] = trim(urldecode($_REQUEST['user_id']));	
+		$users['usergoalid'] = trim(urldecode($_REQUEST['goal_id']));	
+		$users['id_goal'] = trim(urldecode($_REQUEST['goal_name']));	
+		$users['id_term'] = trim(urldecode($_REQUEST['term_id']));	
 		$users['id_cost'] = trim(urldecode($_REQUEST['cost']));	
-		$users['id_currentsaved'] = trim(urldecode($_REQUEST['currentsaved']));	
-		$users['id_datetimepicker1'] = trim(urldecode($_REQUEST['targetdate']));	
+		$users['id_currentsaved'] = trim(urldecode($_REQUEST['current_saved']));	
+		$users['id_datetimepicker1'] = trim(urldecode($_REQUEST['target_date']));	
 			
-		$param['targetdate'] = $users['id_datetimepicker1'];
-		$param['cost'] = $users['id_cost'];
-		$param['saved'] = $users['id_currentsaved'];
-		
-		$monthlytarget = $this->account_model->monthlytargetCalc($param);
-		
-		$key = 'id_monthtarget';
-		$users[$key] = trim(urldecode($monthlytarget));
-		
-		
-		$result = $this->account_model->goaleditingbyuser($users);
-		
-		if($result != '' && $result != '0' && $result != 'alreadyexists')
+			
+		$month['cost'] = $users['id_cost'];
+		$month['saved'] = $users['id_currentsaved'];
+		$month['targetdate'] = $users['id_datetimepicker1'];
+
+		$step1 = $month['cost'] - $month['saved'];
+		$monthsdiff = $this->account_model->datediff($month['targetdate']);
+
+		if($monthsdiff < 1)
 		{
-			//success
-			$b['msg'] = 'Your Goal is updated Successfully!!!';
-			$b['short'] = 'true';
-			$b['usergoalid'] = $result;
-			array_push($a[$this->router->fetch_method()],$b);
+			$monthsdiff = 1;
 		}
-		else if($result == 'alreadyexists'){
-			$b['msg'] = 'Goal Name Aready Exists!!!';
-			$b['short'] = 'false';
-			$b['description'] ='This Goal Name Already Exists in your list!';
-			array_push($a[$this->router->fetch_method()],$b);
+		$step2 = $step1/$monthsdiff;
+		if($step2 > $month['cost'])
+		{
+			$monthlytarget = $month['cost'];//$step2;
 		}
+		else
+		{
+			$monthlytarget =  ($step1)/$monthsdiff;
+		}
+		
+		$users['id_monthtarget'] = $monthlytarget;
+
+		$result = $this->account_model->goaleditingbyuser($users);
+
+		$b['msg'] = 'Your Goal is updated Successfully!!!';
+		$b['short'] = 'true';
+		//$b['goal_id'] = $result;
+		$b['result'] = 'update';
+		array_push($a[$this->router->fetch_method()],$b);
+		// if($result != '' && $result != '0' && $result != 'alreadyexists')
+		// {
+			// //success
+			// $b['msg'] = 'Your Goal is updated Successfully!!!';
+			// $b['short'] = 'true';
+			// //$b['goal_id'] = $result;
+			// $b['result'] = 'update';
+			// array_push($a[$this->router->fetch_method()],$b);
+		// }
+		// else if($result == 'alreadyexists'){
+			// $b['msg'] = 'Goal Name Aready Exists!!!';
+			// $b['short'] = 'false';
+			// $b['description'] ='This Goal Name Already Exists in your list!';
+			// $b['result'] = 'none';
+			// array_push($a[$this->router->fetch_method()],$b);
+		// }
 		echo json_encode($a);
 	}
-	function overallprogress_post()
+	function user_over_all_progress_post()
 	{
-		$userid = trim(urldecode($_REQUEST['usr_id']));	
+		$userid = trim(urldecode($_REQUEST['user_id']));	
 		
 		$a[$this->router->fetch_method()]=array();
 		$b['msg'] = $this->account_model->getoverallprogress($userid);
@@ -425,13 +460,13 @@ class Api extends REST_Controller {
 		array_push($a[$this->router->fetch_method()],$b);
 		echo json_encode($a);
 	}
-	
-	function totalincome_post(){
+	/*Where are you going API*/
+	function wayg_total_income_post(){
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
 		
-		$users['usr_id'] = trim(urldecode($_REQUEST['usr_id']));	
+		$users['usr_id'] = trim(urldecode($_REQUEST['user_id']));	
 		$users['wife_revenue'] = trim(urldecode($_REQUEST['wife_revenue']));	
 		$users['husband_revenue'] = trim(urldecode($_REQUEST['husband_revenue']));	
 		$users['bonuses'] = trim(urldecode($_REQUEST['bonuses']));	
@@ -445,16 +480,17 @@ class Api extends REST_Controller {
 		$b['msg'] = "Revenue saved";
 		$b['short'] = 'true';
 		$b['description'] ='Revenue saved with us';
+		$b['result'] ='add/update';
 		array_push($a[$this->router->fetch_method()],$b);
 		echo json_encode($a);
 	}
 	
-	function totalexpenses_post(){
+	function wayg_total_expenses_post(){
 		
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
 		
-		$users['user_id'] = trim(urldecode($_REQUEST['usr_id']));
+		$users['user_id'] = trim(urldecode($_REQUEST['user_id']));
 		$users['retirement'] = trim(urldecode($_REQUEST['retirement']));
 		$users['mortgage'] = trim(urldecode($_REQUEST['mortgage']));
 		$users['home_repairs'] = trim(urldecode($_REQUEST['home_repairs']));
@@ -491,6 +527,324 @@ class Api extends REST_Controller {
 		$b['msg'] = "Expenses saved";
 		$b['short'] = 'true';
 		$b['description'] ='Expenses saved with us';
+		$b['result'] ='add/update';
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	
+	function wayg_delete_item_post()
+	{
+		$a[$this->router->fetch_method()]=array();
+		$b=array();
+		$year = trim(urldecode($_REQUEST['year']));
+		$month = trim(urldecode($_REQUEST['month']));
+		$user_id = trim(urldecode($_REQUEST['user_id']));
+		
+		$zero = '0';
+		$revenue['wife_revenue'] = $zero ;
+		$revenue['husband_revenue'] = $zero ;
+		$revenue['bonuses'] = $zero;
+		$revenue['dividend'] = $zero ;
+		$revenue['other'] = $zero ;
+		$revenue['status'] = $zero;
+		
+		$this->db->where('year', $year);
+		$this->db->where('month', $month);
+		$this->db->where('user_id', $user_id);
+		$this->db->update('revenue', $revenue);
+
+		$expenses['retirement'] 			= $zero;
+		$expenses['mortgage']				= $zero;
+		$expenses['home_repairs'] 			= $zero;
+		$expenses['home_insurance'] 		= $zero;
+		$expenses['garbage'] 				= $zero;
+		$expenses['electricity'] 			= $zero;
+		$expenses['water']					= $zero;
+		$expenses['gas'] 					= $zero;
+		$expenses['internet'] 				= $zero;
+		$expenses['telephone'] 			= $zero;
+		$expenses['cable_tv'] 				= $zero;
+		$expenses['public_transportation'] = $zero;
+		$expenses['car_payment'] 			= $zero;
+		$expenses['license_plates'] 		= $zero;
+		$expenses['car_repairs'] 			= $zero;
+		$expenses['insurance'] 			= $zero;
+		$expenses['charitable'] 			= $zero;
+		$expenses['child_care'] 			= $zero;
+		$expenses['clothing'] 				= $zero;
+		$expenses['entertainment'] 		= $zero;
+		$expenses['groceries'] 			= $zero;
+		$expenses['medical'] 				= $zero;
+		$expenses['personal_barber'] 		= $zero;
+		$expenses['dry_cleaning'] 			= $zero;
+		$expenses['tithing']               = $zero;
+		$expenses['offerings']             = $zero;
+		$expenses['charities']             = $zero;
+		$expenses['personal_loan']         = $zero;
+		$expenses['credit_card']           = $zero;
+		$expenses['student_loan']          = $zero;
+		$expenses['status'] = $zero;
+		
+		$this->db->where('year', $year);
+		$this->db->where('month', $month);
+		$this->db->where('user_id', $user_id);
+		$this->db->update('expenses', $expenses);		
+		
+		$b['msg'] = "Item deleted";
+		$b['short'] = 'true';
+		$b['result'] ='delete';
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	function wayg_get_item_post()
+	{
+		$a[$this->router->fetch_method()]=array();
+		$b=array();
+		$year = trim(urldecode($_REQUEST['year']));
+		$month = trim(urldecode($_REQUEST['month']));
+		$user_id = trim(urldecode($_REQUEST['user_id']));
+		if($month == 0)
+		{
+			$sql = "SELECT 
+				expenses.id as expenses_id,
+				expenses.user_id,
+				expenses.year,
+				expenses.month,
+				expenses.retirement as expenses_retirement,
+				expenses.mortgage as expenses_mortgage,
+				expenses.home_repairs as expenses_home_repairs,
+				expenses.home_insurance as expenses_home_insurance,
+				expenses.garbage as expenses_garbage,
+				expenses.electricity as expenses_electricity,
+				expenses.water as expenses_water,
+				expenses.gas as expenses_gas,
+				expenses.internet as expenses_internet,
+				expenses.telephone as expenses_telephone,
+				expenses.cable_tv as expenses_cable_tv,
+				expenses.public_transportation as expenses_public_transportation,
+				expenses.car_payment as expenses_car_payment,
+				expenses.license_plates as expenses_license_plates,
+				expenses.car_repairs as expenses_car_repairs,
+				expenses.insurance as expenses_insurance,
+				expenses.charitable as expenses_charitable,
+				expenses.child_care as expenses_child_care,
+				expenses.clothing as expenses_clothing,
+				expenses.entertainment as expenses_entertainment,
+				expenses.groceries as expenses_groceries,
+				expenses.medical as expenses_medical,
+				expenses.personal_barber as expenses_personal_barber,
+				expenses.dry_cleaning as expenses_dry_cleaning,
+				expenses.tithing as expenses_tithing,
+				expenses.offerings as expenses_offerings,
+				expenses.charities as expenses_charities,
+				expenses.personal_loan as expenses_personal_loan,
+				expenses.credit_card as expensess_credit_card,
+				expenses.student_loan as expenses_student_loan,
+				revenue.wife_revenue as revenue_wife_revenue,
+				revenue.husband_revenue as revenue_husband_revenue,
+				revenue.bonuses as revenue_bonuses,
+				revenue.dividend as revenue_dividend,
+				revenue.other as revenue_other
+				FROM expenses inner join revenue on revenue.user_id = expenses.user_id and revenue.month = expenses.month and revenue.year = expenses.year where expenses.user_id  = '$user_id' and expenses.year = '$year' and revenue.user_id  = '$user_id' and revenue.year = '$year' ";
+		}
+		else{
+			$sql = "SELECT 
+				expenses.id as expenses_id,
+				expenses.user_id,
+				expenses.year,
+				expenses.month,
+				expenses.retirement as expenses_retirement,
+				expenses.mortgage as expenses_mortgage,
+				expenses.home_repairs as expenses_home_repairs,
+				expenses.home_insurance as expenses_home_insurance,
+				expenses.garbage as expenses_garbage,
+				expenses.electricity as expenses_electricity,
+				expenses.water as expenses_water,
+				expenses.gas as expenses_gas,
+				expenses.internet as expenses_internet,
+				expenses.telephone as expenses_telephone,
+				expenses.cable_tv as expenses_cable_tv,
+				expenses.public_transportation as expenses_public_transportation,
+				expenses.car_payment as expenses_car_payment,
+				expenses.license_plates as expenses_license_plates,
+				expenses.car_repairs as expenses_car_repairs,
+				expenses.insurance as expenses_insurance,
+				expenses.charitable as expenses_charitable,
+				expenses.child_care as expenses_child_care,
+				expenses.clothing as expenses_clothing,
+				expenses.entertainment as expenses_entertainment,
+				expenses.groceries as expenses_groceries,
+				expenses.medical as expenses_medical,
+				expenses.personal_barber as expenses_personal_barber,
+				expenses.dry_cleaning as expenses_dry_cleaning,
+				expenses.tithing as expenses_tithing,
+				expenses.offerings as expenses_offerings,
+				expenses.charities as expenses_charities,
+				expenses.personal_loan as expenses_personal_loan,
+				expenses.credit_card as expensess_credit_card,
+				expenses.student_loan as expenses_student_loan,
+				revenue.wife_revenue as revenue_wife_revenue,
+				revenue.husband_revenue as revenue_husband_revenue,
+				revenue.bonuses as revenue_bonuses,
+				revenue.dividend as revenue_dividend,
+				revenue.other as revenue_other
+				FROM expenses inner join revenue on revenue.user_id = expenses.user_id and revenue.month = expenses.month and revenue.year = expenses.year where expenses.user_id  = '$user_id' and expenses.year = '$year' and expenses.month = '$month' and revenue.user_id  = '$user_id' and revenue.year = '$year' and revenue.month = '$month'";
+		}
+		
+		$query = $this->db->query($sql);
+		$b = $query->result_array();
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	
+	/*Where you stand API*/
+	function wyst_total_assest_updates_post()
+	{	
+		$a[$this->router->fetch_method()]=array();
+		$b=array();
+		
+		$param['user_id'] = trim(urldecode($_REQUEST['user_id']));
+		$param['checking_account'] = trim(urldecode($_REQUEST['checking_account']));
+		$param['savings_account'] = trim(urldecode($_REQUEST['savings_account']));
+		$param['mutual_funds'] = trim(urldecode($_REQUEST['mutual_funds']));
+		$param['securities'] = trim(urldecode($_REQUEST['securities']));
+		$param['other_investments'] = trim(urldecode($_REQUEST['other_investments']));
+		$param['retirement_funds'] = trim(urldecode($_REQUEST['retirement_funds']));
+		$param['building'] = trim(urldecode($_REQUEST['building']));
+		$param['cars'] = trim(urldecode($_REQUEST['cars']));
+		$param['other_property'] = trim(urldecode($_REQUEST['other_property']));
+		$param['year'] = trim(urldecode($_REQUEST['year']));
+		$param['month'] = trim(urldecode($_REQUEST['month']));
+		$this->account_model->totalassestUpdates($param);
+		
+		$b['msg'] = "Assets saved";
+		$b['short'] = 'true';
+		$b['description'] ='Assets saved with us';
+		$b['result'] ='updated';
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	function wyst_total_liabilities_updates_post()
+	{
+		$a[$this->router->fetch_method()]=array();
+		$b=array();
+		
+		$param['mortgage'] = trim(urldecode($_REQUEST['mortgage']));
+		$param['student_debt'] = trim(urldecode($_REQUEST['student_debt']));
+		$param['car_loans'] = trim(urldecode($_REQUEST['car_loans']));
+		$param['credit_card'] = trim(urldecode($_REQUEST['credit_card']));
+		$param['other_liabilities'] = trim(urldecode($_REQUEST['other_liabilities']));
+		
+		$param['year'] = trim(urldecode($_REQUEST['year']));
+		$param['month'] = trim(urldecode($_REQUEST['month']));
+		$param['user_id'] = trim(urldecode($_REQUEST['user_id']));
+		$this->account_model->totalliabilitiesUpdates($param);
+		
+		$b['msg'] = "Liabilities saved";
+		$b['short'] = 'true';
+		$b['description'] ='Liabilities saved with us';
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	function wyst_delete_item_post()
+	{
+		$a[$this->router->fetch_method()]=array();
+		$b=array();
+		$year = trim(urldecode($_REQUEST['year']));
+		$month = trim(urldecode($_REQUEST['month']));
+		$user_id = trim(urldecode($_REQUEST['user_id']));
+		
+		$zero = '0';
+		$liabilites['mortgage'] = $zero ;
+		$liabilites['student_debt'] = $zero ;
+		$liabilites['car_loans'] = $zero;
+		$liabilites['credit_card'] = $zero;
+		$liabilites['other_liabilities'] = $zero;
+		$liabilites['status'] 				= $zero;
+			
+		$this->db->where('year', $year);
+		$this->db->where('month', $month);
+		$this->db->where('user_id', $user_id);
+		$this->db->update('liabilities', $liabilites);
+			
+		$assets['checking_account']		= $zero;
+		$assets['savings_account'] 		= $zero;
+		$assets['mutual_funds'] 		= $zero;
+		$assets['securities']			= $zero;
+		$assets['other_investments'] 	= $zero;
+		$assets['retirement_funds']		= $zero;
+		$assets['building'] 			= $zero;
+		$assets['cars'] 				= $zero;
+		$assets['other_property'] 		= $zero;
+		$assets['status'] 				= $zero;
+		
+		$this->db->where('year', $year);
+		$this->db->where('month', $month);
+		$this->db->where('user_id', $user_id);
+		$this->db->update('assets', $assets);		
+		
+		$b['msg'] = "Item deleted";
+		$b['short'] = 'true';
+		$b['result'] ='delete';
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	
+	function wyst_get_item_post()
+	{
+		$a[$this->router->fetch_method()]=array();
+		$b=array();
+		$year = trim(urldecode($_REQUEST['year']));
+		$month = trim(urldecode($_REQUEST['month']));
+		$user_id = trim(urldecode($_REQUEST['user_id']));
+		if($month == 0)
+		{
+			$sql = "SELECT 
+				assets.id as assets_id,
+				assets.user_id,
+				assets.year,
+				assets.month,
+				assets.checking_account as assets_checking_account,
+				assets.savings_account as assets_savings_account,
+				assets.mutual_funds as assets_mutual_funds,
+				assets.securities as assets_securities,
+				assets.other_investments as assets_other_investments,
+				assets.retirement_funds as assets_retirement_funds,
+				assets.building as assets_building,
+				assets.cars as assets_cars,
+				assets.other_property as assets_other_property,
+				liabilities.mortgage as liabilities_mortgage,
+				liabilities.student_debt as liabilities_student_debt,
+				liabilities.car_loans as liabilities_car_loans,
+				liabilities.credit_card as liabilities_credit_card,
+				liabilities.other_liabilities as liabilities_other_liabilities
+				FROM assets inner join liabilities on liabilities.user_id = assets.user_id and liabilities.month = assets.month and liabilities.year = assets.year where assets.user_id  = '$user_id' and assets.year = '$year' and liabilities.user_id  = '$user_id' and liabilities.year = '$year' ";
+		}
+		else{
+			$sql = "SELECT 
+				assets.id as assets_id,
+				assets.user_id,
+				assets.year,
+				assets.month,
+				assets.checking_account as assets_checking_account,
+				assets.savings_account as assets_savings_account,
+				assets.mutual_funds as assets_mutual_funds,
+				assets.securities as assets_securities,
+				assets.other_investments as assets_other_investments,
+				assets.retirement_funds as assets_retirement_funds,
+				assets.building as assets_building,
+				assets.cars as assets_cars,
+				assets.other_property as assets_other_property,
+				liabilities.mortgage as liabilities_mortgage,
+				liabilities.student_debt as liabilities_student_debt,
+				liabilities.car_loans as liabilities_car_loans,
+				liabilities.credit_card as liabilities_credit_card,
+				liabilities.other_liabilities as liabilities_other_liabilities
+				FROM assets inner join liabilities on liabilities.user_id = assets.user_id and liabilities.month = assets.month and liabilities.year = assets.year where assets.user_id  = '$user_id' and assets.year = '$year' and assets.month = '$month' and liabilities.user_id  = '$user_id' and liabilities.year = '$year' and liabilities.month = '$month'";
+		}
+		
+		$query = $this->db->query($sql);
+		$b = $query->result_array();
 		array_push($a[$this->router->fetch_method()],$b);
 		echo json_encode($a);
 	}

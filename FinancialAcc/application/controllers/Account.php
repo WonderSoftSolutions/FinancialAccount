@@ -9,6 +9,7 @@ class Account extends CI_Controller {
 		// header('Access-Control-Allow-Origin: *');
 		// header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 		parent::__construct();		
+
 	}
 	
 	public $data = array();
@@ -321,10 +322,7 @@ class Account extends CI_Controller {
 			$param['user_id'] = $user;
 			echo $this->account_model->networthgraph($param);			
 		}
-		else{
-		
-		}
-		
+	
 	}
 	
 	
@@ -374,6 +372,195 @@ class Account extends CI_Controller {
 		//$this->assetesDummy()
 	}
 	
+	function totalliabilitiesUpdates()
+	{
+		$param['mortgage'] = $this->input->post('mortgage');
+		$param['student_debt'] = $this->input->post('student_debt');
+		$param['car_loans'] = $this->input->post('car_loans');
+		$param['credit_card'] = $this->input->post('credit_card');
+		$param['other_liabilities'] = $this->input->post('other_liabilities');
+		
+		$param['year'] = $this->input->post('selectYear');
+		$param['month'] = $this->input->post('monthid');
+		$param['user_id'] = $this->session->userdata('usr_id');
+		$this->account_model->totalliabilitiesUpdates($param);
+		//echo json_encode($this->input->post());
+		//$this->assetesDummy()
+	}
+
+	//
+	function onStrategyChange()
+	{
+		
+		$param['jsonarray'] = $this->input->post('data');
+		$param['strategylist'] = $this->input->post('strategylist');
+		
+		$param['selectYear'] = $this->input->post('selectYear'); //postselectYear
+		$param['month'] = $this->input->post('month'); //postmonth
+		
+		$param['monthlypayment'] = $this->input->post('monthlypayment');
+		$param['mininumpayment'] = $this->input->post('mininumpayment');
+		
+		$array1 = explode('&',$param['jsonarray']);
+		$param['jsonarray'] = explode('&', $param['jsonarray']);
+		$debt_payment['usr_id'] = $this->session->userdata('usr_id');
+		$debt_payment['month'] = $param['month'];
+		$debt_payment['year'] = $param['selectYear'];
+		$debt_payment['monthly_payment'] = $param['monthlypayment'];
+		$debt_payment['minimum_payment'] = $param['mininumpayment'];
+		$debt_payment['strategy'] = $param['strategylist'];
+		$debt_payment['status'] = '1';
+		
+
+		$this->db->where('usr_id',  $debt_payment['usr_id']);
+		$this->db->where('month',  $debt_payment['month']);
+		$this->db->where('year',  $debt_payment['year']);
+		$query=$this->db->get("debt_payment");
+		
+		$insertid = 0;
+        if($query->num_rows() > 0)
+		{
+			$rows = $query->row_array();
+			$insertid = $rows['id'];
+			$this->db->query(" delete debt_payment from debt_payment where id = '$insertid' ");
+			$this->db->query(" delete dept_pay_detail from dept_pay_detail where debt_id = '$insertid' ");
+			
+			$this->db->insert('debt_payment', $debt_payment);
+			$insertid = $this->db->insert_id();
+		}
+		else{
+			$this->db->insert('debt_payment', $debt_payment);
+			$insertid = $this->db->insert_id();
+		}
+
+		
+		
+		$temp = array();
+		//$temp['debt_id'] = $insertid;
+		
+		$b = array();
+		$count = 0;
+		for($i = 0; $i < sizeof($param['jsonarray']); $i++)
+		{
+			$array = explode('=', $param['jsonarray'][$i]);
+			$key = $array[0];
+			$value = $array[1];
+			if(trim(urldecode($value)) != '' && trim(urldecode($value)) != '0')
+			{
+				$temp[trim(urldecode($key))] = trim(urldecode($value)); 
+				if($count == 3)
+				{
+					$temp['debt_id'] = $insertid;
+					$temp['status'] = 1;
+					array_push($b,$temp);
+					$count = 0;
+					$temp = array();
+				}
+				else{
+					$count = $count+1;
+				}
+			}
+		}
+		
+		$this->db->insert_batch('dept_pay_detail', $b); 
+		
+		//print_r($b);
+		$param['jsonarray'] = $this->input->post('data');
+		$data =$b;
+		foreach ($data as $key => $row) {
+			$counter = $key;
+			$balance[$key]  = $row['balance'];
+			$rate[$key] = $row['rate'];
+		}
+
+		$count = $count/4;
+		if($param['strategylist'] == "snowball") 
+		{
+			array_multisort($balance, SORT_ASC, $data);
+			$result = $this->calc_model->getResult($data, $count, $param,'snowball');
+		}
+		else if($param['strategylist'] == "Avalanche") 
+		{
+			array_multisort($rate, SORT_DESC, $data);
+			$result = $this->calc_model->getResult($data, $count, $param,'avalanche');
+		}
+		else{
+			$result = $this->calc_model->getResult($data, $count, $param,'nosnowball');
+		}
+		
+		for($i = 1; $i <= 10; $i++)		
+		{
+			$creditor = '&nbsp;';
+			$amount = '&nbsp;';
+			$futuredate = '&nbsp;';
+			$prev_month = '&nbsp;';
+			$total_interest = '&nbsp;';
+			
+			$cstmbalance = '0';
+			$cstminterest = '0';
+			
+			if($i <= sizeof($result) / 5)
+			{
+				$creditor = $result['creditor'.$i];
+				$amount = $result['amount'.$i];
+				$futuredate = $result['futuredate'.$i];
+				$prev_month = $result['prev_month'.$i];
+				$total_interest = $result['total_interest'.$i];
+				
+				$cstminterest = $result['cstminterest'];
+				$cstmbalance = $result['cstmbalance'];
+			}
+			?>
+			<tr>
+				<th scope="row"><?php echo $i; ?></th>
+				<td id="creditor<?php echo $i; ?>"><?php echo $creditor ?></td>
+				<td id="balance<?php echo $i; ?>"><?php echo $amount; ?></td>
+				<td id="months<?php echo $i; ?>"><?php echo $prev_month; ?></td>
+				<td id="date<?php echo $i; ?>"><?php echo $futuredate; ?></td>
+				<td id="interest<?php echo $i; ?>"><?php echo $total_interest; ?></td>
+			</tr>
+			<?php
+			if($i == 10)
+			{
+			
+				?>
+					<tr>
+					<th></th>
+					  <td>Total</td>
+					  <td> $<span  id="balance_total"><?php echo  $result['cstmbalance'] ?></span> </td>
+					  <td></td>
+					  <td></td>
+					  <td> $<span  id="interest_total"><?php echo $result['cstminterest']; ?></span> </td>
+					</tr>
+				<?php
+			}
+		}
+		
+	}	
 	
+	function getDebtPayment()
+	{
+		$a[$this->router->fetch_method()]=array();
+		$b=array();
+	
+
+		
+		$b['html'] = $this->account_model->getDebtPayment($row);
+		$b['row'] = $row;
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	
+	function inventoryaddingbyuser()
+	{
+		
+		$inventory['item_name'] = $this->input->post('item_name');
+		$inventory['unit_price'] = $this->input->post('unit_price');
+		$inventory['quantity_stock'] = $this->input->post('quantity_stock');
+		$inventory['total_price'] = $this->input->post('total_price');
+		$inventory['inventory_value'] = $this->input->post('inventory_value');
+		$inventory['description'] = $this->input->post('description');
+		echo $this->account_model->inventoryaddingbyuser($inventory);
+	}
 	
 }

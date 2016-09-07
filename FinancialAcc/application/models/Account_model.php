@@ -40,8 +40,10 @@ class Account_model extends CI_Model {
 	{
 		if($id != null)
 		{
-			$this->db->where('id', $id);
-			$query=$this->db->get("users");
+		
+			$query=$this->db->query("SELECT users.id,users.fname as first_name, users.lname as last_name, users.email, users.annual_income, users.register_method as platform, users.email_verified, users.status, users.datetime as date_time FROM `users` where users.id = '$id' ");
+			// $this->db->where('id', $id);
+			// $query=$this->db->get("users");
 			if($query->num_rows() > 0)
 			{
 				return $query->row_array();
@@ -383,9 +385,25 @@ class Account_model extends CI_Model {
 			$goalstatus = false;
 		}
 
+
+		
 		if($goalstatus == true)
 		{
-			return "alreadyexists";
+			//return "alreadyexists";
+			
+			$user_goals['goal_id'] = $goalID;
+			$user_goals['term_id'] = $goal['id_term'];
+			//$user_goals['id'] = $goal['usergoalid'];
+			$user_goals['cost'] = $goal['id_cost'];
+			$user_goals['monthly_target'] = $goal['id_monthtarget'];
+			$user_goals['currently_saved'] = $goal['id_currentsaved'];
+			$user_goals['target_date'] = $goal['id_datetimepicker1'];
+			$user_goals['goal_status'] = '1';
+			
+			$this->db->where('id', $goal['usergoalid']);
+			$this->db->update('user_goals', $user_goals);
+			
+			return $goal['usergoalid'];//$this->db->affected_rows();// insert_id();	
 		}
 		else
 		{
@@ -395,10 +413,10 @@ class Account_model extends CI_Model {
 			}else{
 				$user_goals['user_id'] = $this->session->userdata('usr_id');	
 			}
-			//$user_goals['user_id'] = $this->session->userdata('usr_id');
+			
 			$user_goals['goal_id'] = $goalID;
 			$user_goals['term_id'] = $goal['id_term'];
-			$user_goals['id'] = $goal['usergoalid'];
+			//$user_goals['id'] = $goal['usergoalid'];
 			$user_goals['cost'] = $goal['id_cost'];
 			$user_goals['monthly_target'] = $goal['id_monthtarget'];
 			$user_goals['currently_saved'] = $goal['id_currentsaved'];
@@ -407,42 +425,9 @@ class Account_model extends CI_Model {
 			
 			$this->db->where('id', $goal['usergoalid']);
 			$this->db->update('user_goals', $user_goals);
-				
-			// if($this->db->affected_rows() > 0)
-			// {
-				return $this->db->insert_id();	
-			// }
-			// else{
-				// return "0";
-			// }
+			
+			return $this->db->insert_id();	
 		}
-		
-		// $goals['id'] = '';
-		// $goals['name'] = $goal['id_goal'];
-		// $goals['status'] = '1';
-		// $goalID = $this->GoalSave($goals);
-		
-		
-		// $user_goals['user_id'] = $this->session->userdata('usr_id');
-		// $user_goals['goal_id'] = $goalID;
-		// $user_goals['term_id'] = $goal['id_term'];
-		// $user_goals['id'] = $goal['usergoalid'];
-		// $user_goals['cost'] = $goal['id_cost'];
-		// $user_goals['monthly_target'] = $goal['id_monthtarget'];
-		// $user_goals['currently_saved'] = $goal['id_currentsaved'];
-		// $user_goals['target_date'] = $goal['id_datetimepicker1'];
-		// $user_goals['goal_status'] = '1';
-		
-		// $this->db->where('id', $goal['usergoalid']);
-		// $this->db->update('user_goals', $user_goals);
-		
-		// if($this->db->affected_rows() > 0)
-		// {
-			// return $this->db->insert_id();	
-		// }
-		// else{
-			// return "0";
-		// }
 	}
 	
 	function getactiveGoals($status)
@@ -534,6 +519,26 @@ class Account_model extends CI_Model {
 			echo "nogoal";
 		}
 	}
+	
+	function getAllgoalsAjax($status,$user_id)
+	{
+		// $this->db->where("goal_status",$status);
+		// $this->db->where("user_id",$user_id);
+		// $query=$this->db->get("user_goals");
+		
+		//$sql = "select user_goals.*,goals.name as 'goal_name' from user_goals inner join goals on goals.id = user_goals.goal_id where user_goals.goal_status	= '$status' and user_goals.user_id = '$user_id' ";
+		
+		$sql = "select user_goals.id as goal_id, user_goals.user_id,user_goals.term_id,user_goals.cost,user_goals.monthly_target,user_goals.currently_saved,user_goals.target_date,user_goals.goal_status,goals.name as 'goal_name' from user_goals inner join goals on goals.id = user_goals.goal_id where user_goals.goal_status = '$status' and user_goals.user_id = '$user_id' ";
+		
+		$query = $this->db->query($sql);
+		if($query->num_rows()>0)
+		{
+			return $query->result_array();
+		}
+		else{
+			return "nogoal";
+		}
+	}
 	function selectGoal($goalID)
 	{
 		$userGoals['id'] = $goalID;
@@ -575,8 +580,7 @@ class Account_model extends CI_Model {
 		
 		$step1 = $month['cost'] - $month['saved'];
 		$monthsdiff = $this->datediff($month['targetdate']);
-		
-		
+
 		//echo $monthsdiff.'-';
 		if($monthsdiff < 1)
 		{
@@ -585,11 +589,11 @@ class Account_model extends CI_Model {
 		$step2 = $step1/$monthsdiff;
 		if($step2 > $month['cost'])
 		{
-			echo $month['cost'];//$step2;
+			return $month['cost'];//$step2;
 		}
 		else
 		{
-			echo  ($step1)/$monthsdiff;
+			return  ($step1)/$monthsdiff;
 		}
 		
 	}
@@ -1553,6 +1557,34 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 		
 	}
 	
+	function totalliabilitiesUpdates($users)
+	{
+		$this->db->where('user_id', $users['user_id']);
+		$this->db->where('year', $users['year']);
+		$this->db->where('month', $users['month']);
+		$query = $this->db->get('liabilities');
+		
+		//$query = $this->db->query("select * from revenue where user_id = '$userid' and year= '".$users['year']."' and month= '".$users['month']."' ");
+		$users['status'] = 1;
+		if($query->num_rows() > 0)
+		{
+			$this->db->where('user_id', $users['user_id']);
+			$this->db->where('year', $users['year']);
+			$this->db->where('month', $users['month']);
+			$this->db->update('liabilities', $users);
+		}
+		else{
+			$this->assetesDummy($users);
+			$this->insertDummyliabilities($users);
+			
+			$this->db->where('user_id', $users['user_id']);
+			$this->db->where('year', $users['year']);
+			$this->db->where('month', $users['month']);
+			$this->db->update('liabilities', $users);
+		}
+		
+	}
+	
 	function insertDummyliabilities($users)
 	{
 		$zero = '0';
@@ -1857,62 +1889,217 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 		$this->db->insert_batch('assets', $data); 
 	}
 	
-	function debtpayment($param)//nosnowball
+	function getDebtPaymentDetails($debt_payment)
 	{
-		$param['interestamount'] = $param['rate'] / 12;
-		$param['firststep'] = ($param['amount'] * $param['interestamount'])/$param['payment'];
-		$param['firstlog'] = 1 - $param['firststep'];
-		$param['log10'] = log10($param['firstlog']);
-		$param['2ndstep'] = "start";
-		$param['calclog'] = $param['interestamount'] + 1;
-		$param['ndlog10'] = log10($param['calclog']);
-		$param['months'] = round( -($param['log10'] / $param['ndlog10']));
-		$time = strtotime(date("Y/m/d"));
-		//$param['futuredate'] = date('F Y', strtotime("+".$param['months']." month", $time));
-		$param['futuredate'] = date('F Y', mktime(0,0,0,$param['months'], 1, date($param['postselectYear'])));
+		$this->db->where('usr_id', $debt_payment['usr_id']);
+		$this->db->where('month', $debt_payment['month']);
+		$this->db->where('year', $debt_payment['year']);
+		$this->db->where('status', 1);
 		
-		//Rate//
+		$query=$this->db->get("debt_payment");
 		
-		$param['interestpaid'] = ($param['interestamount']  * $param['amount']);
+		if($query->num_rows() > 0)
+		{
+			return $query->row_array();
+		}
+		else{
+			return "false";
+		}
+	}
+	
+	function getDebtPayment($debt_payment)
+	{
+	
+		$row = $this->account_model->getDebtPaymentDetails($debt_payment);
 		
-		// for($i = 0; $i <= $param['months'];$i++)
-		// {
-			// //$param['$i'.$i] = "Amount-".$param['amount'] ."interest-". $param['interestpaid'] ."balance-".$param['amount'] - ($param['payment'] - $param['interestpaid']);
-			// //Step 1
+		//$row = $this->getDebtPaymentDetails($debt_payment);
+		
+        if($row != 'false')
+		{
+			$debt_payment_id = 	$row['id'];//debt_payment ID
 			
-			// $newamount = $param['amount'] - ($param['payment'] - $param['interestpaid']);
-			// $balance = $newamount - ($param['interestamount']  * $newamount);
-			// $param[$i.'-interest-for-'.$newamount ] = 'Interest-'.($param['interestamount']  * $newamount)."-Balance-".$balance;
-		// }
+			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_payment_id' and status = '1' ");
+			//echo $this->db->last_query();
+			$result = $query->result_array();
+			
+			$query = $this->db->query("select sum(balance) as total_balance, sum(payment) as total_payment from dept_pay_detail where debt_id = '$debt_payment_id' and status = '1' ");
+			$result2 = $query->row_array();
+			$total_balance = $result2['total_balance'];
+			$total_payment = $result2['total_payment'];
+			
+			
+			//return $result;
+			for($i = 0; $i <= 9; $i++)		
+			{
+			$creditor = '';
+			$balance = 0;
+			$rate = 0;
+			$payment = 0;
+?>
+<tbody><?php
 
-		echo json_encode($param);
-		
-		
-		
-// first amount = 8000 
-
-// 295 - 93.27 = 201.73 
-
-// 8000- 201.73   = 7798.27 for next month balance ammount 
-
-// (.1399/12) * 7798.27 = for next month interest = 90.91
-
+				if($i < (sizeof($result)))//if($i < (sizeof($result)/4))
+				{
+					$creditor = $result[$i]['creditor'];
+					$balance = $result[$i]['balance'];
+					$rate = $result[$i]['rate'];
+					$payment = $result[$i]['payment'];
+				}
+			?>
+				<tr>
+				<th scope="row"><?php echo $i+1; ?></th>
+				<td><input type="text" name="creditor" class="form-control" id="creditor<?php echo $i+1; ?>"  data-id="<?php echo $i+1; ?>"  value="<?php echo $creditor; ?>"></td>
+				<td><input type="number" min="0" name="balance"  class="form-control balance" id="balance<?php echo $i+1; ?>"  data-id="<?php echo $i+1; ?>"  value= "<?php echo $balance; ?>"></td>
+				<td><input type="text" name="rate"  pattern="^[0-9]*\.?[0-9]+$"   class="form-control rate" id="rate<?php echo $i+1; ?>"  data-id="<?php echo $i+1; ?>"     value= "<?php echo $rate; ?>"></td>
+				<td><input type="number" min="0" name="payment"  class="form-control payment" id="payment<?php echo $i+1; ?>"  data-id="<?php echo $i+1; ?>"  value= "<?php echo $payment; ?>"></td>
+				</tr>
+				<?php
+				if($i == 9)
+				{
+					?>
+					</tbody>
+					
+					<tfoot>
+						
+					<tr>
+					<th></th>
+					  <td>Total</td>
+					  <td><input type="text" disabled data-id = "1" name="totalbalance"  class="form-control" id="totalbalance"  value= "<?php echo $total_balance; ?>"></td>
+					  <td></td>
+					  <td><input type="text" disabled data-id = "1" name="totalpayment"  class="form-control" id="totalpayment"  value= "<?php echo $total_payment; ?>"></td>
+					</tr>
+									
+						</tfoot>
+					<?php
+				}
+			}
+			
+		}
+		else{
+			$creditor = '';
+			$balance = 0;
+			$rate = 0;
+			$payment = 0;
+			for($i = 0; $i <= 9; $i++)		
+			{
+			?>
+				<tr>
+				<th scope="row"><?php echo $i+1; ?></th>
+				<td><input type="text" name="creditor" class="form-control" id="creditor<?php echo $i+1; ?>"  data-id="<?php echo $i+1; ?>"  value="<?php echo $creditor; ?>"></td>
+				<td><input type="number" min="0" name="balance"  class="form-control balance" id="balance<?php echo $i+1; ?>"  data-id="<?php echo $i+1; ?>"  value= "<?php echo $balance; ?>"></td>
+				<td><input type="text" name="rate"   pattern="^[0-9]*\.?[0-9]+$"  class="form-control rate" id="rate<?php echo $i+1; ?>"  data-id="<?php echo $i+1; ?>"     value= "<?php echo $rate; ?>"></td>
+				<td><input type="number" min="0" name="payment"  class="form-control payment" id="payment<?php echo $i+1; ?>"  data-id="<?php echo $i+1; ?>"  value= "<?php echo $payment; ?>"></td>
+				</tr>
+				<?php
+				if($i == 9)
+				{
+					?>
+					<tr>
+					<th></th>
+					  <td>Total</td>
+					  <td><input type="text" disabled data-id = "1" name="totalbalance"  class="form-control" id="totalbalance"  value= "0"></td>
+					  <td></td>
+					  <td><input type="text" disabled data-id = "1" name="totalpayment"  class="form-control" id="totalpayment"  value= "0"></td>
+					</tr>
+					<?php
+				}
+			}
+		}
 	}
+
 	
-	function debtpaymentsnowballlowest($param)//snowballlowest
+function InventorySave($inventory,$id)
 	{
-		$param['interestamount'] = $param['rate'] / 12;
-		$param['firststep'] = ($param['amount'] * $param['interestamount'])/$param['payment'];
-		$param['firstlog'] = 1 - $param['firststep'];
-		$param['log10'] = log10($param['firstlog']);
-		$param['2ndstep'] = "start";
-		$param['calclog'] = $param['interestamount'] + 1;
-		$param['ndlog10'] = log10($param['calclog']);
-		$param['months'] = round( -($param['log10'] / $param['ndlog10']));
-		$time = strtotime(date("Y/m/d"));
-		//$param['futuredate'] = date('F Y', strtotime("+".$param['months']." month", $time));
-		$param['futuredate'] = date('F Y', mktime(0,0,0,$param['months'], 1, date($param['postselectYear'])));
-		return json_encode($param);
+		if($id == "")
+		{
+			$this->db->where('item_name', $inventory['item_name']);
+			$query=$this->db->get('inventory', $inventory);
+			if($query->num_rows()>0)
+			{
+				$rowdata = $query->row_array();
+				return $rowdata['id'];
+			}
+			else{
+				$this->db->insert('inventory', $inventory);
+				return $this->db->insert_id();			
+			}
+		}
+		else
+		{
+			
+			$this->db->where('id', $id);
+			$this->db->update('inventory', $inventory);
+			return $id;
+		}
 	}
 	
+	function usersameinventorycheck($inventoryID,$userid)//Goal check in user goals
+	{
+		$this->db->where('inventory_id', $inventoryID);
+		$this->db->where('user_id', $userid);
+		$this->db->where('inventory_status', '1');
+		$query=$this->db->get('user_inventory');
+		if($query->num_rows()>0)
+		{
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	function inventoryaddingbyuser($param)
+	{
+		$id = '';
+		$inventory['item_name'] = $param['item_name'];
+		$inventory['status'] = '1';
+		$inventoryID = $this->InventorySave($inventory,$id);
+		
+		
+		//$goalstatus = $this->usersamegoalcheck($goalID);
+		if($inventory['user_id'])
+		{
+			$inventorystatus = $this->usersameinventorycheck($inventoryID,$param['user_id']);
+		}else{
+			$inventorystatus = $this->usersameinventorycheck($inventoryID,$this->session->userdata('usr_id'));
+		}
+		
+		
+		if($inventorystatus == true)
+		{
+			return "alreadyexists";
+		}
+		else{
+		
+			if($inventory['user_id'])
+			{
+				$user_inventory['user_id'] = $inventory['user_id'];	
+			}else{
+				$user_inventory['user_id'] = $this->session->userdata('usr_id');	
+			}
+			
+		
+			//$user_goals['user_id'] = $this->session->userdata('usr_id');
+			$user_inventory['inventory_id'] = $inventoryID;
+			$user_inventory['unit_price'] = $param['unit_price'];
+			$user_inventory['quantity_stock'] = $param['quantity_stock'];
+			$user_inventory['total_price'] = $param['total_price'];
+			$user_inventory['inventory_value'] = $param['inventory_value'];
+			$user_inventory['description'] = $param['description'];
+			$user_inventory['inventory_status'] = '1';
+			
+			$this->db->insert('user_inventory', $user_inventory);
+			
+			if($this->db->affected_rows() > 0)
+			{
+				return $this->db->insert_id();	
+			}
+			else{
+				return "0";
+			}
+		}
+		
+	}
+
+
 }

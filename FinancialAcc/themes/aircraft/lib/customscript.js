@@ -1,4 +1,3 @@
-//var baseHref = "http://localhost/CodeIgniter/FinancialAcc/";
 var baseHref = document.getElementsByTagName('base')[0].href;
 
 function changepassword()
@@ -636,7 +635,6 @@ $(document).ready(function () {
 				//hideloader();
 			}
 		});		
-		
 	}
 	
 	//Liabilities - Investment Debt
@@ -694,6 +692,7 @@ $(document).ready(function () {
 			$('#totalliabilities_'+dataid).text(parseFloat(mortgage) + parseFloat(student_debt) + parseFloat(car_loans)+ parseFloat(credit_card) + parseFloat(other_liabilities));
 			setTimeout(function(){ totalassets_changemom(dataid); totalliabilities_changemom(dataid); }, 1000);
 			totalNetworth(dataid);
+			totalliabilitiesUpdates(dataid);
 		}
 	}
 	function totalliabilities_changemom(dataid)
@@ -727,7 +726,33 @@ $(document).ready(function () {
 		}
 	}
 	
+	function totalliabilitiesUpdates(dataid)
+	{
 	
+		var mortgage = $('#mortgage_'+dataid).val();	
+		var student_debt = $('#student_debt_'+dataid).val();	
+		var car_loans = $('#car_loans_'+dataid).val();	
+		var credit_card = $('#credit_card_'+dataid).val();	
+		var other_liabilities = $('#other_liabilities_'+dataid).val();	
+			
+		$.ajax({
+			type: "post",
+			url: baseHref+"account/totalliabilitiesUpdates",
+			data: {
+				mortgage: mortgage,
+				student_debt: student_debt,
+				car_loans: car_loans,
+				credit_card: credit_card,
+				other_liabilities: other_liabilities,
+				selectYear : $('#selectYear').val(),
+				monthid : dataid
+			},
+			success: function(data){
+				//alert(data);
+				//hideloader();
+			}
+		});		
+	}
 		
 //Where you stand jquery calculations//
 
@@ -2264,18 +2289,32 @@ function onNetWorth(id){
 }
 
 //Start Debt Payment//
-$(document).ready(function ()
-{  
-	 $(".balance").focusout(function(){
-			var ids = $('.balance');
-			var a = 0;
-			for($i = 0; $i < ids.length; $i++)
-			{
+
+
+
+
+$(document).ready(function () {
+	// $("input").focusout( function(e) {
+	// alert( "adasd" );
+	// });
+
+	
+
+	$(".balance").focusout(function(){
+		// $('.balance').each(function(i,j){
+			// alert(j);
+		// })
+		var ids = $('.balance');
+		var a = 0;
+		for($i = 0; $i < ids.length; $i++)
+		{
+			if(ids[$i].value != '' && ids[$i].value != '0')
+			{			
 				a = parseFloat(a) + parseFloat(ids[$i].value);
-			}
-			$('#totalbalance').val(a);
-			var dataid = $("#"+this.id).data('id');
-			debtpaymentcalc(dataid);
+			}	
+		}
+		$('#totalbalance').val(a);
+		var dataid = $("#"+this.id).data('id');
 	 });
  
 	 $(".payment").focusout(function(){
@@ -2283,105 +2322,234 @@ $(document).ready(function ()
 			var a = 0;
 			for($i = 0; $i < ids.length; $i++)
 			{
-				a = parseFloat(a) + parseFloat(ids[$i].value);
+				if(ids[$i].value != '' && ids[$i].value != '0')
+				{			
+					a = parseFloat(a) + parseFloat(ids[$i].value);
+				}
 			}
 			$('#totalpayment').val(a);
 			$('#mininumpayment').val(a);
 			var dataid = $("#"+this.id).data('id');
-			debtpaymentcalc(dataid);
 	 });
-	 
-	 //GRV
-		function debtpaymentcalc(dataid)
-		{
-			var error = false;
-			var selectYear = $('#selectYear').val();
-			var month = $('#sel1').val();
-			var creditor = $('#creditor'+dataid).val();
-			var balance = $('#balance'+dataid).val();
-			var rate = $('#rate'+dataid).val();
-			var payment = $('#payment'+dataid).val();
-			
-			if(creditor == '' || creditor == '0')
-			{
-				$('#creditor'+dataid).focus();
-				swtalertwarningmsg('Creditor Invalid',"Please enter valid Creditor value");
-				error = true;
-				return false;
+
+	$('#strategylist').change(function(){
+		var values = $('#strategylist').val();
+		var selectYear = $('#selectYear').val();
+		var month = $('#sel1').val();
+		var monthlypayment = $('#monthlypayment').val();
+		var mininumpayment = $('#mininumpayment').val();
+		tabledata = $('#testform').serialize();
+		$.ajax({
+			type: "post",
+			url: baseHref+"account/onStrategyChange",
+			data: {
+				data : tabledata, //table data json
+				strategylist : values,
+				selectYear: selectYear,
+				month: month,
+				monthlypayment: monthlypayment,
+				mininumpayment: mininumpayment
+			},
+			success: function(data){
+				$('#tfootDebt').hide();
+				$('#tbodyDebt').html(data);
+				console.log(data);
 			}
-			if(balance == '' || balance == '0')
-			{
-				$('#balance'+dataid).focus();
-				swtalertwarningmsg('Balance Invalid',"Please enter valid Balance value");
-				error = true;
-				return false;
+		});	
+	});
+	
+	$('#monthlypayment').focusout(function(){
+		//alert("asd");
+		var values = $('#strategylist').val();
+		var selectYear = $('#selectYear').val();
+		var month = $('#sel1').val();
+		var monthlypayment = $('#monthlypayment').val();
+		var mininumpayment = $('#mininumpayment').val();
+		tabledata = $('#testform').serialize();
+		$.ajax({
+			type: "post",
+			url: baseHref+"account/onStrategyChange",
+			data: {
+				data : tabledata, //table data json
+				strategylist : values,
+				selectYear: selectYear,
+				month: month,
+				monthlypayment: monthlypayment,
+				mininumpayment: mininumpayment
+			},
+			success: function(data){
+				$('#tfootDebt').hide();
+				$('#tbodyDebt').html(data);
+				console.log(data);
 			}
-			if(rate == '' || rate == '0')
-			{
-				$('#rate'+dataid).focus();
-				swtalertwarningmsg('Rate Invalid',"Please enter valid Rate value");
-				error = true;
-				return false;
-			}
-			if(payment == '' || payment == '0')
-			{
-				$('#payment'+dataid).focus();
-				swtalertwarningmsg('Payment Invalid',"Please enter valid Payment value");
-				error = true;
-				return false;
-			}
-			if(error == false)
-			{
-				$.ajax({
-					type: "post",
-					url: baseHref+"account/debtpaymentcalc",
-					data: {
-						selectYear: selectYear,
-						month: month,
-						creditor: creditor,
-						balance: balance,
-						rate: rate,
-						payment: payment
-					},
-					success: function(data){
-						//console.log(data);
-						localdata = JSON.parse(data);
-						console.log(localdata);
-						// $('.totalincome').html(localdata[0].totalincome);
-						$('#creditor_'+dataid).html(localdata.creditor);
-						$('#balance_'+dataid).html(localdata.amount);
-						$('#months_'+dataid).html(localdata.months);
-						$('#date_'+dataid).html(localdata.futuredate);
-						$('#interest_'+dataid).html(localdata.interestpaid);
-						// $('.totalexpenses').html(localdata[0].totalexpenses);
-						// $('.leftovermoney').html('$ '+localdata[0].leftover);
-						balancecalcbottom();
-					}
-				});	
-			}
-		}
-		function balancecalcbottom()
-		{
-		$ttl = 0;
-		for($i = 1; $i <= 10; $i++)
-		{
-			if($('#balance_'+$i).html() != '' && $('#balance_'+$i).html() != 'NaN')
-			{
-				//console.log(parseFloat($ttl) + $('#balance_'+$i).html());
-				$ttl = parseFloat($ttl) + parseFloat($('#balance_'+$i).html());
-			}
-		}
-		//alert($ttl);
-			$("#balance_total").text($ttl);
-			
-// parseFloat($('#balance_1').html()) + parseFloat($('#balance_2').html()) + parseFloat($('#balance_3').html()) + parseFloat($('#balance_4').html()) + parseFloat($('#balance_5').html()) + parseFloat($('#balance_6').html()) + parseFloat($('#balance_7').html()) + parseFloat($('#balance_8').html()) + parseFloat($('#balance_9').html()) + parseFloat($('#balance_10').html())
-			// );
-			
-		}
-	 //GRV
+		});	
+	});
 });
 
 //End Debt Payment//
+function balancecalcbottom()
+{
+	//alert("asdsadsa");
+	$ttl = 0;
+	for($i = 1; $i <= 10; $i++)
+	{
+		if($('#balance'+$i).html() != '' && $('#balance'+$i).html() != 'NaN' && $('#balance'+$i).html() != '&nbsp;')
+		{
+			$ttl = parseFloat($ttl) + parseFloat($('#balance'+$i).html());
+		}
+	}
+	$("#balance_total").text(Math.round($ttl));
+	
+	$ttl = 0;
+	for($i = 1; $i <= 10; $i++)
+	{
+		if($('#interest'+$i).html() != '' && $('#interest'+$i).html() != 'NaN' && $('#interest'+$i).html() != '&nbsp;')
+		{
+			$ttl = parseFloat($ttl) + parseFloat($('#interest'+$i).html());
+		}
+	}
+	$("#interest_total").text(Math.round($ttl));
+}
+
+
+
+
+//Start S/Q Money//
+
+
+
+function validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_value)
+{
+	var error = "true";
+	var item = item_name;
+	var price = unit_price;
+	var quantity = quantity_stock;
+	var totalprice = total_price; 
+	var inventoryvalue = inventory_value; 
+	
+	if((item == null) || (item == ''))
+	{
+		
+		swtalertwarningmsg('Item Name is Empty',"Please insert the item name first");
+		error = "false";
+		return error;
+		
+	}
+	if((price == '') || (price == 0))
+	{
+		swtalertwarningmsg('Unit Price is Empty',"Please insert the unit price first");
+		error = "false";
+		return error;
+		
+	}
+	if((quantity == '') || (quantity == 0))
+	{
+		swtalertwarningmsg('Quantity Stock is Empty',"Please insert the quantity stock first");
+		error = "false";
+		return error;
+		
+	}
+	if((totalprice == '') || (totalprice == 0))
+	{
+		swtalertwarningmsg('Total Price is Empty',"Please insert the total price first");
+		error = "false";
+		return error;
+		
+	}
+	if((inventoryvalue == '') || (inventoryvalue == 0))
+	{
+		swtalertwarningmsg('Inventory Value is Empty',"Please insert the inventory value first");
+		error = "false";
+		return error;
+		
+	}
+
+}
+
+function inventoryadding() { 
+var item_name = $('#item_name').val();
+var unit_price = $('#unit_price').val();
+var quantity_stock = $('#quantity_stock').val();
+var total_price = $('#total_price').val();
+var inventory_value = $('#inventory_value').val();
+var description = $('#description').val();
+//alert(id_datetimepicker1);
+if(validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_value) == "false") 
+{
+	return false;
+}
+
+	swal({
+			title: "Are you sure?", 
+			text: "Are you sure that you want to add this Inventory?", 
+			type: "warning",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			confirmButtonText: "Yes, add it!",
+			confirmButtonColor: btnColor['info'] 
+		}, function(){
+			$.ajax(
+				{
+					type: "post",
+					url: baseHref+"account/inventoryaddingbyuser",
+					data: {
+						item_name: $("#item_name").val(),
+						unit_price: $("#unit_price").val(),
+						quantity_stock: $("#quantity_stock").val(),
+						total_price: $("#total_price").val(),
+						inventory_value: $("#inventory_value").val(),
+						description: $("#description").val()
+					},
+					success: function(data){
+						//getActiveUserGoals();
+						if(data != '0' && data != 'alreadyexists')
+						{
+							swal({
+								title: "Inventory Added", 
+								text: "Would you like to add more inventory?", 
+								type: "success",
+								showCancelButton: true,
+								closeOnConfirm: false,
+								closeOnCancel: false,
+								confirmButtonText: "Yes",
+								confirmButtonColor: btnColor['info'] 
+							 }, function(isConfirm) {
+									if (isConfirm) {
+									$('#inventoryaddingform')[0].reset();
+									location.reload();
+								} else {
+									location.reload();
+								}
+							});
+							 
+							 //function() { 
+								// //alert('asdsad'); 
+								// $('#goaladdingform')[0].reset();
+								// location.reload();
+							// });
+							
+						}
+						else if(data == 'alreadyexists'){
+							swtalertwarningmsg('Inventory Exists','This inventory already exists in your inventory list');
+						}
+						//swal("Success!", "Your goal ("+data+") is successfully added! \n would you like to add more goal.", "success");
+					}
+				}
+			)
+		  .done(function(data) {
+			//swal("Success!", "Your goal is successfully added!", "success");
+		  })
+		  .error(function(data) {
+			swal("Oops", "We couldn't connect to the server!", "error");
+		  });
+		}
+	)
+};
+
+
+//End S/Q Money//
+
+
 
 // function monthlygraph()
 // {

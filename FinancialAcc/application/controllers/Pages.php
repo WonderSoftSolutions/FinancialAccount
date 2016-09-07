@@ -66,11 +66,33 @@ class Pages extends CI_Controller {
 	public function billpayments()
 	{
 		$this->load->view('header',$this->data);
-		$this->load->view('goals',$this->data);
+		$this->load->view('BillPayments',$this->data);
 		$this->load->view('footer',$this->data);
 	}
-	public function debtpayments()
+	public function debtpayments($month = 0,$year = 0)
 	{
+		if($month != date('n') && $month != 0)
+		{
+			$this->data['monthdisable'] = 'disabled';
+		}
+		if($year != date('n') && $year != 0)
+		{
+			$this->data['yeardisable'] = 'disabled';
+		}
+		if($year==0)
+		{
+			$year = date('y');
+		}
+		
+		if($month==0)
+		{
+			$month = date('n');
+		}
+
+		
+		$this->data['contryear'] = $year;
+		$this->data['contrmonth'] = $month;
+	
 		$this->load->view('header',$this->data);
 		$this->load->view('debt_payment',$this->data);
 		$this->load->view('footer',$this->data);
@@ -78,7 +100,7 @@ class Pages extends CI_Controller {
 	public function sandq()
 	{
 		$this->load->view('header',$this->data);
-		$this->load->view('goals',$this->data);
+		$this->load->view('S&Q',$this->data);
 		$this->load->view('footer',$this->data);
 	}
 }
