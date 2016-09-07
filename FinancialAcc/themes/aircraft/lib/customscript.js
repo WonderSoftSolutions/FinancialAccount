@@ -2551,6 +2551,254 @@ if(validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_v
 
 
 
+
+//Start S/Q Money//
+
+
+
+function validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_value)
+{
+	var error = "true";
+	var item = item_name;
+	var price = unit_price;
+	var quantity = quantity_stock;
+	var totalprice = total_price; 
+	var inventoryvalue = inventory_value; 
+	
+	if((item == null) || (item == ''))
+	{
+		
+		swtalertwarningmsg('Item Name is Empty',"Please insert the item name first");
+		error = "false";
+		return error;
+		
+	}
+	if((price == '') || (price == 0))
+	{
+		swtalertwarningmsg('Unit Price is Empty',"Please insert the unit price first");
+		error = "false";
+		return error;
+		
+	}
+	if((quantity == '') || (quantity == 0))
+	{
+		swtalertwarningmsg('Quantity Stock is Empty',"Please insert the quantity stock first");
+		error = "false";
+		return error;
+		
+	}
+	if((totalprice == '') || (totalprice == 0))
+	{
+		swtalertwarningmsg('Total Price is Empty',"Please insert the total price first");
+		error = "false";
+		return error;
+		
+	}
+	if((inventoryvalue == '') || (inventoryvalue == 0))
+	{
+		swtalertwarningmsg('Inventory Value is Empty',"Please insert the inventory value first");
+		error = "false";
+		return error;
+		
+	}
+
+}
+
+function inventoryadding() { 
+var item_name = $('#item_name').val();
+var unit_price = $('#unit_price').val();
+var quantity_stock = $('#quantity_stock').val();
+var total_price = $('#total_price').val();
+var inventory_value = $('#inventory_value').val();
+var description = $('#description').val();
+//alert(id_datetimepicker1);
+if(validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_value) == "false") 
+{
+	return false;
+}
+
+	swal({
+			title: "Are you sure?", 
+			text: "Are you sure that you want to add this Inventory?", 
+			type: "warning",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			confirmButtonText: "Yes, add it!",
+			confirmButtonColor: btnColor['info'] 
+		}, function(){
+			$.ajax(
+				{
+					type: "post",
+					url: baseHref+"account/inventoryaddingbyuser",
+					data: {
+						item_name: $("#item_name").val(),
+						unit_price: $("#unit_price").val(),
+						quantity_stock: $("#quantity_stock").val(),
+						total_price: $("#total_price").val(),
+						inventory_value: $("#inventory_value").val(),
+						description: $("#description").val()
+					},
+					success: function(data){
+						//getActiveUserGoals();
+						if(data != '0' && data != 'alreadyexists')
+						{
+							swal({
+								title: "Inventory Added", 
+								text: "Would you like to add more inventory?", 
+								type: "success",
+								showCancelButton: true,
+								closeOnConfirm: false,
+								closeOnCancel: false,
+								confirmButtonText: "Yes",
+								confirmButtonColor: btnColor['info'] 
+							 }, function(isConfirm) {
+									if (isConfirm) {
+									$('#inventoryaddingform')[0].reset();
+									location.reload();
+								} else {
+									location.reload();
+								}
+							});
+							 
+							 //function() { 
+								// //alert('asdsad'); 
+								// $('#goaladdingform')[0].reset();
+								// location.reload();
+							// });
+							
+						}
+						else if(data == 'alreadyexists'){
+							swtalertwarningmsg('Inventory Exists','This inventory already exists in your inventory list');
+						}
+						//swal("Success!", "Your goal ("+data+") is successfully added! \n would you like to add more goal.", "success");
+					}
+				}
+			)
+		  .done(function(data) {
+			//swal("Success!", "Your goal is successfully added!", "success");
+		  })
+		  .error(function(data) {
+			swal("Oops", "We couldn't connect to the server!", "error");
+		  });
+		}
+	)
+};
+
+function editsqmodal(id)
+{
+	$.ajax({
+		type: "post",
+		url: baseHref+"account/getinventoryupdate",
+		data: {
+				id: id
+			},
+		success: function(data){
+			
+			$('#inventoryupdateform').html(data);
+			$('#updatesq').modal('show');
+			
+		}
+	});	
+
+	
+}
+
+
+function inventoryediting() { 
+
+var item_name = $('#update_item_name').val();
+var unit_price = $('#update_unit_price').val();
+var quantity_stock = $('#update_quantity_stock').val();
+var total_price = $('#update_total_price').val();
+var inventory_value = $('#update_inventory_value').val();
+var description = $('#update_description').val();
+//alert(id_datetimepicker1);
+// if(validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_value) == "false") 
+// {
+	// return false;
+// }
+swal({
+			title: "Are you sure?", 
+			text: "Are you sure that you want to Update this inventory?", 
+			type: "warning",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			confirmButtonText: "Yes, Edit it!",
+			confirmButtonColor: btnColor['info'] 
+		}, function(){
+			$.ajax(
+				{
+					type: "post",
+					url: baseHref+"account/inventoryeditingbyuser",
+					data: {
+						item_id: $("#update_item_id").val(),
+						item_name: item_name,
+						unit_price: unit_price,
+						quantity_stock: quantity_stock,
+						total_price: total_price,
+						inventory_value: inventory_value,
+						description: description
+					},
+					success: function(data){
+						console.log(data);
+						if(data != '0' && data != 'alreadyexists')
+						{
+							swal({
+								title: "Inventory Updated", 
+								//text: "Would you like to add more goal?", 
+								type: "success",
+								showCancelButton: false,
+								closeOnConfirm: true,
+								confirmButtonText: "Ok",
+								confirmButtonColor: btnColor['success'] 
+							}, function() { 
+								location.reload();
+							});
+						}
+						else if(data == 'alreadyexists'){
+							swtalertwarningmsg('Inventory Exists','This inventory already exists in your inventory list');
+						}
+						else if(data == '0'){
+							swtalertwarningmsg('Inventory Updated','Inventory successfully updated');
+							setTimeout(function(){ location.reload(); }, 1000);
+						}
+						
+
+						//swal("Success!", "Your goal ("+data+") is successfully added! \n would you like to add more goal.", "success");
+					}
+				}
+			)
+		  .done(function(data) {
+			//swal("Success!", "Your goal is successfully added!", "success");
+		  })
+		  .error(function(data) {
+			swal("Oops", "We couldn't connect to the server!", "error");
+		  });
+		}
+	)	
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//End S/Q Money//
+
+
+
+
+
+
 // function monthlygraph()
 // {
 	// $.ajax({

@@ -2008,7 +2008,9 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 	}
 
 	
-function InventorySave($inventory,$id)
+	//SANDQ
+
+	function InventorySave($inventory,$id)
 	{
 		if($id == "")
 		{
@@ -2100,6 +2102,129 @@ function InventorySave($inventory,$id)
 		}
 		
 	}
+	
+	function getinventoryDetails($id)
+	{
+		$this->db->where("id",$id);
+		$query=$this->db->get("inventory");
+		if($query->num_rows()>0)
+		{
+			return $query->row_array();
+		}
+	}
+	
+	function getallinventory($status)
+	{
+		$this->db->where("inventory_status",$status['inventory_status']);
+		$this->db->where("user_id",$status['user_id']);
+		$query=$this->db->get("user_inventory");
+		if($query->num_rows()>0)
+		{
+			$array = $query->result_array();
+			return $array;
+		}
+		else{
+			return "noinventory";
+		}
+	}
+	function getallinventoryPAGELOAD()
+	{
+		$inventory['inventory_status'] = 1;
+		$inventory['user_id'] = $this->session->userdata('usr_id');
+		$array = $this->getallinventory($inventory);
+		if($array != 'noinventory')
+		{
+			foreach($array as $row)
+			{
+				$inventorydetails = $this->getinventoryDetails($row['inventory_id']);
+				?>
+				<tr id="row_<?php echo $row['id']; ?>">
+					<td ><a  href="javascript:editsqmodal('<?php echo $row['id']; ?>');"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;
+					<a  href="javascript:void(0)" onclick="deleteGoal('<?php echo $row['id']; ?>')" ><span class="glyphicon glyphicon-remove"></span></a>&nbsp;
+					<?php echo "IN". str_pad($row['id'],3,0,STR_PAD_LEFT); ?></td>
+					<td ><?php echo $inventorydetails['item_name']; ?></td>
+					<td ><?php echo $this->currencyconverter($row['unit_price']); ?></td>
+					<td><?php echo $this->currencyconverter($row['quantity_stock']); ?></td>
+					<td ><?php echo $this->currencyconverter($row['total_price']); ?></td>
+					<td><?php echo $this->currencyconverter($row['inventory_value']); ?></td>
+					<td ><?php echo $row['description']; ?></td>
+				</tr>
+				<?php
+			}
+		}
+	}
+	function getTotalInvertoryValue()
+	{
+		
+		$user_id = $this->session->userdata('usr_id');
+		
+		$array = $this->db->query("select sum(inventory_value) as count from user_inventory where user_id = '$user_id' and  inventory_status = '1' ");
+		$row = $array->row_array();
+		return  $this->currencyconverter($row['count']);
+	}
+	
+	
+	function inventoryeditingbyuser($param)
+	{
+		$id = '';
+		$inventory['item_name'] = $param['item_name'];
+		$inventory['status'] = '1';
+		$inventoryID = $this->InventorySave($inventory,$id);
+		
+		$sql = "select * from user_inventory where id <> '".$param['item_id']."' and inventory_id in (SELECT id FROM `inventory` where item_name = '".$inventory['item_name']."' ) and user_id = '".$param['user_id']."' and inventory_status = '1' ";
+		
+		$query=$this->db->query($sql);
+		if($query->num_rows()>0)
+		{
+			$inventorystatus = true;
+		}else{
+			$inventorystatus = false;
+		}
 
-
+		if($inventorystatus == true)
+		{
+			//return "alreadyexists";
+			
+			//$user_inventory['inventory_id'] = $inventoryID;
+			$user_inventory['unit_price'] = $param['unit_price'];
+			$user_inventory['quantity_stock'] = $param['quantity_stock'];
+			$user_inventory['total_price'] = $param['total_price'];
+			$user_inventory['inventory_value'] = $param['inventory_value'];
+			$user_inventory['description'] = $param['description'];
+			$user_inventory['inventory_status'] = '1';
+			
+			$this->db->where('id', $param['item_id']);
+			$this->db->update('user_inventory', $user_inventory);
+				
+			return $this->db->insert_id();	
+			
+		}
+		else
+		{
+			if($param['user_id'])
+			{
+				$user_inventory['user_id'] = $param['user_id'];	
+			}else{
+				$user_inventory['user_id'] = $this->session->userdata('usr_id');	
+			}
+			
+		
+			//$user_goals['user_id'] = $this->session->userdata('usr_id');
+			$user_inventory['inventory_id'] = $inventoryID;
+			$user_inventory['unit_price'] = $param['unit_price'];
+			$user_inventory['quantity_stock'] = $param['quantity_stock'];
+			$user_inventory['total_price'] = $param['total_price'];
+			$user_inventory['inventory_value'] = $param['inventory_value'];
+			$user_inventory['description'] = $param['description'];
+			$user_inventory['inventory_status'] = '1';
+			
+			$this->db->where('id', $param['item_id']);
+			$this->db->update('user_inventory', $user_inventory);
+				
+			return $this->db->insert_id();	
+		}
+		
+		
+	}
+	
 }

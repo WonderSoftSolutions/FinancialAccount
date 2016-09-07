@@ -551,6 +551,7 @@ class Account extends CI_Controller {
 		echo json_encode($a);
 	}
 	
+
 	function inventoryaddingbyuser()
 	{
 		
@@ -562,5 +563,65 @@ class Account extends CI_Controller {
 		$inventory['description'] = $this->input->post('description');
 		echo $this->account_model->inventoryaddingbyuser($inventory);
 	}
+	
+	function inventoryeditingbyuser()
+	{
+		$inventory['user_id'] = $this->session->userdata('usr_id');
+		$inventory['item_id'] = $this->input->post('item_id');
+		$inventory['item_name'] = $this->input->post('item_name');
+		$inventory['unit_price'] = $this->input->post('unit_price');
+		$inventory['quantity_stock'] = $this->input->post('quantity_stock');
+		$inventory['total_price'] = $this->input->post('total_price');
+		$inventory['inventory_value'] = $this->input->post('inventory_value');
+		$inventory['description'] = $this->input->post('description');
+		echo $this->account_model->inventoryeditingbyuser($inventory);
+	}
+	
+	function getinventoryupdate()
+	{
+		$inventoryid = $this->input->post('id'); 
+		$sql_query = "SELECT user_inventory.*, inventory.item_name from user_inventory, inventory where user_inventory.id = '$inventoryid' and user_inventory.inventory_id = inventory.id";
+		$array = $this->db->query($sql_query);
+		$row = $array->row_array();
+		
+		?>
+		
+		<div class="form-group">
+			<label for="itemname">Item Name:</label>
+	
+			<input type="hidden" class="form-control" id="update_item_id" name = "item_id" value = "<?php echo $inventoryid; ?>" >
+			<input type="text" class="form-control" id="update_item_name" name = "item_name" value="<?php echo $row['item_name']; ?>" >
+		</div>
+		<div class="form-group">
+			<label for="unitprice">Unit Price:</label>
+			<input type="number" class="form-control" id="update_unit_price" name="unit_price" value = "<?php echo $row['unit_price']; ?>" min='0' >
+		</div>
+		<div class="form-group">
+			<label for="quantitystock">Quantity in Stock:</label>
+			<input type="number" class="form-control" id="update_quantity_stock" name="quantity_stock" value = "<?php echo $row['quantity_stock']; ?>" min='0'>
+		</div>
+		<div class="form-group">
+			<label for="totalprice">Total Price:</label>
+			<input type="number" class="form-control" id="update_total_price" name="total_price" value = "<?php echo $row['total_price']; ?>" min='0'>
+		</div>
+		<div class="form-group">
+			<label for="Inventoryvalue">Inventory Value:</label>
+			<input type="number" class="form-control" id="update_inventory_value" name="inventory_value" value = "<?php echo $row['inventory_value']; ?>" min='0'>
+		</div>
+		<div class="form-group">
+			<label for="description">Description:</label>
+			<input type="text" class="form-control" id="update_description" name="description" value="<?php echo $row['description']; ?>">
+		</div>
+			<input name="submit_button" type="button" onclick="inventoryediting()" class="btn btn-default" id="submit_button" value="Update" />
+			<!--<input type="submit" value class="btn btn-default" onclick="validate();"></input>-->
+			<input type="button"  data-dismiss="modal" class="btn btn-default" id="configreset" value="Cancel">
+		
+
+	<?php
+		
+		
+	}
+	
+	
 	
 }
