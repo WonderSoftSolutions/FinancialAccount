@@ -848,4 +848,316 @@ class Api extends REST_Controller {
 		array_push($a[$this->router->fetch_method()],$b);
 		echo json_encode($a);
 	}
+	//Debt Payment Page//
+	function debt_get_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+		$debt_payment['year'] = trim(urldecode($_REQUEST['year']));
+		$debt_payment['month'] = trim(urldecode($_REQUEST['month']));
+		$debt_payment['usr_id'] = trim(urldecode($_REQUEST['user_id']));
+		$maindetails = $this->account_model->getDebtPaymentDetails($debt_payment);
+		
+		$resultArray['main_data'] = $maindetails;
+		if($maindetails != 'false')
+		{
+			$debt_payment_id = 	$maindetails['id'];//debt_payment ID
+			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_payment_id' and status = '1' ");			
+			$result = $query->result_array();
+			$query = $this->db->query("select sum(balance) as total_balance, sum(payment) as total_payment from dept_pay_detail where debt_id = '$debt_payment_id' and status = '1' ");
+			
+			$result2 = $query->row_array();
+			$total_balance = $result2['total_balance'];
+			$total_payment = $result2['total_payment'];
+			$resultArray['user_loans'] = $result;
+			$resultArray['user_loans_Total'] = $result2;
+
+			if($maindetails['strategy'] == 'Avalanche'){
+			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_payment_id' order by rate desc ");
+			}
+			if($maindetails['strategy'] == 'snowball'){
+			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_payment_id' order by balance asc ");
+			}
+			if($maindetails['strategy'] == 'nosnowball'){
+			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_payment_id' ");
+			}
+			$dept_pay_detail = $query->result_array();
+			
+			$oldparam['monthlypayment'] = $maindetails['monthly_payment'];
+			$oldparam['month'] = $maindetails['month'];
+			$oldparam['selectYear'] = $maindetails['year'];
+			$calculationsResult = $this->calc_model->getResult($dept_pay_detail,sizeof($dept_pay_detail),$oldparam,$maindetails['strategy']);
+			$resultArray['calculationsResult'] = $calculationsResult;
+		}
+		array_push($a[$this->router->fetch_method()],$resultArray);
+		echo json_encode($a);
+		
+		/*
+			Response
+			{
+			  "debt_get_item": [
+				{
+				  "main_data": {
+					"id": "49",
+					"usr_id": "1",
+					"month": "9",
+					"year": "16",
+					"monthly_payment": "5000",
+					"minimum_payment": "1795",
+					"strategy": "snowball",
+					"datetime": "2016-09-07 23:23:53",
+					"status": "1"
+				  },
+				  "user_loans": [
+					{
+					  "id": "179",
+					  "debt_id": "49",
+					  "creditor": "car",
+					  "balance": "8000",
+					  "rate": "13.99",
+					  "payment": "295",
+					  "datetime": "2016-09-07 23:23:53",
+					  "status": "1"
+					},
+					{
+					  "id": "180",
+					  "debt_id": "49",
+					  "creditor": "bike",
+					  "balance": "15762",
+					  "rate": "18.99",
+					  "payment": "400",
+					  "datetime": "2016-09-07 23:23:53",
+					  "status": "1"
+					},
+					{
+					  "id": "181",
+					  "debt_id": "49",
+					  "creditor": "personal",
+					  "balance": "22000",
+					  "rate": "3.99",
+					  "payment": "650",
+					  "datetime": "2016-09-07 23:23:53",
+					  "status": "1"
+					},
+					{
+					  "id": "182",
+					  "debt_id": "49",
+					  "creditor": "loan",
+					  "balance": "27141",
+					  "rate": "4.99",
+					  "payment": "450",
+					  "datetime": "2016-09-07 23:23:53",
+					  "status": "1"
+					}
+				  ],
+				  "user_loans_Total": {
+					"total_balance": "72903",
+					"total_payment": "1795"
+				  },
+				  "calculationsResult": {
+					"creditor1": "car",
+					"amount1": "8000",
+					"futuredate1": "December 2016",
+					"prev_month1": 3,
+					"total_interest1": "160.19",
+					"cstmbalance": "72,903.00",
+					"cstminterest": "3,353.85",
+					"creditor2": "bike",
+					"amount2": "15762",
+					"futuredate2": "April 2017",
+					"prev_month2": 7,
+					"total_interest2": "1,207.15",
+					"creditor3": "personal",
+					"amount3": "22000",
+					"futuredate3": "August 2017",
+					"prev_month3": 11,
+					"total_interest3": "591.11",
+					"creditor4": "loan",
+					"amount4": "27141",
+					"futuredate4": "January 2018",
+					"prev_month4": 16,
+					"total_interest4": "1,395.41"
+				  }
+				}
+			  ]
+			}
+		*/
+	}
+	
+	function debt_add_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+		
+		$param['jsonarray'] = trim(urldecode($_REQUEST['data'])); //json array
+		
+/*data*/
+//creditor=car&balance=8000&rate=13.99&payment=295&creditor=bike&balance=15762&rate=18.99&payment=400&creditor=personal&balance=22000&rate=3.99&payment=650&creditor=loan&balance=27141&rate=4.99&payment=450&creditor=&balance=0&rate=0&payment=0&creditor=&balance=0&rate=0&payment=0&creditor=&balance=0&rate=0&payment=0&creditor=&balance=0&rate=0&payment=0&creditor=&balance=0&rate=0&payment=0&creditor=&balance=0&rate=0&payment=0
+/*data*/
+		
+		$param['strategylist'] = trim(urldecode($_REQUEST['strategylist'])); //snowball / avalanche / nosnowball
+		
+		$param['selectYear'] =  trim(urldecode($_REQUEST['year'])); //16
+		$param['month'] = trim(urldecode($_REQUEST['month'])); //1
+		
+		$param['monthlypayment'] = trim(urldecode($_REQUEST['monthlypayment'])); 
+		$param['mininumpayment'] = trim(urldecode($_REQUEST['mininumpayment'])); 
+		
+		$array1 = explode('&',$param['jsonarray']);
+		$param['jsonarray'] = explode('&', $param['jsonarray']);
+		$debt_payment['usr_id'] = trim(urldecode($_REQUEST['user_id'])); 
+		$debt_payment['month'] = $param['month'];
+		$debt_payment['year'] = $param['selectYear'];
+		$debt_payment['monthly_payment'] = $param['monthlypayment'];
+		$debt_payment['minimum_payment'] = $param['mininumpayment'];
+		$debt_payment['strategy'] = $param['strategylist'];
+		$debt_payment['status'] = '1';
+
+		$this->db->where('usr_id',  $debt_payment['usr_id']);
+		$this->db->where('month',  $debt_payment['month']);
+		$this->db->where('year',  $debt_payment['year']);
+		$query=$this->db->get("debt_payment");
+		
+		$insertid = 0;
+        if($query->num_rows() > 0)
+		{
+			$rows = $query->row_array();
+			$insertid = $rows['id'];
+			$this->db->query(" delete debt_payment from debt_payment where id = '$insertid' ");
+			$this->db->query(" delete dept_pay_detail from dept_pay_detail where debt_id = '$insertid' ");
+			
+			$this->db->insert('debt_payment', $debt_payment);
+			$insertid = $this->db->insert_id();
+		}
+		else{
+			$this->db->insert('debt_payment', $debt_payment);
+			$insertid = $this->db->insert_id();
+		}
+
+		
+		$temp = array();
+		
+		$b = array();
+		$count = 0;
+		for($i = 0; $i < sizeof($param['jsonarray']); $i++)
+		{
+			$array = explode('=', $param['jsonarray'][$i]);
+			$key = $array[0];
+			$value = $array[1];
+			if(trim(urldecode($value)) != '' && trim(urldecode($value)) != '0')
+			{
+				$temp[trim(urldecode($key))] = trim(urldecode($value)); 
+				if($count == 3)
+				{
+					$temp['debt_id'] = $insertid;
+					$temp['status'] = 1;
+					array_push($b,$temp);
+					$count = 0;
+					$temp = array();
+				}
+				else{
+					$count = $count+1;
+				}
+			}
+		}
+		
+		$this->db->insert_batch('dept_pay_detail', $b); 
+		
+		$param['jsonarray'] = trim(urldecode($_REQUEST['data'])); //$this->input->post('data');
+		$data =$b;
+		foreach ($data as $key => $row) {
+			$counter = $key;
+			$balance[$key]  = $row['balance'];
+			$rate[$key] = $row['rate'];
+		}
+
+		$count = $count/4;
+		if($param['strategylist'] == "snowball") 
+		{
+			array_multisort($balance, SORT_ASC, $data);
+			$result = $this->calc_model->getResult($data, $count, $param,'snowball');
+		}
+		else if(strtolower($param['strategylist']) == "avalanche") 
+		{
+			array_multisort($rate, SORT_DESC, $data);
+			$result = $this->calc_model->getResult($data, $count, $param,'avalanche');
+		}
+		else{
+			$result = $this->calc_model->getResult($data, $count, $param,'nosnowball');
+		}
+		array_push($a[$this->router->fetch_method()],$result);
+		echo json_encode($a);
+		
+		/*
+		Response 
+		{
+		  "debt_add_item": [
+			{
+			  "creditor1": "car",
+			  "amount1": "8000",
+			  "futuredate1": "December 2016",
+			  "prev_month1": 3,
+			  "total_interest1": "160.19",
+			  "cstmbalance": "72,903.00",
+			  "cstminterest": "3,353.85",
+			  "creditor2": "bike",
+			  "amount2": "15762",
+			  "futuredate2": "April 2017",
+			  "prev_month2": 7,
+			  "total_interest2": "1,207.15",
+			  "creditor3": "personal",
+			  "amount3": "22000",
+			  "futuredate3": "August 2017",
+			  "prev_month3": 11,
+			  "total_interest3": "591.11",
+			  "creditor4": "loan",
+			  "amount4": "27141",
+			  "futuredate4": "January 2018",
+			  "prev_month4": 16,
+			  "total_interest4": "1,395.41"
+			}
+		  ]
+		}
+		*/
+	}
+	
+	function debt_delete_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+		
+		$debt_payment['year'] = trim(urldecode($_REQUEST['year']));
+		$debt_payment['month'] = trim(urldecode($_REQUEST['month']));
+		$debt_payment['usr_id'] = trim(urldecode($_REQUEST['user_id']));
+		
+		$this->db->where('usr_id',  $debt_payment['usr_id']);
+		$this->db->where('month',  $debt_payment['month']);
+		$this->db->where('year',  $debt_payment['year']);
+		
+		$query=$this->db->get("debt_payment");
+		
+        if($query->num_rows() > 0)
+		{
+			$rows = $query->row_array();
+			$insertid = $rows['id'];
+			$this->db->query(" delete debt_payment from debt_payment where id = '$insertid' ");
+			$this->db->query(" delete dept_pay_detail from dept_pay_detail where debt_id = '$insertid' ");
+		}
+		
+		$b['msg'] = "Item deleted";
+		$b['short'] = 'true';
+		$b['result'] ='delete';
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+		
+		/*
+			Response
+			{
+			  "debt_delete_item": [
+				{
+				  "msg": "Item deleted",
+				  "short": "true",
+				  "result": "delete"
+				}
+			  ]
+			}
+		*/
+	}
 }
