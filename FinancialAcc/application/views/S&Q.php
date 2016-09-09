@@ -1,26 +1,26 @@
 <style>
 .heightdiv{
-	
 	height:460px;
-	
 }
 </style>
 <div class="content contentcstm ">
   
 		<div class="main-content ">
-		<div class="col-md-5 " >
+		<div class="col-md-5 ">
 		<!-- Trigger the modal with a button -->
   
-<form class="form-inline ">
+<form class="form-inline">
   
   <div class="form-group" style="margin-bottom:5px">
   
-    <label for="Total">Total:</label> <input type="text" placeholder="$ 295.00" class="form-control" id="Total"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">New Inventory</button>
+    <label for="Total">Total:</label> <input type="text" disabled placeholder="$ 295.00" class="form-control" id="Total" value = "<?php echo $this->account_model->getTotalInvertoryValue(); ?>"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">New Inventory</button>
     
   </div>
  
  
 </form>
+  
+  
   </div>
 			<div class="col-md-12 col-xs-12 heightdiv">
 				
@@ -36,38 +36,13 @@
 							<th class="hidden-xs hidden-sm">Description</th>
 						</tr>
 					</thead>
-					<tbody>
-						 <tr>
-					    <td scope="row">IN0001</td>
-						<td>Shoes</td>
-					    <td>$175.00</td>
-					    <td>2</td>
-					    <td>$ 350</td>
-					    <td>$ 80</td>
-					    <td>Stilettos</td>
-						</tr>
-						 <tr>
-					    <td scope="row">IN0002</td>
-						<td>T.V.</td>
-					    <td>$175.00</td>
-					    <td>2</td>
-					    <td>$ 350</td>
-					    <td>$ 80</td>
-					    <td>Sony</td>
-						</tr>
-						 <tr>
-					    <td scope="row">IN0003</td>
-						<td>Toys</td>
-					    <td>$175.00</td>
-					    <td>2</td>
-					    <td>$ 350</td>
-					    <td>$ 80</td>
-					    <td>Varies</td>
-						</tr>
+					<tbody id ="tablecontent">
+							<?php
+								$this->account_model->getallinventoryPAGELOAD();
+							?>
 					</tbody>
 				</table>
-
-						</div>
+					</div>
 
                     
 <!-- Modal -->
@@ -88,15 +63,15 @@
   </div>
   <div class="form-group">
     <label for="unitprice">Unit Price:</label>
-    <input type="number" class="form-control" id="unit_price" name="unit_price" value = "0" min='0' >
+    <input type="number" class="form-control sandqmoneytotaladd" id="unit_price" name="unit_price" value = "0" min='0' >
   </div>
   <div class="form-group">
     <label for="quantitystock">Quantity in Stock:</label>
-    <input type="number" class="form-control" id="quantity_stock" name="quantity_stock" value = "0" min='0'>
+    <input type="text" class="form-control sandqmoneytotaladd" id="quantity_stock" name="quantity_stock" value = "0" min='0'>
   </div>
   <div class="form-group">
     <label for="totalprice">Total Price:</label>
-    <input type="number" class="form-control" id="total_price" name="total_price" value = "0" min='0'>
+    <input type="number" class="form-control" readonly id="total_price" name="total_price" value="0">
   </div>
   <div class="form-group">
     <label for="Inventoryvalue">Inventory Value:</label>
@@ -110,6 +85,26 @@
   <!--<input type="submit" value class="btn btn-default" onclick="validate();"></input>-->
   <input type="reset" class="btn btn-default" id="configreset" value="Reset">
 </form>
+        </div>
+      
+      </div>
+      
+    </div>
+  </div>
+  
+  
+  <div class="modal fade" id="updatesq" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add New Inventory</h4>
+        </div>
+        <div class="modal-body">
+          <form name = "inventoryupdateform" id = "inventoryupdateform" method = "post" action = "">
+		  </form>
         </div>
       
       </div>

@@ -65,6 +65,10 @@ class Pages extends CI_Controller {
 	}
 	public function billpayments()
 	{
+		$bill['status'] = 1;
+		$bill['user_id'] = $this->session->userdata('usr_id');
+		$this->data['allbills'] = $this->account_model->getallbill($bill);
+		
 		$this->load->view('header',$this->data);
 		$this->load->view('BillPayments',$this->data);
 		$this->load->view('footer',$this->data);

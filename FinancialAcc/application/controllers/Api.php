@@ -1160,4 +1160,221 @@ class Api extends REST_Controller {
 			}
 		*/
 	}
+	
+	//SandQMoney Start
+	
+	function sandq_get_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+	
+		$user_id = trim(urldecode($_REQUEST['user_id']));
+		$inventory_id = trim(urldecode($_REQUEST['inventory_id']));
+		
+		if($inventory_id == 0)
+		{
+			$sql = "SELECT user_inventory.id as inventory_id, user_inventory.unit_price, user_inventory.quantity_stock, user_inventory.total_price, user_inventory.inventory_value, user_inventory.description, user_inventory.datetime , inventory.item_name as inventory_name  FROM `user_inventory` inner join inventory on user_inventory.inventory_id = inventory.id where user_inventory.user_id = '$user_id' and user_inventory.inventory_status = '1' ";
+		}
+		else{
+			$sql = "SELECT user_inventory.id as inventory_id, user_inventory.unit_price, user_inventory.quantity_stock, user_inventory.total_price, user_inventory.inventory_value, user_inventory.description, user_inventory.datetime , inventory.item_name as inventory_name  FROM `user_inventory` inner join inventory on user_inventory.inventory_id = inventory.id where user_inventory.user_id = '$user_id' and user_inventory.id = '$inventory_id' and user_inventory.inventory_status = '1'";
+		}
+		$query = $this->db->query($sql); //above query 'inventory_id' is a auto gen id in user_inventory table update on this base
+		
+		array_push($a[$this->router->fetch_method()],$query->result_array());
+		echo json_encode($a);
+	}
+	
+	function sandq_add_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+	
+		$inventory['user_id'] = trim(urldecode($_REQUEST['user_id']));
+		$inventory['item_name'] = trim(urldecode($_REQUEST['item_name']));
+		$inventory['unit_price'] = trim(urldecode($_REQUEST['unit_price']));
+		$inventory['quantity_stock'] = trim(urldecode($_REQUEST['quantity_stock']));
+		$inventory['inventory_value'] = trim(urldecode($_REQUEST['inventory_value']));
+		$inventory['description'] = trim(urldecode($_REQUEST['description']));
+		
+		$inventory['total_price'] = $inventory['unit_price'] * $inventory['quantity_stock'];//trim(urldecode($_REQUEST['total_price']));
+	
+		$result = $this->account_model->inventoryaddingbyuser($inventory);
+			
+			
+		if($result != '' && $result != '0' && $result != 'alreadyexists')
+		{
+			//success
+			$b['msg'] = 'Your inventory is Added Successfully!!!';
+			$b['short'] = 'true';
+			$b['inventory_id'] = $result;
+			$b['result'] = 'add';
+			array_push($a[$this->router->fetch_method()],$b);
+		}
+		else if($result == 'alreadyexists'){
+			$b['msg'] = 'inventory Already Exists!!!';
+			$b['short'] = 'false';
+			$b['description'] ='This inventory already exists in your list!';
+			$b['result'] = 'none';
+			array_push($a[$this->router->fetch_method()],$b);
+		}
+		echo json_encode($a);
+	}
+	
+	function sandq_update_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+	
+		$inventory['item_id'] = trim(urldecode($_REQUEST['inventory_id'])); //user_inventory.id
+
+		$inventory['user_id'] = trim(urldecode($_REQUEST['user_id']));
+		$inventory['item_name'] = trim(urldecode($_REQUEST['item_name']));
+		$inventory['unit_price'] = trim(urldecode($_REQUEST['unit_price']));
+		$inventory['quantity_stock'] = trim(urldecode($_REQUEST['quantity_stock']));
+		$inventory['inventory_value'] = trim(urldecode($_REQUEST['inventory_value']));
+		$inventory['description'] = trim(urldecode($_REQUEST['description']));
+		
+		$inventory['total_price'] = $inventory['unit_price'] * $inventory['quantity_stock'];//trim(urldecode($_REQUEST['total_price']));
+	
+		$result = $this->account_model->inventoryeditingbyuser($inventory);
+			
+		if($result != '' && $result != '0' && $result != 'alreadyexists')
+		{
+			//success
+			$b['msg'] = 'Your inventory is updated Successfully!!!';
+			$b['short'] = 'true';
+			//$b['inventory_id'] = $result;
+			$b['result'] = 'update';
+			array_push($a[$this->router->fetch_method()],$b);
+		}
+		echo json_encode($a);
+	}
+
+	function sandq_delete_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+	
+		$inventory['id'] = trim(urldecode($_REQUEST['inventory_id'])); //user_inventory.id
+		$inventory['user_id'] = trim(urldecode($_REQUEST['user_id']));	
+		$inventory['inventory_status'] = 0; 
+
+		$result = $this->account_model->inventorymanagement($inventory);
+			
+		if($result != '' && $result != '0' && $result != 'alreadyexists')
+		{
+			//success
+			$b['msg'] = 'Your inventory has been deleted successfully!!!';
+			$b['short'] = 'true';
+			$b['result'] = 'delete';
+			array_push($a[$this->router->fetch_method()],$b);
+		}
+		echo json_encode($a);
+	}
+	
+	//SandQMoney End
+	
+	//Bill Payment API 
+	
+	function bill_get_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+	
+		$user_id = trim(urldecode($_REQUEST['user_id']));
+		
+		$bill['status'] = 1;
+		$bill['user_id'] = $user_id;
+		$allbills = $this->account_model->getallbill($bill);
+		
+		array_push($a[$this->router->fetch_method()],$allbills);
+		echo json_encode($a);
+	}
+
+	function bill_add_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+		$b;
+		$user_id = trim(urldecode($_REQUEST['user_id']));
+		
+		$bill['bill_name'] =  trim(urldecode($_REQUEST['bill_name']));
+		$bill['datepicker1'] =  trim(urldecode($_REQUEST['date']));
+		$bill['amount_due'] =  trim(urldecode($_REQUEST['amount_due']));
+		$bill['debt_status'] =  trim(urldecode($_REQUEST['debt_status']));
+		$bill['user_id'] = $user_id;
+		$result = $this->account_model->billaddingbyuser($bill);
+		if($result == 0)
+		{
+			$b['msg'] = 'please try again';
+			$b['short'] = 'false';
+			$b['result'] = 'none';
+		}
+		else{
+			$b['msg'] = 'Your bill successfully added!!!';
+			$b['short'] = 'true';
+			$b['result'] = 'add';
+		}
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	
+	function bill_update_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+		$b;
+		
+		$bill['user_id'] =  trim(urldecode($_REQUEST['user_id']));
+		$bill['id'] = trim(urldecode($_REQUEST['id']));
+		
+		$bill['bill_name'] = $this->input->post('bill_name');
+		$bill['due_date'] = $this->input->post('date'); //due date
+		$bill['amount_due'] = $this->input->post('amount_due');
+		$bill['debt_status'] = $this->input->post('debt_status');
+		
+		$this->account_model->billpaymenteditingbyuser($bill);
+		
+		$b['msg'] = 'Your bill updated successfully!!!';
+		$b['short'] = 'true';
+		$b['result'] = 'update';
+		
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	
+	function bill_delete_item_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+		$b;
+		
+		$bill['user_id'] =  trim(urldecode($_REQUEST['user_id']));
+		$bill['id'] = trim(urldecode($_REQUEST['id']));
+		$bill['status'] = '0';
+		$this->account_model->billmanagement($bill);
+		
+		$b['msg'] = 'Your bill has been deleted successfully!!!';
+		$b['short'] = 'true';
+		$b['result'] = 'delete';
+		
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+	
+	//Bill Payment API
+	
+	//Dashboard 
+	function dash_get_total_inventory_value_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+		$b;
+		$user_id =  trim(urldecode($_REQUEST['user_id']));
+		$b = $this->account_model->getTotalInvertoryValue($user_id);
+		array_push($a[$this->router->fetch_method()],$b);
+		echo json_encode($a);
+	}
+
+	function dash_get_weekly_bills_summary_post()
+	{
+		$a[$this->router->fetch_method()] = array();
+		$b;
+		$user_id =  trim(urldecode($_REQUEST['user_id']));
+		$b = $this->account_model->pageload($user_id);
+		array_push($a[$this->router->fetch_method()],$b['billoverview']);
+		echo json_encode($a);
+	}
+	//Dashboard
 }

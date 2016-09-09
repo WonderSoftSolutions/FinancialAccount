@@ -1,68 +1,67 @@
 <?php 
 $userid = $this->session->userdata('usr_id');		
 
-$overallprogress =  $this->account_model->getoverallprogress($userid); ?>
-
-<?php 
+$overallprogress =  $this->account_model->getoverallprogress($userid); 
 
 $debt_payment['usr_id'] = $this->session->userdata('usr_id');
 $debt_payment['month'] = date("n");
 $debt_payment['year'] = date("y");
 $maindetails = $this->account_model->getDebtPaymentDetails($debt_payment);
-$strategy = '';
+$strategy = 'N/A';
+$strategylevel = 'N/A';
 if($maindetails == 'false')
 {
 	$monthly_payment = '0';
+	$minimum_payment = '0';
+	$futuredate = 'N/A';
+	$tempmonth = "0";
+	$tempmonth = "0";
 }
 else{
 	$monthly_payment = $maindetails['monthly_payment'];
-}
-if($maindetails == 'false')
-{
-	$minimum_payment = '0';
-}
-else{
 	$minimum_payment = $maindetails['minimum_payment'];
-}
-$debt_id =$maindetails['id'];
-if($maindetails['strategy'] == 'Avalanche'){
-$strategy = 'Avalanche';
-$strategylevel = "(Highest Interest)";
-$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by rate desc ");
-}
-if($maindetails['strategy'] == 'snowball'){
-$strategy = 'Snowball';
-$strategylevel = "(Lowest Balance)";
-$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by balance asc ");
-}
-if($maindetails['strategy'] == 'nosnowball'){
-$strategy = 'No snowball';
-$strategylevel = "";
-$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' ");
-}
-$dept_pay_detail = $query->result_array();
-
-$oldparam['monthlypayment'] = $maindetails['monthly_payment'];
-$oldparam['month'] = $maindetails['month'];
-$oldparam['selectYear'] = $maindetails['year'];
-$result = $this->calc_model->getResult($dept_pay_detail,sizeof($dept_pay_detail),$oldparam,$maindetails['strategy']);
 
 
-$tempmonth = 0;
-$futuredate = 0;
-
-for($i = 1; $i < sizeof($result)/5; $i++)
-{
-	if($result['prev_month'.$i] > $tempmonth)
-	{
-		$tempmonth = $result['prev_month'.$i];
-		$futuredate = $result['futuredate'.$i];
+	$debt_id =$maindetails['id'];
+	if($maindetails['strategy'] == 'Avalanche'){
+	$strategy = 'Avalanche';
+	$strategylevel = "(Highest Interest)";
+	$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by rate desc ");
 	}
+	if($maindetails['strategy'] == 'snowball'){
+	$strategy = 'Snowball';
+	$strategylevel = "(Lowest Balance)";
+	$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by balance asc ");
+	}
+	if($maindetails['strategy'] == 'nosnowball'){
+	$strategy = 'No snowball';
+	$strategylevel = "";
+	$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' ");
+	}
+	$dept_pay_detail = $query->result_array();
+
+	$oldparam['monthlypayment'] = $maindetails['monthly_payment'];
+	$oldparam['month'] = $maindetails['month'];
+	$oldparam['selectYear'] = $maindetails['year'];
+	
+	$result = $this->calc_model->getResult($dept_pay_detail,sizeof($dept_pay_detail),$oldparam,$maindetails['strategy']);
+
+
+	$tempmonth = 0;
+	$futuredate = 0;
+
+	for($i = 1; $i < sizeof($result)/5; $i++)
+	{
+		if($result['prev_month'.$i] > $tempmonth)
+		{
+			$tempmonth = $result['prev_month'.$i];
+			$futuredate = $result['futuredate'.$i];
+		}
+	}
+
+	$fmonth = explode(" ",$futuredate);
+	$futuredate = substr($fmonth[0],0,3) . " ". $fmonth[1];
 }
-
-$fmonth = explode(" ",$futuredate);
-$futuredate = substr($fmonth[0],0,3) . " ". $fmonth[1];
-
 ?>
 
 <script>
@@ -327,28 +326,32 @@ $(document).ready(function () {
 							
 							
                         </div>
-						
+						<?php 
+						$response = $this->account_model->pageload();
+						$total_due = $response['billoverview']['total_due'];
+						$total_bills = $response['billoverview']['total_bills'];
+						?>
                         <div class="col-md-2-new" style="background-color:blue; max-height:240px; ">
                             <div class="col-md-12 knob-container" style="background-color: blue;text-align: center;color:white;">
 							  <h5 style="border-bottom: 1px solid white; padding-bottom: 10px; font-size: 13px;">Weekly Bills Summary</h5>
 <!--                                <input class="knob" data-width="200" data-min="0" data-max="4500" data-displayPrevious="true" value="3299" data-fgColor="#efbf59" data-readOnly=true;>-->
 									
 									<div class="col-md-8 col-xs-8 col-sm-8 col-lg-8" style="background-color: cornflowerblue;margin-top: 8px;"><p style="font-size: 9px;padding-top: 6px;width: 63px;margin-left: -6px;">Total Bills Due:</p></div>
-									<div class="col-md-4 col-xs-4 col-sm-4 col-lg-4" style="background-color: white; margin-top: 8px;"><p style="font-size: 9px; color: black; padding-top: 6px;text-align: right;">2</p></div>
+									<div class="col-md-4 col-xs-4 col-sm-4 col-lg-4" style="background-color: white; margin-top: 8px;"><p style="font-size: 9px; color: black; padding-top: 6px;text-align: right;"><?php echo $total_bills; ?></p></div>
 								
 									<div class="col-md-8 col-xs-8 col-sm-8 col-lg-8" style="background-color: cornflowerblue;margin-top: 5px;"><p style="font-size: 9px;padding-top: 6px;margin-left: -25px;width: 100px;">Total Bill Amount:</p></div>
-									<div class="col-md-4 col-xs-4 col-sm-4 col-lg-4" style="background-color: white; margin-top: 5px;"><p style="font-size: 9px;color: black;padding-top: 6px;text-align: right;margin-left: -12px;">1,050.00</p></div>
+									<div class="col-md-4 col-xs-4 col-sm-4 col-lg-4" style="background-color: white; margin-top: 5px;"><p style="font-size: 9px;color: black;padding-top: 6px;text-align: right;margin-left: -12px;"><?php echo $total_due; ?></p></div>
 								
                             </div>
 							
 							<div class="col-md-12 knob-container hidden-xs hidden-sm" style="background-color: blue;text-align: center;color:white;margin-top: 10px;border-top: 4px solid white;height: 100%;max-height: 114px;">
 							  <h5 style="border-bottom: 1px solid white;padding-bottom: 10px;font-size: 13px;margin-top: 29px;">Total Inventory Value</h5>
-								<h5 style="">$95.00.00</h5>
+								<h5 style="">$<?php echo $this->account_model->getTotalInvertoryValue(); ?></h5>
                             </div>
 							
 							<div class=" hidden-md hidden-lg col-md-12 col-xs-12 col-sm-12 knob-container" style="background-color: blue;text-align: center;color:white;margin-top: 4px;border-top: 1px solid white; height: 100%; max-height: 77px; ">
 							  <h5 style="border-bottom: 1px solid white;padding-bottom: 10px;font-size: 13px;margin-top: 32px;">Total Inventory Value</h5>
-								<h5 style="">$95.00.00</h5>
+								<h5 style="">$<?php echo $this->account_model->getTotalInvertoryValue(); ?></h5>
                             </div>
                         </div> 
 						
@@ -369,10 +372,10 @@ $(document).ready(function () {
 									<div class="col-md-7 col-xs-7 col-sm-7 col-lg-7" style="background-color: #e1dfe0;margin-top: 5px;"><p style="font-size: 9px;padding-top: 6px;line-height: 12px;width: 83px;margin-left: -9px;/* text-align: -webkit-auto; */ color:black;/* word-spacing: 0px; */">Number of months:</p></div>
 									<div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 5px;"><p style="font-size: 9px; color: black; padding-top: 6px;text-align: right;"><?php echo $tempmonth; ?></p></div>
 									</div>
+									
 									<div class="form-group">
-									<div class="col-md-4 col-sm-4 col-lg-4 col-xs-4" style="background-color: #f6f4f5;margin-top: 20px;margin-left: 22px;"><p style="font-size: 9px;padding-top: 11px;width: 54px;margin-left: -9px;color:#514f50;height: 27px;margin-left: -13px; ">Strategy:</p></div>
-									<div class="col-md-8 col-sm-8 col-lg-8 col-xs-8" style="background-color: #e1dfe0;margin-top: 20px;width: 79px;"><p style="font-size: 9px;color: #514f50;padding-top: 3px;width: 68px;margin-left: -10px;text-align: -webkit-right;"><?php echo $strategy; ?><br>
-									<span style="font-size: 9px;color: #514f50;padding-left: 11px;margin-left: -16px;"><?php echo $strategylevel; ?></span></p></div>
+									<div class="col-md-7 col-xs-7 col-sm-7 col-lg-7" style="background-color: #e1dfe0;margin-top: 20px;"><p style="font-size: 9px;padding-top: 6px;line-height: 24px;width: 83px;margin-left: -9px;/* text-align: -webkit-auto; */ color:black;/* word-spacing: 0px; */">Strategy:</p></div>
+									<div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" style="background-color: white; margin-top: 20px;"><p style="font-size: 9px; color: black; padding-top: 6px;text-align: right;"><?php echo $strategy; ?><br/><?php echo $strategylevel; ?></p></div>
 									</div>
 									
 								<h5 style="">&nbsp;</h5>

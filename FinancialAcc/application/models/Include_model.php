@@ -1195,62 +1195,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Total Income</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalincome_1' name='totalincome_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalincome_1' name='totalincome_1'>
 			<?php echo $this->revenueTotalcalc(0,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalincome_2' name='totalincome_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalincome_2' name='totalincome_2'>
 			<?php echo $this->revenueTotalcalc(1,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalincome_3' name='totalincome_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalincome_3' name='totalincome_3'>
 			<?php echo $this->revenueTotalcalc(2,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalincome_4' name='totalincome_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalincome_4' name='totalincome_4'>
 			<?php echo $this->revenueTotalcalc(3,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalincome_5' name='totalincome_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalincome_5' name='totalincome_5'>
 			<?php echo $this->revenueTotalcalc(4,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalincome_6' name='totalincome_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalincome_6' name='totalincome_6'>
 			<?php echo $this->revenueTotalcalc(5,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalincome_7' name='totalincome_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalincome_7' name='totalincome_7'>
 			<?php echo $this->revenueTotalcalc(6,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalincome_8' name='totalincome_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalincome_8' name='totalincome_8'>
 			<?php echo $this->revenueTotalcalc(7,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalincome_9' name='totalincome_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalincome_9' name='totalincome_9'>
 			<?php echo $this->revenueTotalcalc(8,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalincome_10' name='totalincome_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalincome_10' name='totalincome_10'>
 			<?php echo $this->revenueTotalcalc(9,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalincome_11' name='totalincome_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalincome_11' name='totalincome_11'>
 			<?php echo $this->revenueTotalcalc(10,$revenues); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalincome_12' name='totalincome_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalincome_12' name='totalincome_12'>
 			<?php echo $this->revenueTotalcalc(11,$revenues); ?>
 			</span>
 			</div></td>
@@ -1647,40 +1647,40 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Total Expenses</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1'  id='totalexpenses_1' name='totalexpenses_1'><?php echo $this->expensesTotalcalc(0,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='1'  id='totalexpenses_1' name='totalexpenses_1'><?php echo $this->expensesTotalcalc(0,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='2'  id='totalexpenses_2' name='totalexpenses_2'><?php echo $this->expensesTotalcalc(1,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='2'  id='totalexpenses_2' name='totalexpenses_2'><?php echo $this->expensesTotalcalc(1,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='3'  id='totalexpenses_3' name='totalexpenses_3'><?php echo $this->expensesTotalcalc(2,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='3'  id='totalexpenses_3' name='totalexpenses_3'><?php echo $this->expensesTotalcalc(2,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='4'  id='totalexpenses_4' name='totalexpenses_4'><?php echo $this->expensesTotalcalc(3,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='4'  id='totalexpenses_4' name='totalexpenses_4'><?php echo $this->expensesTotalcalc(3,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='5'  id='totalexpenses_5' name='totalexpenses_5'><?php echo $this->expensesTotalcalc(4,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='5'  id='totalexpenses_5' name='totalexpenses_5'><?php echo $this->expensesTotalcalc(4,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='6'  id='totalexpenses_6' name='totalexpenses_6'><?php echo $this->expensesTotalcalc(5,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='6'  id='totalexpenses_6' name='totalexpenses_6'><?php echo $this->expensesTotalcalc(5,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='7'  id='totalexpenses_7' name='totalexpenses_7'><?php echo $this->expensesTotalcalc(6,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='7'  id='totalexpenses_7' name='totalexpenses_7'><?php echo $this->expensesTotalcalc(6,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='8'  id='totalexpenses_8' name='totalexpenses_8'><?php echo $this->expensesTotalcalc(7,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='8'  id='totalexpenses_8' name='totalexpenses_8'><?php echo $this->expensesTotalcalc(7,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='9'  id='totalexpenses_9' name='totalexpenses_9'><?php echo $this->expensesTotalcalc(8,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='9'  id='totalexpenses_9' name='totalexpenses_9'><?php echo $this->expensesTotalcalc(8,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='10' id='totalexpenses_10' name='totalexpenses_10'><?php echo $this->expensesTotalcalc(9,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='10' id='totalexpenses_10' name='totalexpenses_10'><?php echo $this->expensesTotalcalc(9,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='11' id='totalexpenses_11' name='totalexpenses_11'><?php echo $this->expensesTotalcalc(10,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='11' id='totalexpenses_11' name='totalexpenses_11'><?php echo $this->expensesTotalcalc(10,$expenses); ?></span>
 			</div></td>                    
 			<td><div class='form-group'>   
-			<span class='label label-info ' data-id='12' id='totalexpenses_12' name='totalexpenses_12'><?php echo $this->expensesTotalcalc(11,$expenses); ?></span>
+			<span class='label label-info cstmlabel' data-id='12' id='totalexpenses_12' name='totalexpenses_12'><?php echo $this->expensesTotalcalc(11,$expenses); ?></span>
 			</div></td>
 		</tr>
 	<?php
@@ -1737,62 +1737,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Total Cash</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalcash_1' name='totalcash_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalcash_1' name='totalcash_1'>
 			<?php echo $this->totalCash(0,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalcash_2' name='totalcash_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalcash_2' name='totalcash_2'>
 			<?php echo $this->totalCash(1,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalcash_3' name='totalcash_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalcash_3' name='totalcash_3'>
 			<?php echo $this->totalCash(2,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalcash_4' name='totalcash_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalcash_4' name='totalcash_4'>
 			<?php echo $this->totalCash(3,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalcash_5' name='totalcash_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalcash_5' name='totalcash_5'>
 			<?php echo $this->totalCash(4,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalcash_6' name='totalcash_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalcash_6' name='totalcash_6'>
 			<?php echo $this->totalCash(5,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalcash_7' name='totalcash_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalcash_7' name='totalcash_7'>
 			<?php echo $this->totalCash(6,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalcash_8' name='totalcash_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalcash_8' name='totalcash_8'>
 			<?php echo $this->totalCash(7,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalcash_9' name='totalcash_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalcash_9' name='totalcash_9'>
 			<?php echo $this->totalCash(8,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalcash_10' name='totalcash_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalcash_10' name='totalcash_10'>
 			<?php echo $this->totalCash(9,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalcash_11' name='totalcash_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalcash_11' name='totalcash_11'>
 			<?php echo $this->totalCash(10,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalcash_12' name='totalcash_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalcash_12' name='totalcash_12'>
 			<?php echo $this->totalCash(11,$assets); ?>
 			</span>
 			</div></td>
@@ -1828,62 +1828,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Total Investment</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalinvestment_1' name='totalinvestment_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalinvestment_1' name='totalinvestment_1'>
 			<?php echo $this->totalInvestment(0,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalinvestment_2' name='totalinvestment_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalinvestment_2' name='totalinvestment_2'>
 			<?php echo $this->totalInvestment(1,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalinvestment_3' name='totalinvestment_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalinvestment_3' name='totalinvestment_3'>
 			<?php echo $this->totalInvestment(2,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalinvestment_4' name='totalinvestment_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalinvestment_4' name='totalinvestment_4'>
 			<?php echo $this->totalInvestment(3,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalinvestment_5' name='totalinvestment_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalinvestment_5' name='totalinvestment_5'>
 			<?php echo $this->totalInvestment(4,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalinvestment_6' name='totalinvestment_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalinvestment_6' name='totalinvestment_6'>
 			<?php echo $this->totalInvestment(5,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalinvestment_7' name='totalinvestment_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalinvestment_7' name='totalinvestment_7'>
 			<?php echo $this->totalInvestment(6,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalinvestment_8' name='totalinvestment_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalinvestment_8' name='totalinvestment_8'>
 			<?php echo $this->totalInvestment(7,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalinvestment_9' name='totalinvestment_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalinvestment_9' name='totalinvestment_9'>
 			<?php echo $this->totalInvestment(8,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalinvestment_10' name='totalinvestment_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalinvestment_10' name='totalinvestment_10'>
 			<?php echo $this->totalInvestment(9,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalinvestment_11' name='totalinvestment_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalinvestment_11' name='totalinvestment_11'>
 			<?php echo $this->totalInvestment(10,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalinvestment_12' name='totalinvestment_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalinvestment_12' name='totalinvestment_12'>
 			<?php echo $this->totalInvestment(11,$assets); ?>
 			</span>
 			</div></td>
@@ -1907,62 +1907,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Total Retirement</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalretirement_1' name='totalretirement_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalretirement_1' name='totalretirement_1'>
 			<?php echo $this->totalRetirement(0,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalretirement_2' name='totalretirement_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalretirement_2' name='totalretirement_2'>
 			<?php echo $this->totalRetirement(1,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalretirement_3' name='totalretirement_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalretirement_3' name='totalretirement_3'>
 			<?php echo $this->totalRetirement(2,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalretirement_4' name='totalretirement_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalretirement_4' name='totalretirement_4'>
 			<?php echo $this->totalRetirement(3,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalretirement_5' name='totalretirement_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalretirement_5' name='totalretirement_5'>
 			<?php echo $this->totalRetirement(4,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalretirement_6' name='totalretirement_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalretirement_6' name='totalretirement_6'>
 			<?php echo $this->totalRetirement(5,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalretirement_7' name='totalretirement_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalretirement_7' name='totalretirement_7'>
 			<?php echo $this->totalRetirement(6,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalretirement_8' name='totalretirement_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalretirement_8' name='totalretirement_8'>
 			<?php echo $this->totalRetirement(7,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalretirement_9' name='totalretirement_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalretirement_9' name='totalretirement_9'>
 			<?php echo $this->totalRetirement(8,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalretirement_10' name='totalretirement_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalretirement_10' name='totalretirement_10'>
 			<?php echo $this->totalRetirement(9,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalretirement_11' name='totalretirement_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalretirement_11' name='totalretirement_11'>
 			<?php echo $this->totalRetirement(10,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalretirement_12' name='totalretirement_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalretirement_12' name='totalretirement_12'>
 			<?php echo $this->totalRetirement(11,$assets); ?>
 			</span>
 			</div></td>
@@ -2010,62 +2010,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Total Property</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalproperty_1' name='totalproperty_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalproperty_1' name='totalproperty_1'>
 			<?php echo $this->totalProperty(0,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalproperty_2' name='totalproperty_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalproperty_2' name='totalproperty_2'>
 			<?php echo $this->totalProperty(1,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalproperty_3' name='totalproperty_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalproperty_3' name='totalproperty_3'>
 			<?php echo $this->totalProperty(2,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalproperty_4' name='totalproperty_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalproperty_4' name='totalproperty_4'>
 			<?php echo $this->totalProperty(3,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalproperty_5' name='totalproperty_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalproperty_5' name='totalproperty_5'>
 			<?php echo $this->totalProperty(4,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalproperty_6' name='totalproperty_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalproperty_6' name='totalproperty_6'>
 			<?php echo $this->totalProperty(5,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalproperty_7' name='totalproperty_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalproperty_7' name='totalproperty_7'>
 			<?php echo $this->totalProperty(6,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalproperty_8' name='totalproperty_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalproperty_8' name='totalproperty_8'>
 			<?php echo $this->totalProperty(7,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalproperty_9' name='totalproperty_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalproperty_9' name='totalproperty_9'>
 			<?php echo $this->totalProperty(8,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalproperty_10' name='totalproperty_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalproperty_10' name='totalproperty_10'>
 			<?php echo $this->totalProperty(9,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalproperty_11' name='totalproperty_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalproperty_11' name='totalproperty_11'>
 			<?php echo $this->totalProperty(10,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalproperty_12' name='totalproperty_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalproperty_12' name='totalproperty_12'>
 			<?php echo $this->totalProperty(11,$assets); ?>
 			</span>
 			</div></td>
@@ -2074,62 +2074,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Total Assets</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalassets_1' name='totalassets_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalassets_1' name='totalassets_1'>
 			<?php echo $this->totalAssets(0,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalassets_2' name='totalassets_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalassets_2' name='totalassets_2'>
 			<?php echo $this->totalAssets(1,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalassets_3' name='totalassets_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalassets_3' name='totalassets_3'>
 			<?php echo $this->totalAssets(2,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalassets_4' name='totalassets_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalassets_4' name='totalassets_4'>
 			<?php echo $this->totalAssets(3,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalassets_5' name='totalassets_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalassets_5' name='totalassets_5'>
 			<?php echo $this->totalAssets(4,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalassets_6' name='totalassets_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalassets_6' name='totalassets_6'>
 			<?php echo $this->totalAssets(5,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalassets_7' name='totalassets_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalassets_7' name='totalassets_7'>
 			<?php echo $this->totalAssets(6,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalassets_8' name='totalassets_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalassets_8' name='totalassets_8'>
 			<?php echo $this->totalAssets(7,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalassets_9' name='totalassets_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalassets_9' name='totalassets_9'>
 			<?php echo $this->totalAssets(8,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalassets_10' name='totalassets_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalassets_10' name='totalassets_10'>
 			<?php echo $this->totalAssets(9,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalassets_11' name='totalassets_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalassets_11' name='totalassets_11'>
 			<?php echo $this->totalAssets(10,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalassets_12' name='totalassets_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalassets_12' name='totalassets_12'>
 			<?php echo $this->totalAssets(11,$assets); ?>
 			</span>
 			</div></td>
@@ -2137,62 +2137,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Change MOM</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='assetsmom_1' name='assetsmom_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='assetsmom_1' name='assetsmom_1'>
 			<?php echo $this->totalAssetsMOM(0,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='assetsmom_2' name='assetsmom_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='assetsmom_2' name='assetsmom_2'>
 			<?php echo $this->totalAssetsMOM(1,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='assetsmom_3' name='assetsmom_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='assetsmom_3' name='assetsmom_3'>
 			<?php echo $this->totalAssetsMOM(2,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='assetsmom_4' name='assetsmom_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='assetsmom_4' name='assetsmom_4'>
 			<?php echo $this->totalAssetsMOM(3,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='assetsmom_5' name='assetsmom_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='assetsmom_5' name='assetsmom_5'>
 			<?php echo $this->totalAssetsMOM(4,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='assetsmom_6' name='assetsmom_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='assetsmom_6' name='assetsmom_6'>
 			<?php echo $this->totalAssetsMOM(5,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='assetsmom_7' name='assetsmom_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='assetsmom_7' name='assetsmom_7'>
 			<?php echo $this->totalAssetsMOM(6,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='assetsmom_8' name='assetsmom_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='assetsmom_8' name='assetsmom_8'>
 			<?php echo $this->totalAssetsMOM(7,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='assetsmom_9' name='assetsmom_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='assetsmom_9' name='assetsmom_9'>
 			<?php echo $this->totalAssetsMOM(8,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='assetsmom_10' name='assetsmom_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='assetsmom_10' name='assetsmom_10'>
 			<?php echo $this->totalAssetsMOM(9,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='assetsmom_11' name='assetsmom_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='assetsmom_11' name='assetsmom_11'>
 			<?php echo $this->totalAssetsMOM(10,$assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='assetsmom_12' name='assetsmom_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='assetsmom_12' name='assetsmom_12'>
 			<?php echo $this->totalAssetsMOM(11,$assets); ?>
 			</span>
 			</div></td>
@@ -2270,62 +2270,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Total Liabilities</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalliabilities_1' name='totalliabilities_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalliabilities_1' name='totalliabilities_1'>
 			<?php echo $this->totalliabilities(0,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalliabilities_2' name='totalliabilities_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalliabilities_2' name='totalliabilities_2'>
 			<?php echo $this->totalliabilities(1,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalliabilities_3' name='totalliabilities_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalliabilities_3' name='totalliabilities_3'>
 			<?php echo $this->totalliabilities(2,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalliabilities_4' name='totalliabilities_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalliabilities_4' name='totalliabilities_4'>
 			<?php echo $this->totalliabilities(3,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalliabilities_5' name='totalliabilities_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalliabilities_5' name='totalliabilities_5'>
 			<?php echo $this->totalliabilities(4,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalliabilities_6' name='totalliabilities_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalliabilities_6' name='totalliabilities_6'>
 			<?php echo $this->totalliabilities(5,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalliabilities_7' name='totalliabilities_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalliabilities_7' name='totalliabilities_7'>
 			<?php echo $this->totalliabilities(6,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalliabilities_8' name='totalliabilities_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalliabilities_8' name='totalliabilities_8'>
 			<?php echo $this->totalliabilities(7,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalliabilities_9' name='totalliabilities_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalliabilities_9' name='totalliabilities_9'>
 			<?php echo $this->totalliabilities(8,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalliabilities_10' name='totalliabilities_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalliabilities_10' name='totalliabilities_10'>
 			<?php echo $this->totalliabilities(9,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalliabilities_11' name='totalliabilities_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalliabilities_11' name='totalliabilities_11'>
 			<?php echo $this->totalliabilities(10,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalliabilities_12' name='totalliabilities_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalliabilities_12' name='totalliabilities_12'>
 			<?php echo $this->totalliabilities(11,$liabilities); ?>
 			</span>
 			</div></td>
@@ -2333,62 +2333,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Change MOM</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalliabilitiesmom_1' name='totalliabilitiesmom_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalliabilitiesmom_1' name='totalliabilitiesmom_1'>
 			<?php echo $this->totalliabilitiesMOM(0,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalliabilitiesmom_2' name='totalliabilitiesmom_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalliabilitiesmom_2' name='totalliabilitiesmom_2'>
 			<?php echo $this->totalliabilitiesMOM(1,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalliabilitiesmom_3' name='totalliabilitiesmom_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalliabilitiesmom_3' name='totalliabilitiesmom_3'>
 			<?php echo $this->totalliabilitiesMOM(2,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalliabilitiesmom_4' name='totalliabilitiesmom_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalliabilitiesmom_4' name='totalliabilitiesmom_4'>
 			<?php echo $this->totalliabilitiesMOM(3,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalliabilitiesmom_5' name='totalliabilitiesmom_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalliabilitiesmom_5' name='totalliabilitiesmom_5'>
 			<?php echo $this->totalliabilitiesMOM(4,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalliabilitiesmom_6' name='totalliabilitiesmom_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalliabilitiesmom_6' name='totalliabilitiesmom_6'>
 			<?php echo $this->totalliabilitiesMOM(5,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalliabilitiesmom_7' name='totalliabilitiesmom_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalliabilitiesmom_7' name='totalliabilitiesmom_7'>
 			<?php echo $this->totalliabilitiesMOM(6,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalliabilitiesmom_8' name='totalliabilitiesmom_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalliabilitiesmom_8' name='totalliabilitiesmom_8'>
 			<?php echo $this->totalliabilitiesMOM(7,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalliabilitiesmom_9' name='totalliabilitiesmom_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalliabilitiesmom_9' name='totalliabilitiesmom_9'>
 			<?php echo $this->totalliabilitiesMOM(8,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalliabilitiesmom_10' name='totalliabilitiesmom_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalliabilitiesmom_10' name='totalliabilitiesmom_10'>
 			<?php echo $this->totalliabilitiesMOM(9,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalliabilitiesmom_11' name='totalliabilitiesmom_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalliabilitiesmom_11' name='totalliabilitiesmom_11'>
 			<?php echo $this->totalliabilitiesMOM(10,$liabilities); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalliabilitiesmom_12' name='totalliabilitiesmom_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalliabilitiesmom_12' name='totalliabilitiesmom_12'>
 			<?php echo $this->totalliabilitiesMOM(11,$liabilities); ?>
 			</span>
 			</div></td>
@@ -2398,62 +2398,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Net Worth</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalnetworth_1' name='totalnetworth_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalnetworth_1' name='totalnetworth_1'>
 			<?php echo $this->totalNetworth(0,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalnetworth_2' name='totalnetworth_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalnetworth_2' name='totalnetworth_2'>
 			<?php echo $this->totalNetworth(1,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalnetworth_3' name='totalnetworth_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalnetworth_3' name='totalnetworth_3'>
 			<?php echo $this->totalNetworth(2,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalnetworth_4' name='totalnetworth_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalnetworth_4' name='totalnetworth_4'>
 			<?php echo $this->totalNetworth(3,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalnetworth_5' name='totalnetworth_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalnetworth_5' name='totalnetworth_5'>
 			<?php echo $this->totalNetworth(4,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalnetworth_6' name='totalnetworth_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalnetworth_6' name='totalnetworth_6'>
 			<?php echo $this->totalNetworth(5,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalnetworth_7' name='totalnetworth_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalnetworth_7' name='totalnetworth_7'>
 			<?php echo $this->totalNetworth(6,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalnetworth_8' name='totalnetworth_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalnetworth_8' name='totalnetworth_8'>
 			<?php echo $this->totalNetworth(7,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalnetworth_9' name='totalnetworth_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalnetworth_9' name='totalnetworth_9'>
 			<?php echo $this->totalNetworth(8,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalnetworth_10' name='totalnetworth_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalnetworth_10' name='totalnetworth_10'>
 			<?php echo $this->totalNetworth(9,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalnetworth_11' name='totalnetworth_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalnetworth_11' name='totalnetworth_11'>
 			<?php echo $this->totalNetworth(10,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalnetworth_12' name='totalnetworth_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalnetworth_12' name='totalnetworth_12'>
 			<?php echo $this->totalNetworth(11,$liabilities, $assets); ?>
 			</span>
 			</div></td>
@@ -2461,62 +2461,62 @@ class Include_model extends CI_Model {
 		<tr>
 			<td class= "total_class">Change MOM</td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='1' id='totalNetworthmom_1' name='totalNetworthmom_1'>
+			<span class='label label-info cstmlabel' data-id='1' id='totalNetworthmom_1' name='totalNetworthmom_1'>
 			<?php echo $this->totalNetMOM(0,$liabilities, $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='2' id='totalNetworthmom_2' name='totalNetworthmom_2'>
+			<span class='label label-info cstmlabel' data-id='2' id='totalNetworthmom_2' name='totalNetworthmom_2'>
 			<?php echo $this->totalNetMOM(1,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='3' id='totalNetworthmom_3' name='totalNetworthmom_3'>
+			<span class='label label-info cstmlabel' data-id='3' id='totalNetworthmom_3' name='totalNetworthmom_3'>
 			<?php echo $this->totalNetMOM(2,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='4' id='totalNetworthmom_4' name='totalNetworthmom_4'>
+			<span class='label label-info cstmlabel' data-id='4' id='totalNetworthmom_4' name='totalNetworthmom_4'>
 			<?php echo $this->totalNetMOM(3,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='5' id='totalNetworthmom_5' name='totalNetworthmom_5'>
+			<span class='label label-info cstmlabel' data-id='5' id='totalNetworthmom_5' name='totalNetworthmom_5'>
 			<?php echo $this->totalNetMOM(4,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='6' id='totalNetworthmom_6' name='totalNetworthmom_6'>
+			<span class='label label-info cstmlabel' data-id='6' id='totalNetworthmom_6' name='totalNetworthmom_6'>
 			<?php echo $this->totalNetMOM(5,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='7' id='totalNetworthmom_7' name='totalNetworthmom_7'>
+			<span class='label label-info cstmlabel' data-id='7' id='totalNetworthmom_7' name='totalNetworthmom_7'>
 			<?php echo $this->totalNetMOM(6,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='8' id='totalNetworthmom_8' name='totalNetworthmom_8'>
+			<span class='label label-info cstmlabel' data-id='8' id='totalNetworthmom_8' name='totalNetworthmom_8'>
 			<?php echo $this->totalNetMOM(7,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='9' id='totalNetworthmom_9' name='totalNetworthmom_9'>
+			<span class='label label-info cstmlabel' data-id='9' id='totalNetworthmom_9' name='totalNetworthmom_9'>
 			<?php echo $this->totalNetMOM(8,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='10' id='totalNetworthmom_10' name='totalNetworthmom_10'>
+			<span class='label label-info cstmlabel' data-id='10' id='totalNetworthmom_10' name='totalNetworthmom_10'>
 			<?php echo $this->totalNetMOM(9,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='11' id='totalNetworthmom_11' name='totalNetworthmom_11'>
+			<span class='label label-info cstmlabel' data-id='11' id='totalNetworthmom_11' name='totalNetworthmom_11'>
 			<?php echo $this->totalNetMOM(10,$liabilities , $assets); ?>
 			</span>
 			</div></td>
 			<td><div class='form-group'>
-			<span class='label label-info ' data-id='12' id='totalNetworthmom_12' name='totalNetworthmom_12'>
+			<span class='label label-info cstmlabel' data-id='12' id='totalNetworthmom_12' name='totalNetworthmom_12'>
 			<?php echo $this->totalNetMOM(11,$liabilities , $assets); ?>
 			</span>
 			</div></td>

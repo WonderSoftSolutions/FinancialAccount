@@ -585,7 +585,49 @@ class Account extends CI_Controller {
 		$row = $array->row_array();
 		
 		?>
-		
+		<script>
+		$(document).ready(function () {	
+			$(".sandqmoneytotalupdate").focusout(function(){
+				var unit_price = $('#update_unit_price').val();
+				var quantity_stock = $('#update_quantity_stock').val();
+				a = 0;
+				if(quantity_stock != '' && unit_price != '' && quantity_stock != '0' && unit_price != '0' )
+				{
+					a = parseFloat(unit_price) * parseFloat(quantity_stock);
+				}
+				else{
+					swtalertwarningmsg('Invalid','Please fill valid information');
+				}		
+				$('#update_total_price').val(a);
+			});
+			
+			$("#update_quantity_stock").focusout(function(){
+				var number = $('#update_quantity_stock').val();
+				var cnumber = parseFloat(number);
+
+				if (number.toLowerCase().indexOf(".") >= 0)
+				{
+					swtalertwarningmsg('Quantity Stock Invalid',"Please enter the valid quantity stock");
+					return false;   
+				}
+				else if(isNaN(cnumber))
+				{
+					swtalertwarningmsg('Quantity Stock Required',"Please enter the valid quantity stock");
+					return false;
+				}
+				else if(number == 0  || number == '')
+				{
+					swtalertwarningmsg('Quantity Stock is Empty',"Please insert the quantity stock first");
+					return false;
+				}
+				else{
+					return true;
+				}
+			});
+			
+		});
+
+		</script>
 		<div class="form-group">
 			<label for="itemname">Item Name:</label>
 	
@@ -594,15 +636,15 @@ class Account extends CI_Controller {
 		</div>
 		<div class="form-group">
 			<label for="unitprice">Unit Price:</label>
-			<input type="number" class="form-control" id="update_unit_price" name="unit_price" value = "<?php echo $row['unit_price']; ?>" min='0' >
+			<input type="number" class="form-control sandqmoneytotalupdate" id="update_unit_price" name="unit_price" value = "<?php echo $row['unit_price']; ?>" min='0' >
 		</div>
 		<div class="form-group">
 			<label for="quantitystock">Quantity in Stock:</label>
-			<input type="number" class="form-control" id="update_quantity_stock" name="quantity_stock" value = "<?php echo $row['quantity_stock']; ?>" min='0'>
+			<input type="number" class="form-control sandqmoneytotalupdate" id="update_quantity_stock" name="quantity_stock" value = "<?php echo $row['quantity_stock']; ?>" min='0'>
 		</div>
 		<div class="form-group">
 			<label for="totalprice">Total Price:</label>
-			<input type="number" class="form-control" id="update_total_price" name="total_price" value = "<?php echo $row['total_price']; ?>" min='0'>
+			<input type="number" class="form-control" id="update_total_price" readonly name="total_price" value = "<?php echo $row['total_price']; ?>" min='0'>
 		</div>
 		<div class="form-group">
 			<label for="Inventoryvalue">Inventory Value:</label>
@@ -623,5 +665,173 @@ class Account extends CI_Controller {
 	}
 	
 	
+	function userinventoryManagement()
+	{
+
+		$inventory['id'] = $this->input->post('id'); 
+		$inventory['inventory_status'] = $this->input->post('status'); 
 	
+		echo $this->account_model->inventorymanagement($inventory);
+	}
+
+	function billaddingbyuser()
+	{
+		
+		$bill['bill_name'] = $this->input->post('bill_name');
+		$bill['datepicker1'] = $this->input->post('datepicker1');
+		$bill['amount_due'] = $this->input->post('amount_due');
+		$bill['debt_status'] = $this->input->post('debt_status');
+		$bill['user_id'] = $this->session->userdata('usr_id');
+		echo $this->account_model->billaddingbyuser($bill);
+	}
+	
+	function userbillManagement()
+	{
+		$action = $this->input->post('action'); 
+		$bill['id'] = $this->input->post('id'); 
+		if(trim($action) == 'active')
+		{
+			$bill['status'] = '1';
+		}
+		else{
+			$bill['status'] = '0';
+		}
+		echo $this->account_model->billmanagement($bill);
+	}
+	
+	function getbillupdate()
+	{
+		$billid = $this->input->post('id'); 
+		$sql_query = "SELECT * from bill_payment where id = '$billid' ";
+		$query = $this->db->query($sql_query);
+		
+		
+			$row = $query->row_array();
+			
+			$debt_status = $row['debt_status'];
+			?>
+			<script>
+			$(document).ready(function () {
+				$("#billpaymentupdateform #id_datetimepicker1 #datepicker12").datepicker({
+					minDate: 0
+				});
+			});
+			</script>
+
+		<div class="form-group">
+				<label for="itemname">Bill Name:</label>
+				<input type="hidden" class="form-control" id="update_bill_id" name = "update_bill_id" value = "<?php echo $billid; ?>" >
+				<input type="text" class="form-control" id="update_bill_name" name = "update_bill_name" value="<?php echo $row['bill_name']; ?>" >
+			</div>
+			<div class="form-group">
+				<label for="unitprice">Due Date:</label>
+				<div class="input-group date" id="id_datetimepicker1">
+<!---->
+				<input type="text" name="datepicker12" id="datepicker12" class="form-control datepicker " style="z-index: 100000;"   value = "<?php echo $row['due_date']; ?>"/>
+				
+				<!---<input type="hidden" name="datepickerhidden" id="datepickerhidden" />-->
+				<span class="input-group-addon">
+				<span class="glyphicon glyphicon-calendar"></span>
+				</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="quantitystock">Amount Due:</label>
+				<input type="number" class="form-control" id="update_amount_due" name="update_amount_due"  value="<?php echo $row['amount_due']; ?>" min='0'>
+			</div>
+			<div class="form-group">
+				<label for="totalprice">Debt Status:</label>
+				<select class="form-control fillone" id="update_debt_status" name="update_debt_status">
+				
+				<option value="0" <?php echo $b = ($debt_status == 0) ? 'Selected' : ''; ?> >Pending</option>
+				<option value="1" <?php echo $b = ($debt_status == 1) ? 'Selected' : ''; ?> >Paid</option>	
+				</select>
+			</div>
+			<input name="submit_button" type="button" onclick="billpaymentediting()" class="btn btn-default" id="submit_button" value="Update" />
+			<!--<input type="submit" value class="btn btn-default" onclick="validate();"></input>-->
+			<input type="button"  data-dismiss="modal" class="btn btn-default" id="configreset" value="Cancel">
+		
+
+	<?php
+		
+		
+		
+	}
+	
+	function billpaymenteditingbyuser()
+	{
+		$bill['user_id'] = $this->session->userdata('usr_id');
+		$bill['id'] = $this->input->post('item_id');
+		$bill['bill_name'] = $this->input->post('bill_name');
+		$bill['due_date'] = $this->input->post('datepicker1');
+		$bill['amount_due'] = $this->input->post('amount_due');
+		$bill['debt_status'] = $this->input->post('debt_status');
+		echo $this->account_model->billpaymenteditingbyuser($bill);
+	}
+	
+	function bill_payment_ondate_change()
+	{
+		$s = $this->input->post('dateText');
+		$dates;
+		$weekday = date('l', strtotime($s)); 
+		if($weekday == 'Sunday')
+		{
+			$time = strtotime($s);
+			$start = $time;//strtotime('last sunday, 12pm', $time);
+			$end = strtotime('next saturday, 11:59am', $time);
+			//$format = 'l, F j, Y g:i A';
+			$format = 'm/d/Y';
+			$start_day = date($format, $start);
+			$end_day = date($format, $end);
+			
+			$dates['prev'] = $start_day;
+			$dates['selected'] = $s;
+			$dates['next'] = $end_day;
+		}
+		if($weekday == 'Saturday')
+		{
+			$time = strtotime($s);
+			$start = $time;//strtotime('last sunday, 00:01am', $time);
+			$end = strtotime('next friday, 11:59pm', $time);
+			//$format = 'l, F j, Y g:i A';
+			$format = 'm/d/Y';
+			$start_day = date($format, $start);
+			$end_day = date($format, $end);
+			
+			$dates['prev'] = $start_day;
+			$dates['selected'] = $s;
+			$dates['next'] = $end_day;
+		}
+		else if($weekday != 'Sunday' && $weekday != 'Saturday') {
+			$time = strtotime($s);
+			$start = strtotime('last sunday, 12pm', $time);
+			$end = strtotime('next saturday, 11:59am', $time);
+			//$format = 'l, F j, Y g:i A';
+			$format = 'm/d/Y';
+			$start_day = date($format, $start);
+			$end_day = date($format, $end);
+			
+			$dates['prev'] = $start_day;
+			$dates['selected'] = $s;
+			$dates['next'] = $end_day;
+		}
+		
+		$dates['user_id'] = $this->session->userdata('usr_id');
+		$response = $this->account_model->bill_payment_ondate_change($dates);
+		
+		$result['billoverview'] = $response['billoverview'];
+		
+		$result['html'] = "";
+		foreach($response['pendingdetails'] as $row)
+		{
+			$time = strtotime($row['due_date']);
+			$format = 'l, F j, Y g:i A';
+			$date = date($format, $time);
+			$amt = $this->account_model->currencyconverter($row['amount_due']);
+			$billname = $row['bill_name'];
+			
+			$result['html'] = $result['html']."<tr><td scope='row'>$billname</td><td>$date</td><td>$ $amt</td></tr>";
+		}
+		echo json_encode($result);
+	}
 }

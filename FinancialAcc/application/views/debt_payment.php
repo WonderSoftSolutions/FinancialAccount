@@ -208,26 +208,26 @@ $(document).ready(function () {
 						//$maindetails = $this->account_model->getDebtPaymentDetails($debt_payment);
 						if($maindetails != 'false')
 						{
-						$debt_id = $maindetails['id'];
-						if($maindetails['strategy'] == 'Avalanche'){
-						$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by rate desc ");
-						}
-						if($maindetails['strategy'] == 'snowball'){
-						$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by balance asc ");
-						}
-						if($maindetails['strategy'] == 'nosnowball'){
-						$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' ");
-						}
-						$dept_pay_detail = $query->result_array();
-						
-						$oldparam['monthlypayment'] = $maindetails['monthly_payment'];
-						$oldparam['month'] = $maindetails['month'];
-						$oldparam['selectYear'] = $maindetails['year'];
-						$result = $this->calc_model->getResult($dept_pay_detail,sizeof($dept_pay_detail),$oldparam,$maindetails['strategy']);
-						
+							$debt_id = $maindetails['id'];
+							if($maindetails['strategy'] == 'Avalanche'){
+							$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by rate desc ");
+							}
+							if($maindetails['strategy'] == 'snowball'){
+							$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by balance asc ");
+							}
+							if($maindetails['strategy'] == 'nosnowball'){
+							$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' ");
+							}
+							$dept_pay_detail = $query->result_array();
+							
+							$oldparam['monthlypayment'] = $maindetails['monthly_payment'];
+							$oldparam['month'] = $maindetails['month'];
+							$oldparam['selectYear'] = $maindetails['year'];
+							$result = $this->calc_model->getResult($dept_pay_detail,sizeof($dept_pay_detail),$oldparam,$maindetails['strategy']);
+							
 
-						$cstmbalance = '0';
-						$cstminterest = '0';
+							$cstmbalance = '0';
+							$cstminterest = '0';
 						
 						//echo "asd". sizeof($result)/5 . "</br>";
 							for($i = 1; $i <= 10; $i++)		

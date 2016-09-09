@@ -381,7 +381,7 @@ function getActiveUserGoals(){
 		data: "status=1",
 		success: function(data){
 			$('#UsersGoals').html(data);
-			console.log(data);
+			//console.log(data);
 		}
 	});	
 };
@@ -2353,7 +2353,6 @@ $(document).ready(function () {
 			success: function(data){
 				$('#tfootDebt').hide();
 				$('#tbodyDebt').html(data);
-				console.log(data);
 			}
 		});	
 	});
@@ -2380,7 +2379,6 @@ $(document).ready(function () {
 			success: function(data){
 				$('#tfootDebt').hide();
 				$('#tbodyDebt').html(data);
-				console.log(data);
 			}
 		});	
 	});
@@ -2411,12 +2409,7 @@ function balancecalcbottom()
 	$("#interest_total").text(Math.round($ttl));
 }
 
-
-
-
 //Start S/Q Money//
-
-
 
 function validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_value)
 {
@@ -2473,7 +2466,7 @@ var quantity_stock = $('#quantity_stock').val();
 var total_price = $('#total_price').val();
 var inventory_value = $('#inventory_value').val();
 var description = $('#description').val();
-//alert(id_datetimepicker1);
+
 if(validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_value) == "false") 
 {
 	return false;
@@ -2509,173 +2502,27 @@ if(validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_v
 								text: "Would you like to add more inventory?", 
 								type: "success",
 								showCancelButton: true,
-								closeOnConfirm: false,
-								closeOnCancel: false,
+								closeOnConfirm: true,
+								closeOnCancel: true,
 								confirmButtonText: "Yes",
 								confirmButtonColor: btnColor['info'] 
 							 }, function(isConfirm) {
 									if (isConfirm) {
 									$('#inventoryaddingform')[0].reset();
-									location.reload();
+									//location.reload();
 								} else {
 									location.reload();
 								}
 							});
-							 
-							 //function() { 
-								// //alert('asdsad'); 
-								// $('#goaladdingform')[0].reset();
-								// location.reload();
-							// });
-							
 						}
 						else if(data == 'alreadyexists'){
 							swtalertwarningmsg('Inventory Exists','This inventory already exists in your inventory list');
 						}
-						//swal("Success!", "Your goal ("+data+") is successfully added! \n would you like to add more goal.", "success");
 					}
 				}
 			)
 		  .done(function(data) {
-			//swal("Success!", "Your goal is successfully added!", "success");
-		  })
-		  .error(function(data) {
-			swal("Oops", "We couldn't connect to the server!", "error");
-		  });
-		}
-	)
-};
-
-
-//End S/Q Money//
-
-
-
-
-//Start S/Q Money//
-
-
-
-function validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_value)
-{
-	var error = "true";
-	var item = item_name;
-	var price = unit_price;
-	var quantity = quantity_stock;
-	var totalprice = total_price; 
-	var inventoryvalue = inventory_value; 
-	
-	if((item == null) || (item == ''))
-	{
-		
-		swtalertwarningmsg('Item Name is Empty',"Please insert the item name first");
-		error = "false";
-		return error;
-		
-	}
-	if((price == '') || (price == 0))
-	{
-		swtalertwarningmsg('Unit Price is Empty',"Please insert the unit price first");
-		error = "false";
-		return error;
-		
-	}
-	if((quantity == '') || (quantity == 0))
-	{
-		swtalertwarningmsg('Quantity Stock is Empty',"Please insert the quantity stock first");
-		error = "false";
-		return error;
-		
-	}
-	if((totalprice == '') || (totalprice == 0))
-	{
-		swtalertwarningmsg('Total Price is Empty',"Please insert the total price first");
-		error = "false";
-		return error;
-		
-	}
-	if((inventoryvalue == '') || (inventoryvalue == 0))
-	{
-		swtalertwarningmsg('Inventory Value is Empty',"Please insert the inventory value first");
-		error = "false";
-		return error;
-		
-	}
-
-}
-
-function inventoryadding() { 
-var item_name = $('#item_name').val();
-var unit_price = $('#unit_price').val();
-var quantity_stock = $('#quantity_stock').val();
-var total_price = $('#total_price').val();
-var inventory_value = $('#inventory_value').val();
-var description = $('#description').val();
-//alert(id_datetimepicker1);
-if(validateinventory(item_name,unit_price,quantity_stock,total_price,inventory_value) == "false") 
-{
-	return false;
-}
-
-	swal({
-			title: "Are you sure?", 
-			text: "Are you sure that you want to add this Inventory?", 
-			type: "warning",
-			showCancelButton: true,
-			closeOnConfirm: false,
-			confirmButtonText: "Yes, add it!",
-			confirmButtonColor: btnColor['info'] 
-		}, function(){
-			$.ajax(
-				{
-					type: "post",
-					url: baseHref+"account/inventoryaddingbyuser",
-					data: {
-						item_name: $("#item_name").val(),
-						unit_price: $("#unit_price").val(),
-						quantity_stock: $("#quantity_stock").val(),
-						total_price: $("#total_price").val(),
-						inventory_value: $("#inventory_value").val(),
-						description: $("#description").val()
-					},
-					success: function(data){
-						//getActiveUserGoals();
-						if(data != '0' && data != 'alreadyexists')
-						{
-							swal({
-								title: "Inventory Added", 
-								text: "Would you like to add more inventory?", 
-								type: "success",
-								showCancelButton: true,
-								closeOnConfirm: false,
-								closeOnCancel: false,
-								confirmButtonText: "Yes",
-								confirmButtonColor: btnColor['info'] 
-							 }, function(isConfirm) {
-									if (isConfirm) {
-									$('#inventoryaddingform')[0].reset();
-									location.reload();
-								} else {
-									location.reload();
-								}
-							});
-							 
-							 //function() { 
-								// //alert('asdsad'); 
-								// $('#goaladdingform')[0].reset();
-								// location.reload();
-							// });
-							
-						}
-						else if(data == 'alreadyexists'){
-							swtalertwarningmsg('Inventory Exists','This inventory already exists in your inventory list');
-						}
-						//swal("Success!", "Your goal ("+data+") is successfully added! \n would you like to add more goal.", "success");
-					}
-				}
-			)
-		  .done(function(data) {
-			//swal("Success!", "Your goal is successfully added!", "success");
+			
 		  })
 		  .error(function(data) {
 			swal("Oops", "We couldn't connect to the server!", "error");
@@ -2740,7 +2587,7 @@ swal({
 						description: description
 					},
 					success: function(data){
-						console.log(data);
+						//console.log(data);
 						if(data != '0' && data != 'alreadyexists')
 						{
 							swal({
@@ -2752,11 +2599,13 @@ swal({
 								confirmButtonText: "Ok",
 								confirmButtonColor: btnColor['success'] 
 							}, function() { 
+								$('#updatesq').modal('hide');
 								location.reload();
 							});
 						}
 						else if(data == 'alreadyexists'){
 							swtalertwarningmsg('Inventory Exists','This inventory already exists in your inventory list');
+							setTimeout(function(){ location.reload(); }, 1000);
 						}
 						else if(data == '0'){
 							swtalertwarningmsg('Inventory Updated','Inventory successfully updated');
@@ -2784,53 +2633,300 @@ swal({
 
 
 
+function deleteInventory(id)
+{
+	swal({
+			title: "Are you sure?", 
+			text: "Are you sure that you want to Delete this inventory?", 
+			type: "warning",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			confirmButtonText: "Yes, Delete it!",
+			confirmButtonColor: btnColor['info'] 
+		}, function(){
+	$.ajax({
+		type: "post",
+		url: baseHref+"account/userinventoryManagement",
+		data: {
+			status: 0,
+			id: id
+		},
+		success: function(data){
+			if(data == id)
+			{
+				//$('#row_'+id).remove();
+				setTimeout(function(){ location.reload(); }, 1000);
+				//location.reload();
+			}
+			//console.log(data);
+		}
+	});	
+	}
+)}
 
 
+$(document).ready(function () {
+	$(".sandqmoneytotaladd").focusout(function(){
+		var unit_price = $('#unit_price').val();
+		var quantity_stock = $('#quantity_stock').val();
+		a = 0;
+		
+		if(quantity_stock != '' && unit_price != '' && quantity_stock != '0' && unit_price != '0' )
+		{
+			a = parseFloat(unit_price) * parseFloat(quantity_stock);
+		}
+		else{
+			swtalertwarningmsg('Invalid','Please fill valid information');
+		}
+		
+		$('#total_price').val(a);
+	});
+});
 
 
+$(document).ready(function () {
+	$("#quantity_stock").focusout(function(){
+		var number = $('#quantity_stock').val();
+		var cnumber = parseFloat(number);
 
-
-
-
+		if (number.toLowerCase().indexOf(".") >= 0)
+		{
+			swtalertwarningmsg('Quantity Stock Invalid',"Please enter the valid quantity stock");
+			$('#quantity_stock').val(0);
+			return false;   
+		}
+		else if(isNaN(cnumber))
+		{
+			swtalertwarningmsg('Quantity Stock Required',"Please enter the valid quantity stock");
+			return false;
+		}
+		else if(number == 0  || number == '')
+		{
+			swtalertwarningmsg('Quantity Stock is Empty',"Please insert the quantity stock first");
+			return false;
+		}
+		else{
+			return true;
+		}
+	});
+	
+	
+});
 //End S/Q Money//
 
 
 
+//Start Bill Payment page//
+
+function validatebill(bill_name,datepicker1,amount_due)
+{
+	var error = "true";
+	var name = bill_name;
+	var date = datepicker1;
+	var amount = amount_due;
+	
+	if((name == null) || (name == ''))
+	{
+		
+		swtalertwarningmsg('Bill Name is Empty',"Please enter the bill name first");
+		error = "false";
+		return error;
+		
+	}
+	if((date == null) || (date == ''))
+	{
+		
+		swtalertwarningmsg('Due Date is Empty',"Please enter the due date first");
+		error = "false";
+		return error;
+		
+	}
+	if((amount == '') || (amount == 0))
+	{
+		swtalertwarningmsg('Amount Due is Empty',"Please enter the amount due first");
+		error = "false";
+		return error;
+		
+	}
+	
+
+}
+
+
+function billadding() { 
+var bill_name = $('#bill_name').val();
+var datepicker1 = $('#datepicker1').val();
+var amount_due = $('#amount_due').val();
+var debt_status = $('#debt_status').val();
+if(validatebill(bill_name,datepicker1,amount_due) == "false") 
+{
+	return false;
+}
+
+	swal({
+			title: "Are you sure?", 
+			text: "Are you sure that you want to add this Bill?", 
+			type: "warning",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			confirmButtonText: "Yes, add it!",
+			confirmButtonColor: btnColor['info'] 
+		}, function(){
+			$.ajax(
+				{
+					type: "post",
+					url: baseHref+"account/billaddingbyuser",
+					data: {
+						bill_name: bill_name,
+						datepicker1: datepicker1,
+						amount_due: amount_due,
+						debt_status: debt_status
+						
+					},
+					success: function(data){
+						//getActiveUserGoals();
+						// if(data != '0' && data != 'alreadyexists')
+						// {
+							swal({
+								title: "Bill Added", 
+								text: "Would you like to add more bill?", 
+								type: "success",
+								showCancelButton: true,
+								closeOnConfirm: true,
+								closeOnCancel: true,
+								confirmButtonText: "Yes",
+								confirmButtonColor: btnColor['info'] 
+							 }, function(isConfirm) {
+									if (isConfirm) {
+									$('#billaddingform')[0].reset();
+									//location.reload();
+								} else {
+									location.reload();
+								}
+							});
+					}
+				}
+			)
+		  .done(function(data) {
+		  })
+		  .error(function(data) {
+			swal("Oops", "We couldn't connect to the server!", "error");
+		  });
+		}
+	)
+};
+
+function deletebill(id)
+{
+	swal({
+			title: "Are you sure?", 
+			text: "Are you sure that you want to Delete this bill?", 
+			type: "warning",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			confirmButtonText: "Yes, Delete it!",
+			confirmButtonColor: btnColor['info'] 
+		}, function(){
+	$.ajax({
+		type: "post",
+		url: baseHref+"account/userbillManagement",
+		data: {
+			action: 'deactive',
+			id: id
+		},
+		success: function(data){
+			if(data == id)
+			{
+				//$('#row_'+id).remove();
+				setTimeout(function(){ location.reload(); }, 1000);
+				//location.reload();
+			}
+			//console.log(data);
+		}
+	});	
+	}
+)}
+
+function editbillmodal(id)
+{
+	$.ajax({
+		type: "post",
+		url: baseHref+"account/getbillupdate",
+		data: { id: id },
+		success: function(data){
+			console.log(data);
+			$('#billpaymentupdateform').html(data);
+			$('#updatebillpayment').modal('show');			
+		}
+	});	
+}
+
+
+function billpaymentediting() { 
+
+var bill_name = $('#update_bill_name').val();
+var datepicker1 = $('#billpaymentupdateform #datepicker12').val();
+var amount_due = $('#update_amount_due').val();
+var debt_status = $('#update_debt_status').val();
+
+	swal({
+			title: "Are you sure?", 
+			text: "Are you sure that you want to Update this inventory?", 
+			type: "warning",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			confirmButtonText: "Yes, Edit it!",
+			confirmButtonColor: btnColor['info'] 
+		}, function(){
+			$.ajax(
+				{
+					type: "post",
+					url: baseHref+"account/billpaymenteditingbyuser",
+					data: {
+						item_id: $("#update_bill_id").val(),
+						bill_name: bill_name,
+						datepicker1: datepicker1,
+						amount_due: amount_due,
+						debt_status: debt_status
+					},
+					success: function(data){
+
+						if(data != '0' && data != 'alreadyexists')
+						{
+							swal({
+								title: "Inventory Updated", 
+								type: "success",
+								showCancelButton: false,
+								closeOnConfirm: true,
+								confirmButtonText: "Ok",
+								confirmButtonColor: btnColor['success'] 
+							}, function() { 
+								$('#updatebillpayment').modal('hide');
+								location.reload();
+							});
+						}
+						else if(data == 'alreadyexists'){
+							swtalertwarningmsg('Inventory Exists','This inventory already exists in your inventory list');
+							setTimeout(function(){ location.reload(); }, 1000);
+						}
+						else if(data == '0'){
+							swtalertwarningmsg('Inventory Updated','Inventory successfully updated');
+							setTimeout(function(){ location.reload(); }, 1000);
+						}
+					}
+				}
+			)
+		  .done(function(data) {
+			//swal("Success!", "Your goal is successfully added!", "success");
+		  })
+		  .error(function(data) {
+			swal("Oops", "We couldn't connect to the server!", "error");
+		  });
+		}
+	)	
+};
 
 
 
-// function monthlygraph()
-// {
-	// $.ajax({
-		// type: "post",
-		// url: baseHref+"account/monthlygraph",
-		// // data: {
-			// // monthyear: id
-		// // },
-		// success: function(data){
-			// return data;
-		// }
-	// });	
-// }
-// $(document).ready(function () {
-// $('body').on('click','.btn-alert',function () { 
-		// swal({
-			// title: "Are you sure?",
-			// text: "You will not be able to recover this imaginary file!",
-			// type: "warning",
-			// showCancelButton: true,
-			// confirmButtonClass: 'btn-danger',
-			// confirmButtonText: 'Yes, delete it!',
-			// cancelButtonText: "No, cancel plx!",
-			// closeOnConfirm: false,
-			// closeOnCancel: false
-		// },
-		// function (isConfirm) {
-			// if (isConfirm) {
-				// swal("Deleted!", "Your imaginary file has been deleted!", "success");
-			// } else {
-				// swal("Cancelled", "Your imaginary file is safe :)", "error");
-			// }
-		// });
-	// });
-// });
+
+//End Bill Payment page//

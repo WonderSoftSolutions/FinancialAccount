@@ -1935,8 +1935,8 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 			$balance = 0;
 			$rate = 0;
 			$payment = 0;
-?>
-<tbody><?php
+			?>
+			<tbody><?php
 
 				if($i < (sizeof($result)))//if($i < (sizeof($result)/4))
 				{
@@ -1973,7 +1973,6 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 					<?php
 				}
 			}
-			
 		}
 		else{
 			$creditor = '';
@@ -2055,11 +2054,9 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 		$id = '';
 		$inventory['item_name'] = $param['item_name'];
 		$inventory['status'] = '1';
-		$inventoryID = $this->InventorySave($inventory,$id);
+		$inventoryID = $this->InventorySave($inventory,$id);		
 		
-		
-		//$goalstatus = $this->usersamegoalcheck($goalID);
-		if($inventory['user_id'])
+		if($param['user_id'])
 		{
 			$inventorystatus = $this->usersameinventorycheck($inventoryID,$param['user_id']);
 		}else{
@@ -2073,14 +2070,12 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 		}
 		else{
 		
-			if($inventory['user_id'])
+			if($param['user_id'])
 			{
-				$user_inventory['user_id'] = $inventory['user_id'];	
+				$user_inventory['user_id'] = $param['user_id'];	
 			}else{
 				$user_inventory['user_id'] = $this->session->userdata('usr_id');	
 			}
-			
-		
 			//$user_goals['user_id'] = $this->session->userdata('usr_id');
 			$user_inventory['inventory_id'] = $inventoryID;
 			$user_inventory['unit_price'] = $param['unit_price'];
@@ -2091,14 +2086,7 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 			$user_inventory['inventory_status'] = '1';
 			
 			$this->db->insert('user_inventory', $user_inventory);
-			
-			if($this->db->affected_rows() > 0)
-			{
-				return $this->db->insert_id();	
-			}
-			else{
-				return "0";
-			}
+			return $this->db->insert_id();	
 		}
 		
 	}
@@ -2140,7 +2128,7 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 				?>
 				<tr id="row_<?php echo $row['id']; ?>">
 					<td ><a  href="javascript:editsqmodal('<?php echo $row['id']; ?>');"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;
-					<a  href="javascript:void(0)" onclick="deleteGoal('<?php echo $row['id']; ?>')" ><span class="glyphicon glyphicon-remove"></span></a>&nbsp;
+					<a  href="javascript:void(0)" onclick="deleteInventory('<?php echo $row['id']; ?>')" ><span class="glyphicon glyphicon-remove"></span></a>&nbsp;
 					<?php echo "IN". str_pad($row['id'],3,0,STR_PAD_LEFT); ?></td>
 					<td ><?php echo $inventorydetails['item_name']; ?></td>
 					<td ><?php echo $this->currencyconverter($row['unit_price']); ?></td>
@@ -2153,10 +2141,14 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 			}
 		}
 	}
-	function getTotalInvertoryValue()
+	function getTotalInvertoryValue($id = 0)
 	{
 		
-		$user_id = $this->session->userdata('usr_id');
+		if($id == 0)
+		{
+			$id = $this->session->userdata('usr_id');
+		}
+		$user_id = $id;
 		
 		$array = $this->db->query("select sum(inventory_value) as count from user_inventory where user_id = '$user_id' and  inventory_status = '1' ");
 		$row = $array->row_array();
@@ -2171,9 +2163,10 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 		$inventory['status'] = '1';
 		$inventoryID = $this->InventorySave($inventory,$id);
 		
-		$sql = "select * from user_inventory where id <> '".$param['item_id']."' and inventory_id in (SELECT id FROM `inventory` where item_name = '".$inventory['item_name']."' ) and user_id = '".$param['user_id']."' and inventory_status = '1' ";
+		$sql = "select * from user_inventory where id <> '".$param['item_id']."' and inventory_id = '$inventoryID' and user_id = '".$param['user_id']."' and inventory_status = '1' ";
 		
 		$query=$this->db->query($sql);
+
 		if($query->num_rows()>0)
 		{
 			$inventorystatus = true;
@@ -2196,7 +2189,7 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 			$this->db->where('id', $param['item_id']);
 			$this->db->update('user_inventory', $user_inventory);
 				
-			return $this->db->insert_id();	
+			return $param['item_id'];
 			
 		}
 		else
@@ -2221,10 +2214,144 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 			$this->db->where('id', $param['item_id']);
 			$this->db->update('user_inventory', $user_inventory);
 				
-			return $this->db->insert_id();	
+			return $param['item_id'];	
 		}
 		
 		
 	}
+
+	function inventorymanagement($inventory)//Inventory deactive
+	{
+		$this->db->where('id', $inventory['id']);
+		$this->db->update('user_inventory', $inventory);
+		return $inventory['id'];
+	}
 	
+	
+	function billaddingbyuser($param)
+	{
+		$id = '';
+		$user_bill['user_id'] = $param['user_id'];
+		$user_bill['bill_name'] = $param['bill_name'];
+		$user_bill['due_date'] = $param['datepicker1'];
+		$user_bill['amount_due'] = $param['amount_due'];
+		$user_bill['debt_status'] = $param['debt_status'];
+		$user_bill['status'] = '1';
+		
+		$this->db->insert('bill_payment', $user_bill);
+		
+		if($this->db->affected_rows() > 0)
+		{
+			return $this->db->insert_id();	
+		}
+		else{
+			return "0";
+		}
+	}
+	
+	function billpaymenteditingbyuser($param)
+	{
+		$this->db->where('id', $param['id']);
+		$this->db->update('bill_payment', $param);
+		return $param['id'];
+	}
+	
+	
+	function getallbill($status)
+	{
+		$this->db->where("status",$status['status']);
+		$this->db->where("user_id",$status['user_id']);
+		$query=$this->db->get("bill_payment");
+		if($query->num_rows()>0)
+		{
+			$array = $query->result_array();
+			return $array;
+		}
+		else{
+			return "nobill";
+		}
+	}
+	
+	
+	function billmanagement($bill)//Inventory deactive
+	{
+		$this->db->where('id', $bill['id']);
+		$this->db->update('bill_payment', $bill);
+		return $bill['id'];
+	}
+	
+	function bill_payment_ondate_change($param)
+	{
+		$sql = "SELECT sum(amount_due) as total_due,count(id) as total_bills FROM `bill_payment` WHERE `due_date` >= '".$param['prev']."' AND `due_date` <= '".$param['next']."' AND `user_id` = '".$param['user_id']."' and debt_status = '0' ";
+		$query = $this->db->query($sql);
+		
+		$result1 = $query->row_array();
+		$result1['total_bills'] = $result1['total_bills'];
+		$result1['total_due'] = $this->currencyconverter($result1['total_due']);
+		$sql = "SELECT * FROM `bill_payment` WHERE `due_date` >= '".$param['prev']."' AND `due_date` <= '".$param['next']."' AND `user_id` = '".$param['user_id']."' and debt_status = '0' ";
+		$query = $this->db->query($sql);
+		$result2 =  $query->result_array();
+		
+		$return['billoverview'] = $result1;
+		$return['pendingdetails'] = $result2;
+		return $return;
+	}
+	
+	
+	function pageload($id = 0)
+	{
+		$s =  date('Y-m-d H:i:s');
+		$dates;
+		$weekday = date('l', strtotime($s)); 
+		if($weekday == 'Sunday')
+		{
+			$time = strtotime($s);
+			$start = $time;//strtotime('last sunday, 12pm', $time);
+			$end = strtotime('next saturday, 11:59am', $time);
+			//$format = 'l, F j, Y g:i A';
+			$format = 'm/d/Y';
+			$start_day = date($format, $start);
+			$end_day = date($format, $end);
+			
+			$dates['prev'] = $start_day;
+			$dates['selected'] = $s;
+			$dates['next'] = $end_day;
+		}
+		if($weekday == 'Saturday')
+		{
+			$time = strtotime($s);
+			$start = $time;//strtotime('last sunday, 00:01am', $time);
+			$end = strtotime('next friday, 11:59pm', $time);
+			//$format = 'l, F j, Y g:i A';
+			$format = 'm/d/Y';
+			$start_day = date($format, $start);
+			$end_day = date($format, $end);
+			
+			$dates['prev'] = $start_day;
+			$dates['selected'] = $s;
+			$dates['next'] = $end_day;
+		}
+		else if($weekday != 'Sunday' && $weekday != 'Saturday') {
+			$time = strtotime($s);
+			$start = strtotime('last sunday, 12pm', $time);
+			$end = strtotime('next saturday, 11:59am', $time);
+			//$format = 'l, F j, Y g:i A';
+			$format = 'm/d/Y';
+			$start_day = date($format, $start);
+			$end_day = date($format, $end);
+			
+			$dates['prev'] = $start_day;
+			$dates['selected'] = $s;
+			$dates['next'] = $end_day;
+		}
+		
+		if($id == 0)
+		{
+			$id = $this->session->userdata('usr_id');
+		}
+		$dates['user_id'] = $id;
+		
+		$response = $this->bill_payment_ondate_change($dates);
+		return $response;
+	}
 }

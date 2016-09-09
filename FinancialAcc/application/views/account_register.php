@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="styles/wrapkit.css">
 
   <link rel="stylesheet" href="styles/pages.css">
-	<script src="scripts/script.js"></script>
+	
   <!-- END VENDORS -->
   <style>
   .error{
@@ -131,20 +131,9 @@
       </div><!-- /.tab-pane -->
     </div><!-- /.tab-content -->
   </main><!--/#wrapper-->
-  <p class="signin-cr text-light">&copy; 2016 Advecion. with Love from Stilearning team.</p>
+  <p class="signin-cr text-light">&copy; 2016 Micoufinance.</p>
 
 
-  <!-- VENDORS : jQuery & Bootstrap -->
-  <script src="scripts/vendor.js"></script>
-  <!-- END VENDORS -->
 
-  <!-- DEPENDENCIES : Required plugins -->
-  <script src="scripts/dependencies.js"></script>
-  <!-- END DEPENDENCIES -->
-
-
-  <!-- PLUGIN SETUPS: vendors & dependencies setups -->
-  <script src="scripts/plugin-setups.js"></script>
-  <!-- END PLUGIN SETUPS -->
 </body>
 </html>

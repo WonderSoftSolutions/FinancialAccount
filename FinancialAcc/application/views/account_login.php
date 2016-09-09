@@ -115,7 +115,7 @@
      
     </div><!-- /.tab-content -->
   </main><!--/#wrapper-->
- <p class="signin-cr text-light">&copy; 2016 Advecion. with Love from Stilearning team.</p>
+ <p class="signin-cr text-light">&copy; 2016 Micoufinance.</p>
 
 
   <!-- Modal Recover -->

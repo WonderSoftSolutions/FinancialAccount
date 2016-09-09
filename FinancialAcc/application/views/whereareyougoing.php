@@ -39,6 +39,9 @@ function getWhereAreYouGoing(year)
 // year1 = year1.substring(4, 6);
 // getWhereAreYouGoing(year1);
 </script>
+<style>
+}
+</style>
 <div class="content contentcstm" >
 		<div class="main-content">
 			<div class="col-md-12">
