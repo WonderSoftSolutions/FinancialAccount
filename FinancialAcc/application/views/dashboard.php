@@ -1,69 +1,3 @@
-<?php 
-$userid = $this->session->userdata('usr_id');		
-
-$overallprogress =  $this->account_model->getoverallprogress($userid); 
-
-$debt_payment['usr_id'] = $this->session->userdata('usr_id');
-$debt_payment['month'] = date("n");
-$debt_payment['year'] = date("y");
-$maindetails = $this->account_model->getDebtPaymentDetails($debt_payment);
-$strategy = 'N/A';
-$strategylevel = 'N/A';
-if($maindetails == 'false')
-{
-	$monthly_payment = '0';
-	$minimum_payment = '0';
-	$futuredate = 'N/A';
-	$tempmonth = "0";
-	$tempmonth = "0";
-}
-else{
-	$monthly_payment = $maindetails['monthly_payment'];
-	$minimum_payment = $maindetails['minimum_payment'];
-
-
-	$debt_id =$maindetails['id'];
-	if($maindetails['strategy'] == 'Avalanche'){
-	$strategy = 'Avalanche';
-	$strategylevel = "(Highest Interest)";
-	$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by rate desc ");
-	}
-	if($maindetails['strategy'] == 'snowball'){
-	$strategy = 'Snowball';
-	$strategylevel = "(Lowest Balance)";
-	$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by balance asc ");
-	}
-	if($maindetails['strategy'] == 'nosnowball'){
-	$strategy = 'No snowball';
-	$strategylevel = "";
-	$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' ");
-	}
-	$dept_pay_detail = $query->result_array();
-
-	$oldparam['monthlypayment'] = $maindetails['monthly_payment'];
-	$oldparam['month'] = $maindetails['month'];
-	$oldparam['selectYear'] = $maindetails['year'];
-	
-	$result = $this->calc_model->getResult($dept_pay_detail,sizeof($dept_pay_detail),$oldparam,$maindetails['strategy']);
-
-
-	$tempmonth = 0;
-	$futuredate = 0;
-
-	for($i = 1; $i < sizeof($result)/5; $i++)
-	{
-		if($result['prev_month'.$i] > $tempmonth)
-		{
-			$tempmonth = $result['prev_month'.$i];
-			$futuredate = $result['futuredate'.$i];
-		}
-	}
-
-	$fmonth = explode(" ",$futuredate);
-	$futuredate = substr($fmonth[0],0,3) . " ". $fmonth[1];
-}
-?>
-
 <script>
 $(".knob").knob({
     readOnly: true,
@@ -80,11 +14,6 @@ $(document).ready(function () {
 
     <div class="content">
         <div class="header">
-            <div class="stats">
-    <p class="stat"><span class="label label-info">5</span> Tickets</p>
-    <p class="stat"><span class="label label-success">27</span> Tasks</p>
-    <p class="stat"><span class="label label-danger">15</span> Overdue</p>
-</div>
 
             <h1 class="page-title">Dashboard</h1>
                     <ul class="breadcrumb">
@@ -395,196 +324,11 @@ $(document).ready(function () {
 	<div id="chart_div_area"  ></div>
 	 <div id="chart_div_column"  ></div>
 	 
-	<!--
-	<div id="Linegraph" style=" height: 300px"></div>
-	<div id="Bargraph" style=" height: 300px"></div>-->
 	</div>
 	</div>
-	<!--
-<div class="row">
-    <div class="col-sm-6 col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading no-collapse">Not Collapsible<span class="label label-warning">+10</span></div>
-            <table class="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Username</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Mark</td>
-                  <td>Tompson</td>
-                  <td>the_mark7</td>
-                </tr>
-                <tr>
-                  <td>Ashley</td>
-                  <td>Jacobs</td>
-                  <td>ash11927</td>
-                </tr>
-                <tr>
-                  <td>Audrey</td>
-                  <td>Ann</td>
-                  <td>audann84</td>
-                </tr>
-                <tr>
-                  <td>John</td>
-                  <td>Robinson</td>
-                  <td>jr5527</td>
-                </tr>
-                <tr>
-                  <td>Aaron</td>
-                  <td>Butler</td>
-                  <td>aaron_butler</td>
-                </tr>
-                <tr>
-                  <td>Chris</td>
-                  <td>Albert</td>
-                  <td>cab79</td>
-                </tr>
-              </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-6">
-        <div class="panel panel-default">
-            <a href="#widget1container" class="panel-heading" data-toggle="collapse">Collapsible </a>
-            <div id="widget1container" class="panel-body collapse in">
-                <h2>Here's a Tip</h2>
-                <p>This template was developed with <a href="http://middlemanapp.com/" target="_blank">Middleman</a> and includes .erb layouts and views.</p>
-                <p>All of the views you see here (sign in, sign up, users, etc) are already split up so you don't have to waste your time doing it yourself!</p>
-                <p>The layout.erb file includes the header, footer, and side navigation and all of the views are broken out into their own files.</p>
-                <p>If you aren't using Ruby, there is also a set of plain HTML files for each page, just like you would expect.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-6 col-md-6">
-        <div class="panel panel-default"> 
-            <div class="panel-heading no-collapse">
-                <span class="panel-icon pull-right">
-                    <a href="#" class="demo-cancel-click" rel="tooltip" title="Click to refresh"><i class="fa fa-refresh"></i></a>
-                </span>
-
-                Needed to Close
-            </div>
-            <table class="table list">
-              <tbody>
-                  <tr>
-                      <td>
-                          <a href="#"><p class="title">Care Hospital</p></a>
-                          <p class="info">Sales Rating: 86%</p>
-                      </td>
-                      <td>
-                          <p>Date: 7/19/2012</p>
-                          <a href="#">View Transaction</a>
-                      </td>
-                      <td>
-                          <p class="text-danger h3 pull-right" style="margin-top: 12px;">$20,500</p>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>
-                          <a href="#"><p class="title">Custom Eyesight</p></a>
-                          <p class="info">Sales Rating: 58%</p>
-                      </td>
-                      <td>
-                          <p>Date: 7/19/2012</p>
-                          <a href="#">View Transaction</a>
-                      </td>
-                      <td>
-                          <p class="text-danger h3 pull-right" style="margin-top: 12px;">$12,600</p>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>
-                          <a href="#"><p class="title">Clear Dental</p></a>
-                          <p class="info">Sales Rating: 76%</p>
-                      </td>
-                      <td>
-                          <p>Date: 7/19/2012</p>
-                          <a href="#">View Transaction</a>
-                      </td>
-                      <td>
-                          <p class="text-danger h3 pull-right" style="margin-top: 12px;">$2,500</p>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>
-                          <a href="#"><p class="title">Safe Insurance</p></a>
-                          <p class="info">Sales Rating: 82%</p>
-                      </td>
-                      <td>
-                          <p>Date: 7/19/2012</p>
-                          <a href="#">View Transaction</a>
-                      </td>
-                      <td>
-                          <p class="text-danger h3 pull-right" style="margin-top: 12px;">$22,400</p>
-                      </td>
-                  </tr>
-                    
-              </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-6">
-        <div class="panel panel-default">
-            <a href="#widget2container" class="panel-heading" data-toggle="collapse">Collapsible </a>
-            <div id="widget2container" class="panel-body collapse in">
-                <h2>Built with Less</h2>
-                <p>The CSS is built with Less. There is a compiled version included if you prefer plain CSS.</p>
-                <p>Fava bean jícama seakale beetroot courgette shallot amaranth pea garbanzo carrot radicchio peanut leek pea sprouts arugula brussels sprout green bean. Spring onion broccoli chicory shallot winter purslane pumpkin gumbo cabbage squash beet greens lettuce celery. Gram zucchini swiss chard mustard burdock radish brussels sprout groundnut. Asparagus horseradish beet greens broccoli brussels.</p>
-                <p><a class="btn btn-primary">Learn more »</a></p>
-            </div>
-        </div>
-    </div>
-</div>
-
- -->
+	
     <script type="text/javascript">
-	//***1
 	google.charts.load('current', {packages: ['corechart', 'bar']});
-	// google.charts.setOnLoadCallback(drawChart);
-	// function drawChart() {
-        // var data = google.visualization.arrayToDataTable([
-			  // ['Month', 'Net Worth'],
-			  // ['Jan',  1000],
-			  // ['Feb',  1170],
-			  // ['Mar',  660],
-			  // ['Apr',  1030],
-			  // ['May',  800],
-			  // ['June',  730],
-			  // ['July',  430],
-			  // ['Aug',  530],
-			  // ['Sept',  930],
-			  // ['Oct',  230],
-			  // ['Nov',  130],
-			  // ['Dec',  630]
-			// ]);
-
-        // var options = {
-          // title: 'NET WORTH',
-          // hAxis: {title: 'Month',  titleTextStyle: {color: '#333'}},
-          // vAxis: {minValue: 0}
-        // };
-
-        // var chart = new google.visualization.AreaChart(document.getElementById('chart_div_area'));
-        // chart.draw(data, options);
-		
-		// function resizeHandler () {
-			// chart.draw(data, options);
-		// }
-		// if (window.addEventListener) {
-			// window.addEventListener('resize', resizeHandler, false);
-		// }
-		// else if (window.attachEvent) {
-			// window.attachEvent('onresize', resizeHandler);
-		// }
-	// }
 	google.charts.setOnLoadCallback(drawChart);
 	function drawChart() {
 	
@@ -595,7 +339,7 @@ $(document).ready(function () {
 		}).responseText;
 	
 		var data = new google.visualization.DataTable(jsonData);
-		//var data = new google.visualization.arrayToDataTable(jsonData);
+		
         var options = {
           title: 'NET WORTH',
           hAxis: {title: 'Month',  titleTextStyle: {color: '#333'}},
@@ -616,7 +360,7 @@ $(document).ready(function () {
 		}
 	}
 	
-	//google.charts.setOnLoadCallback(onNetWorthGraphChange());
+	
 	function onNetWorthGraphChange(year) {
 	
 	var jsonData = $.ajax({

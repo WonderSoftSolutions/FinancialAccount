@@ -6,8 +6,6 @@ class Account extends CI_Controller {
 
 	public function __construct()
 	{
-		// header('Access-Control-Allow-Origin: *');
-		// header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 		parent::__construct();		
 
 	}
@@ -32,15 +30,7 @@ class Account extends CI_Controller {
 					
 					
 				if($this->account_model->do_login($users) == true){
-				
-					//if($this->session->userdata('user_status') == 0){
-						//redirect(base_url().'account/dashboard');
-						redirect(base_url().'pages/AddNewGoal');
-					// }
-					// else
-					// {
-						// redirect(base_url().'ci-admin');
-					// }
+					redirect(base_url().'pages/AddNewGoal');
 				}
 				else
 				{
@@ -51,7 +41,6 @@ class Account extends CI_Controller {
 		}
 		else
 		{
-			//redirect(base_url().'account/dashboard');
 			redirect(base_url().'pages/AddNewGoal');
 		}
 	}
@@ -117,6 +106,88 @@ class Account extends CI_Controller {
 	
 	function dashboard()
 	{
+		//Db work
+		$userid = $this->session->userdata('usr_id');		
+		$overallprogress =  $this->account_model->getoverallprogress($userid); 
+
+		$debt_payment['usr_id'] = $this->session->userdata('usr_id');
+		$debt_payment['month'] = date("n");
+		$debt_payment['year'] = date("y");
+		$maindetails = $this->account_model->getDebtPaymentDetails($debt_payment);
+		$strategy = 'N/A';
+		$strategylevel = 'N/A';
+		
+		$monthly_payment = '0';
+		$minimum_payment = '0';
+		$futuredate = 'N/A';
+		$tempmonth = "0";
+		
+		$this->data['monthly_payment'] = $monthly_payment;
+		$this->data['minimum_payment'] = $minimum_payment;
+		$this->data['tempmonth'] = $tempmonth;
+		$this->data['futuredate'] = $futuredate;
+		$this->data['strategy'] = $strategy;
+		$this->data['strategylevel'] = $strategylevel;
+		$this->data['overallprogress'] = $overallprogress;
+		
+		if($maindetails != 'false')
+		{
+			$monthly_payment = $maindetails['monthly_payment'];
+			$minimum_payment = $maindetails['minimum_payment'];
+			
+			$this->data['monthly_payment'] = $monthly_payment;
+			$this->data['minimum_payment'] = $minimum_payment;
+
+			$debt_id =$maindetails['id'];
+			if($maindetails['strategy'] == 'Avalanche'){
+			$strategy = 'Avalanche';
+			$strategylevel = "(Highest Interest)";
+			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by rate desc ");
+			}
+			if($maindetails['strategy'] == 'snowball'){
+			$strategy = 'Snowball';
+			$strategylevel = "(Lowest Balance)";
+			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by balance asc ");
+			}
+			if($maindetails['strategy'] == 'nosnowball'){
+			$strategy = 'No snowball';
+			$strategylevel = "";
+			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' ");
+			}
+			$dept_pay_detail = $query->result_array();
+
+			$oldparam['monthlypayment'] = $maindetails['monthly_payment'];
+			$oldparam['month'] = $maindetails['month'];
+			$oldparam['selectYear'] = $maindetails['year'];
+			
+			$result = $this->calc_model->getResult($dept_pay_detail,sizeof($dept_pay_detail),$oldparam,$maindetails['strategy']);
+
+
+			$tempmonth = 0;
+			$futuredate = 0;
+
+			for($i = 1; $i < sizeof($result)/5; $i++)
+			{
+				if($result['prev_month'.$i] > $tempmonth)
+				{
+					$tempmonth = $result['prev_month'.$i];
+					$futuredate = $result['futuredate'.$i];
+				}
+			}
+
+			$fmonth = explode(" ",$futuredate);
+			$tempmonth = $tempmonth;
+			$futuredate = substr($fmonth[0],0,3) . " ". $fmonth[1];
+			
+			$this->data['monthly_payment'] = $monthly_payment;
+			$this->data['minimum_payment'] = $minimum_payment;
+			$this->data['tempmonth'] = $tempmonth;
+			$this->data['futuredate'] = $futuredate;
+			$this->data['strategy'] = $strategy;
+			$this->data['strategylevel'] = $strategylevel;			
+		}		
+		//Db Work
+	
 		$this->load->view('header',$this->data);
 		$this->load->view('dashboard',$this->data);
 		$this->load->view('footer',$this->data);
