@@ -46,12 +46,7 @@ class Pages extends CI_Controller {
 		$this->load->view('whereyoustand',$this->data);
 		$this->load->view('footer',$this->data);
 	}
-	// public function whereareyougoing()
-	// {
-		// $this->load->view('header',$this->data);
-		// $this->load->view('whereareyougoing',$this->data);
-		// $this->load->view('footer',$this->data);
-	// }
+
 	public function whereareyougoing($id = 0)
 	{	
 		if($id==0)
@@ -103,6 +98,14 @@ class Pages extends CI_Controller {
 	}
 	public function sandq()
 	{
+		$inventory['inventory_status'] = 1;
+		$inventory['user_id'] = $this->session->userdata('usr_id');
+		$getallinventory = $this->account_model->getallinventory($inventory);
+		
+		$getTotalInvertoryValue = $this->account_model->getTotalInvertoryValue();
+		
+		$this->data['getTotalInvertoryValue'] = $getTotalInvertoryValue;
+		$this->data['getallinventory'] = $getallinventory;
 		$this->load->view('header',$this->data);
 		$this->load->view('S&Q',$this->data);
 		$this->load->view('footer',$this->data);

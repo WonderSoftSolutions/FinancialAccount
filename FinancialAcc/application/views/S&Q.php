@@ -13,7 +13,7 @@
   
   <div class="form-group" style="margin-bottom:5px">
   
-    <label for="Total">Total:</label> <input type="text" disabled placeholder="$ 295.00" class="form-control" id="Total" value = "<?php echo $this->account_model->getTotalInvertoryValue(); ?>"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">New Inventory</button>
+    <label for="Total">Total:</label> <input type="text" disabled placeholder="$ 295.00" class="form-control" id="Total" value = "<?php echo $getTotalInvertoryValue; ?>"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">New Inventory</button>
     
   </div>
  
@@ -28,17 +28,39 @@
 					<thead>
 						<tr>
 							<th>Inventory ID</th>
-							<th class="hidden-xs hidden-sm">Item Name</th>
+							<th>Item Name</th>
 							<th>Unit Price</th>
-							<th class="hidden-xs hidden-sm">Quantity in Stock</th>
+							<th>Quantity in Stock</th>
 							<th>Total Price</th>
-							<th class="hidden-xs hidden-sm">Inventory Value</th>
-							<th class="hidden-xs hidden-sm">Description</th>
+							<th>Inventory Value</th>
+							<th>Description</th>
 						</tr>
 					</thead>
 					<tbody id ="tablecontent">
 							<?php
-								$this->account_model->getallinventoryPAGELOAD();
+							if(count($getallinventory)>0)
+							{
+								if($getallinventory != 'noinventory')
+								{
+									foreach($getallinventory as $row)
+									{
+										$inventorydetails = $this->account_model->getinventoryDetails($row['inventory_id']);
+										?>
+										<tr id="row_<?php echo $row['id']; ?>">
+											<td ><a  href="javascript:editsqmodal('<?php echo $row['id']; ?>');"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;
+											<a  href="javascript:void(0)" onclick="deleteInventory('<?php echo $row['id']; ?>')" ><span class="glyphicon glyphicon-remove"></span></a>&nbsp;
+											<?php echo "IN". str_pad($row['id'],3,0,STR_PAD_LEFT); ?></td>
+											<td ><?php echo $inventorydetails['item_name']; ?></td>
+											<td ><?php echo $this->account_model->currencyconverter($row['unit_price']); ?></td>
+											<td><?php echo $this->account_model->currencyconverter($row['quantity_stock']); ?></td>
+											<td ><?php echo $this->account_model->currencyconverter($row['total_price']); ?></td>
+											<td><?php echo $this->account_model->currencyconverter($row['inventory_value']); ?></td>
+											<td ><?php echo $row['description']; ?></td>
+										</tr>
+										<?php
+									}
+								}
+							}
 							?>
 					</tbody>
 				</table>
