@@ -24,6 +24,7 @@
 @media only screen and (min-width: 800px) {
 	[class*="contentcstm"] {
 		width: 86.65%;
+		height: auto;
     }
 }
 
@@ -968,14 +969,25 @@ background-color: grey;
 /* CSS made by Shafali */
 .total_class
 {
+/* 	background-color: #5bc0de !important;
+    font-size: 13px !important;
+    color: #fff;
+    text-align: left;
+    padding-top: 13px !important; */
 	background-color: #5bc0de !important;
     font-size: 13px !important;
     color: #fff;
     text-align: left;
-    padding-top: 13px !important;
+    padding-top: 10px !important;
 }
 
-
+.cstmlabel
+{
+	font-size: 14px;
+    display: block;
+    float: left;
+    margin: 0px 0 0 4px;
+}
 
 
 
