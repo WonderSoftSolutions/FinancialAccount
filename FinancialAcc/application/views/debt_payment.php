@@ -43,52 +43,16 @@ $(document).ready(function () {
 				<div class="table-responsive">
 				<div class="col-md-12">
 
-					<div class="col-md-2 col-md-offset-6" style="font-size: 22px;">
+					<div class="col-md-2 col-md-offset-9" style="font-size: 22px;margin-top: -6px;">
 						Current Date :
 					</div>
 					
-					<div class="col-md-4">
+					<div class="col-md-1">
 					
-					
-					<select id="selectYear" name = "selectYear" style="width:52%;" class="form-control selectWidth pull-right" <?php echo $yeardisable; ?> >
-                    
-					<?php
-					for($i = 2000; $i < date("Y")+84; $i++){
-						if($contryear == substr($i,2,2)){
-						//if(substr($i,2,2) == substr(date("Y"),2,2)){
-							echo '<option selected value="'. substr($i,2,2).'">'.$i.'</option>';
-						}
-						else
-						{
-							echo '<option value="'. substr($i,2,2).'">'.$i.'</option>';
-						}
-					}
-					?>      
-					</select>
-					
-					<select class=" form-control " id="sel1" style="width:47%;" <?php echo $monthdisable; ?> >
-					  
-					  <?php
-						//$today = substr(date("F"),0,3);
-						for ($m=1; $m<=12; $m++) {
-							$month = date('F', mktime(0,0,0,$m, 1, date('Y')));
-							$printmonth = substr($month,0,3);
-							
-							if($contrmonth == $m){
-							
-							//if(date("n") == $m ){
-						?>
-						 <option selected value="<?php echo $m; ?>"><?php echo $printmonth; ?></option>
-						 <?php
-						 }
-						 else {?>
-						 <option value="<?php echo $m; ?>"><?php echo $printmonth; ?></option>
-						 <?php
-						 }
-						}?> 
-						
-					</select>
-					<br/>	
+					<label class="label label-info" style="font-size: 16px;" ><?php echo substr(date('F', mktime(0,0,0,date('n'), 1, date('Y'))),0,3) .' '. date("Y"); ?></label>
+					<input type="hidden" id="selectYear" name="selectYear" value="<?php echo substr(date('Y'),2,2); ?>" />
+					<input type="hidden" id="sel1" name="sel1" value="<?php echo date('n'); ?>" />
+					<br/><br/>
 					</div>
 				</div>
 				  <!--<div class="table-responsive"> 
@@ -111,8 +75,8 @@ $(document).ready(function () {
 					  <?php 
 					  
 						$debt_payment['usr_id'] = $this->session->userdata('usr_id');
-						$debt_payment['month'] = $contrmonth;//date("n");
-						$debt_payment['year'] =$contryear;//date("y");
+						// $debt_payment['month'] = $contrmonth;//date("n");
+						// $debt_payment['year'] =$contryear;//date("y");
 						$this->account_model->getDebtPayment($debt_payment);
 						
 					
@@ -228,6 +192,14 @@ $(document).ready(function () {
 
 							$cstmbalance = '0';
 							$cstminterest = '0';
+							if(isset($result['cstminterest']))
+							{
+								$cstminterest = $result['cstminterest'];
+							}
+							if(isset($result['cstmbalance']))
+							{
+								$cstmbalance = $result['cstmbalance'];
+							}
 						
 						//echo "asd". sizeof($result)/5 . "</br>";
 							for($i = 1; $i <= 10; $i++)		
@@ -239,8 +211,7 @@ $(document).ready(function () {
 								$prev_month = '&nbsp;';
 								$total_interest = '';
 								
-								$cstminterest = $result['cstminterest'];
-								$cstmbalance = $result['cstmbalance'];
+								
 								
 								if($i < sizeof($result)/5)
 								{
