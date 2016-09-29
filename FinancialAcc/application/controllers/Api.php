@@ -852,8 +852,8 @@ class Api extends REST_Controller {
 	function debt_get_item_post()
 	{
 		$a[$this->router->fetch_method()] = array();
-		$debt_payment['year'] = trim(urldecode($_REQUEST['year']));
-		$debt_payment['month'] = trim(urldecode($_REQUEST['month']));
+		// $debt_payment['year'] = trim(urldecode($_REQUEST['year']));
+		// $debt_payment['month'] = trim(urldecode($_REQUEST['month']));
 		$debt_payment['usr_id'] = trim(urldecode($_REQUEST['user_id']));
 		$maindetails = $this->account_model->getDebtPaymentDetails($debt_payment);
 		
@@ -995,8 +995,11 @@ class Api extends REST_Controller {
 		
 		$param['strategylist'] = trim(urldecode($_REQUEST['strategylist'])); //snowball / avalanche / nosnowball
 		
-		$param['selectYear'] =  trim(urldecode($_REQUEST['year'])); //16
-		$param['month'] = trim(urldecode($_REQUEST['month'])); //1
+		// $param['selectYear'] =  trim(urldecode($_REQUEST['year'])); //16
+		// $param['month'] = trim(urldecode($_REQUEST['month'])); //1
+		
+		$param['month'] = date('n'); //$param['month'];
+		$param['selectYear'] = date('y'); 	//$param['selectYear'];
 		
 		$param['monthlypayment'] = trim(urldecode($_REQUEST['monthlypayment'])); 
 		$param['mininumpayment'] = trim(urldecode($_REQUEST['mininumpayment'])); 
@@ -1012,8 +1015,8 @@ class Api extends REST_Controller {
 		$debt_payment['status'] = '1';
 
 		$this->db->where('usr_id',  $debt_payment['usr_id']);
-		$this->db->where('month',  $debt_payment['month']);
-		$this->db->where('year',  $debt_payment['year']);
+		// $this->db->where('month',  $debt_payment['month']);
+		// $this->db->where('year',  $debt_payment['year']);
 		$query=$this->db->get("debt_payment");
 		
 		$insertid = 0;
@@ -1137,8 +1140,15 @@ class Api extends REST_Controller {
 		{
 			$rows = $query->row_array();
 			$insertid = $rows['id'];
-			$this->db->query(" delete debt_payment from debt_payment where id = '$insertid' ");
-			$this->db->query(" delete dept_pay_detail from dept_pay_detail where debt_id = '$insertid' ");
+			
+			$this->db->where('id',  $insertid);
+			$query=$this->db->delete("debt_payment");
+			
+			$this->db->where('debt_id',  $insertid);
+			$query=$this->db->delete("dept_pay_detail");
+		
+			// $this->db->query(" delete from debt_payment where id = '$insertid' ");
+			// $this->db->query(" delete from dept_pay_detail where debt_id = '$insertid' ");
 		}
 		
 		$b['msg'] = "Item deleted";
