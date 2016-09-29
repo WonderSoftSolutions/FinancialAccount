@@ -118,6 +118,32 @@
  <p class="signin-cr text-light">&copy; 2016 Micoufinance.</p>
 
 
+ <?php 
+	// $cost = 45000;
+	// $saved = 25000;
+
+	// $currentdate = new DateTime(date("Y-m-d"));
+	// $currentdate->modify('last day of');
+	// $currentdate = $currentdate ->format('d');
+	
+	// $targetdate = new DateTime('2017-01-01');
+	// $targetdate->modify('last day of');
+	// $targetdate =$targetdate ->format('d');
+
+	// $diff = $cost - $saved;
+	// $days = $targetdate - $currentdate;
+	// //=IF((D9-F9) / ((EOMONTH(G9,0)-EOMONTH(TODAY(),0))/31)   > D9    ,D9,(D9-F9)/((EOMONTH(G9,0)-EOMONTH(TODAY(),0))/31))
+	
+	// if(($diff/ ($days / 31)) > $cost)
+	// {
+		// echo $cost;
+	// }
+	// else{
+		// echo ($diff/ ($days / 31));
+	// }
+	
+ ?>
+ 
   <!-- Modal Recover -->
   <div class="modal fade" id="recoverAccount" tabindex="-1" role="dialog" aria-labelledby="recoverAccountLabel" aria-hidden="true">
     <div class="modal-dialog">

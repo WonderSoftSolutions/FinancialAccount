@@ -174,7 +174,7 @@ if($user_login_status == false)
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="" href="javascript:void(0)"><span class="navbar-brand"><span class="fa fa-paper-plane"></span> MicouFinance</span></a></div>
+          <a href="javascript:void(0)"><span class="navbar-brand"> <?php echo $this->config->item('website'); ?></span></a></div>
 
         <div class="navbar-collapse collapse" style="height: 1px;">
           <ul id="main-menu" class="nav navbar-nav navbar-right">
@@ -185,13 +185,8 @@ if($user_login_status == false)
                 </a>
 
               <ul class="dropdown-menu">
-                <li><a href="./">My Account</a></li>
+                
 				<li><a href="#" data-toggle="modal" data-target="#changepassword" >Change Password</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Admin Panel</li>
-                <li><a href="./">Users</a></li>
-                <li><a href="./">Security</a></li>
-                <li><a tabindex="-1" href="./">Payments</a></li>
                 <li class="divider"></li>
                 <li><a tabindex="-1" href="<?php echo 'account/logout/'.$this->session->userdata('usr_id'); ?>">Logout</a></li>
               </ul>
