@@ -2114,7 +2114,32 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 			return "noinventory";
 		}
 	}
-
+	function getallinventoryPAGELOAD()
+	{
+		$inventory['inventory_status'] = 1;
+		$inventory['user_id'] = $this->session->userdata('usr_id');
+		$array = $this->getallinventory($inventory);
+		if($array != 'noinventory')
+		{
+			foreach($array as $row)
+			{
+				$inventorydetails = $this->getinventoryDetails($row['inventory_id']);
+				?>
+				<tr id="row_<?php echo $row['id']; ?>">
+					<td ><a  href="javascript:editsqmodal('<?php echo $row['id']; ?>');"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;
+					<a  href="javascript:void(0)" onclick="deleteInventory('<?php echo $row['id']; ?>')" ><span class="glyphicon glyphicon-remove"></span></a>&nbsp;
+					<?php echo "IN". str_pad($row['id'],3,0,STR_PAD_LEFT); ?></td>
+					<td ><?php echo $inventorydetails['item_name']; ?></td>
+					<td ><?php echo $this->currencyconverter($row['unit_price']); ?></td>
+					<td><?php echo $this->currencyconverter($row['quantity_stock']); ?></td>
+					<td ><?php echo $this->currencyconverter($row['total_price']); ?></td>
+					<td><?php echo $this->currencyconverter($row['inventory_value']); ?></td>
+					<td ><?php echo $row['description']; ?></td>
+				</tr>
+				<?php
+			}
+		}
+	}
 	function getTotalInvertoryValue($id = 0)
 	{	
 		if($id == 0)
