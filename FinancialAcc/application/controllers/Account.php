@@ -106,17 +106,18 @@ class Account extends CI_Controller {
 	
 	function dashboard()
 	{
-		//Db work
+		
+		//
 		$userid = $this->session->userdata('usr_id');		
+
 		$overallprogress =  $this->account_model->getoverallprogress($userid); 
 
-		$debt_payment['usr_id'] = $this->session->userdata('usr_id');
+		$debt_payment['usr_id'] = $userid;
 		$debt_payment['month'] = date("n");
 		$debt_payment['year'] = date("y");
 		$maindetails = $this->account_model->getDebtPaymentDetails($debt_payment);
 		$strategy = 'N/A';
 		$strategylevel = 'N/A';
-		
 		$monthly_payment = '0';
 		$minimum_payment = '0';
 		$futuredate = 'N/A';
@@ -130,13 +131,12 @@ class Account extends CI_Controller {
 		$this->data['strategylevel'] = $strategylevel;
 		$this->data['overallprogress'] = $overallprogress;
 		
+		
 		if($maindetails != 'false')
 		{
-			$monthly_payment = $maindetails['monthly_payment'];
-			$minimum_payment = $maindetails['minimum_payment'];
-			
-			$this->data['monthly_payment'] = $monthly_payment;
-			$this->data['minimum_payment'] = $minimum_payment;
+			$this->data['monthly_payment'] = $maindetails['monthly_payment'];
+			$this->data['minimum_payment'] = $maindetails['minimum_payment'];
+
 
 			$debt_id =$maindetails['id'];
 			if($maindetails['strategy'] == 'Avalanche'){
@@ -151,7 +151,7 @@ class Account extends CI_Controller {
 			}
 			if($maindetails['strategy'] == 'nosnowball'){
 			$strategy = 'No snowball';
-			$strategylevel = "";
+			$strategylevel = "&nbsp;";
 			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' ");
 			}
 			$dept_pay_detail = $query->result_array();
@@ -174,19 +174,22 @@ class Account extends CI_Controller {
 					$futuredate = $result['futuredate'.$i];
 				}
 			}
-
-			$fmonth = explode(" ",$futuredate);
-			$tempmonth = $tempmonth;
-			$futuredate = substr($fmonth[0],0,3) . " ". $fmonth[1];
+			if($futuredate != '0'){
+				$fmonth = explode(" ",$futuredate);
+				$futuredate = substr($fmonth[0],0,3) . " ". $fmonth[1];
+			}
+			else{
+				$futuredate = 'N/A';
+			}
 			
 			$this->data['monthly_payment'] = $monthly_payment;
 			$this->data['minimum_payment'] = $minimum_payment;
 			$this->data['tempmonth'] = $tempmonth;
 			$this->data['futuredate'] = $futuredate;
 			$this->data['strategy'] = $strategy;
-			$this->data['strategylevel'] = $strategylevel;			
-		}		
-		//Db Work
+			$this->data['strategylevel'] = $strategylevel;		
+		}
+		//
 	
 		$this->load->view('header',$this->data);
 		$this->load->view('dashboard',$this->data);
