@@ -4,7 +4,7 @@
 
                 <!-- Purchase a site license to remove this link from the footer: http://www.portnine.com/bootstrap-themes -->
               
-                <p>© 2016 <a href="<?php echo $this->config->item('websiteurl'); ?>" target="_blank"><?php  echo $this->config->item('website'); ?></a></p>
+                <p>© 2016 <a href="http://www.micoufinance.com" target="_blank">micoufinance</a></p>
             </footer>
         </div>
     </div>

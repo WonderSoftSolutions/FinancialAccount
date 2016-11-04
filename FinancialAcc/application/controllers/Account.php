@@ -6,6 +6,8 @@ class Account extends CI_Controller {
 
 	public function __construct()
 	{
+		// header('Access-Control-Allow-Origin: *');
+		// header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 		parent::__construct();		
 
 	}
@@ -30,7 +32,15 @@ class Account extends CI_Controller {
 					
 					
 				if($this->account_model->do_login($users) == true){
-					redirect(base_url().'pages/AddNewGoal');
+				
+					//if($this->session->userdata('user_status') == 0){
+						redirect(base_url().'account/dashboard');
+						//redirect(base_url().'pages/AddNewGoal');
+					// }
+					// else
+					// {
+						// redirect(base_url().'ci-admin');
+					// }
 				}
 				else
 				{
@@ -41,7 +51,8 @@ class Account extends CI_Controller {
 		}
 		else
 		{
-			redirect(base_url().'pages/AddNewGoal');
+			redirect(base_url().'account/dashboard');
+			//redirect(base_url().'pages/AddNewGoal');
 		}
 	}
 	
@@ -106,91 +117,6 @@ class Account extends CI_Controller {
 	
 	function dashboard()
 	{
-		
-		//
-		$userid = $this->session->userdata('usr_id');		
-
-		$overallprogress =  $this->account_model->getoverallprogress($userid); 
-
-		$debt_payment['usr_id'] = $userid;
-		$debt_payment['month'] = date("n");
-		$debt_payment['year'] = date("y");
-		$maindetails = $this->account_model->getDebtPaymentDetails($debt_payment);
-		$strategy = 'N/A';
-		$strategylevel = 'N/A';
-		$monthly_payment = '0';
-		$minimum_payment = '0';
-		$futuredate = 'N/A';
-		$tempmonth = "0";
-		
-		$this->data['monthly_payment'] = $monthly_payment;
-		$this->data['minimum_payment'] = $minimum_payment;
-		$this->data['tempmonth'] = $tempmonth;
-		$this->data['futuredate'] = $futuredate;
-		$this->data['strategy'] = $strategy;
-		$this->data['strategylevel'] = $strategylevel;
-		$this->data['overallprogress'] = $overallprogress;
-		
-		
-		if($maindetails != 'false')
-		{
-			$this->data['monthly_payment'] = $maindetails['monthly_payment'];
-			$this->data['minimum_payment'] = $maindetails['minimum_payment'];
-
-
-			$debt_id =$maindetails['id'];
-			if($maindetails['strategy'] == 'Avalanche'){
-			$strategy = 'Avalanche';
-			$strategylevel = "(Highest Interest)";
-			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by rate desc ");
-			}
-			if($maindetails['strategy'] == 'snowball'){
-			$strategy = 'Snowball';
-			$strategylevel = "(Lowest Balance)";
-			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' order by balance asc ");
-			}
-			if($maindetails['strategy'] == 'nosnowball'){
-			$strategy = 'No snowball';
-			$strategylevel = "&nbsp;";
-			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_id' ");
-			}
-			$dept_pay_detail = $query->result_array();
-
-			$oldparam['monthlypayment'] = $maindetails['monthly_payment'];
-			$oldparam['month'] = $maindetails['month'];
-			$oldparam['selectYear'] = $maindetails['year'];
-			
-			$result = $this->calc_model->getResult($dept_pay_detail,sizeof($dept_pay_detail),$oldparam,$maindetails['strategy']);
-
-
-			$tempmonth = 0;
-			$futuredate = 0;
-
-			for($i = 1; $i < sizeof($result)/5; $i++)
-			{
-				if($result['prev_month'.$i] > $tempmonth)
-				{
-					$tempmonth = $result['prev_month'.$i];
-					$futuredate = $result['futuredate'.$i];
-				}
-			}
-			if($futuredate != '0'){
-				$fmonth = explode(" ",$futuredate);
-				$futuredate = substr($fmonth[0],0,3) . " ". $fmonth[1];
-			}
-			else{
-				$futuredate = 'N/A';
-			}
-			
-			$this->data['monthly_payment'] = $monthly_payment;
-			$this->data['minimum_payment'] = $minimum_payment;
-			$this->data['tempmonth'] = $tempmonth;
-			$this->data['futuredate'] = $futuredate;
-			$this->data['strategy'] = $strategy;
-			$this->data['strategylevel'] = $strategylevel;		
-		}
-		//
-	
 		$this->load->view('header',$this->data);
 		$this->load->view('dashboard',$this->data);
 		$this->load->view('footer',$this->data);
@@ -469,8 +395,11 @@ class Account extends CI_Controller {
 		$param['jsonarray'] = $this->input->post('data');
 		$param['strategylist'] = $this->input->post('strategylist');
 		
-		$param['selectYear'] = $this->input->post('selectYear'); //postselectYear
-		$param['month'] = $this->input->post('month'); //postmonth
+		// $param['selectYear'] = $this->input->post('selectYear'); //postselectYear
+		// $param['month'] = $this->input->post('month'); //postmonth
+		
+		$param['month'] = date('n'); //$param['month'];
+		$param['selectYear'] = date('y'); 	//$param['selectYear'];
 		
 		$param['monthlypayment'] = $this->input->post('monthlypayment');
 		$param['mininumpayment'] = $this->input->post('mininumpayment');
@@ -487,8 +416,8 @@ class Account extends CI_Controller {
 		
 
 		$this->db->where('usr_id',  $debt_payment['usr_id']);
-		$this->db->where('month',  $debt_payment['month']);
-		$this->db->where('year',  $debt_payment['year']);
+		// $this->db->where('month',  $debt_payment['month']);
+		// $this->db->where('year',  $debt_payment['year']);
 		$query=$this->db->get("debt_payment");
 		
 		$insertid = 0;

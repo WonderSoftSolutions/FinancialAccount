@@ -376,8 +376,8 @@ class Account_model extends CI_Model {
 		$goalstatus;
 		
 		$sql = "select * from user_goals where id <> '".$goal['usergoalid']."' and goal_id in (SELECT id FROM `goals` where name = '".$goals['name']."' ) and user_id = '".$goal['user_id']."' and goal_status = '1' ";
+		
 		$query=$this->db->query($sql);
-
 		if($query->num_rows()>0)
 		{
 			$goalstatus = true;
@@ -391,8 +391,9 @@ class Account_model extends CI_Model {
 		{
 			//return "alreadyexists";
 			
-			//$user_goals['goal_id'] = $goalID;
+			$user_goals['goal_id'] = $goalID;
 			$user_goals['term_id'] = $goal['id_term'];
+			//$user_goals['id'] = $goal['usergoalid'];
 			$user_goals['cost'] = $goal['id_cost'];
 			$user_goals['monthly_target'] = $goal['id_monthtarget'];
 			$user_goals['currently_saved'] = $goal['id_currentsaved'];
@@ -527,7 +528,7 @@ class Account_model extends CI_Model {
 		
 		//$sql = "select user_goals.*,goals.name as 'goal_name' from user_goals inner join goals on goals.id = user_goals.goal_id where user_goals.goal_status	= '$status' and user_goals.user_id = '$user_id' ";
 		
-		$sql = "select user_goals.id as goal_id, user_goals.user_id,user_goals.term_id,user_goals.cost,user_goals.monthly_target,user_goals.currently_saved,user_goals.target_date,user_goals.goal_status,goals.name as 'goal_name' from user_goals inner join goals on goals.id = user_goals.goal_id where user_goals.goal_status = '$status' and user_goals.user_id = '$user_id' ";
+		$sql = "select user_goals.id as goal_id, user_goals.user_id,user_goals.term_id,user_goals.cost,user_goals.monthly_target,user_goals.currently_saved as current_saved,user_goals.target_date,user_goals.goal_status,goals.name as 'goal_name' from user_goals inner join goals on goals.id = user_goals.goal_id where user_goals.goal_status = '$status' and user_goals.user_id = '$user_id' ";
 		
 		$query = $this->db->query($sql);
 		if($query->num_rows()>0)
@@ -666,7 +667,7 @@ class Account_model extends CI_Model {
 		
 		//$query = $this->db->query("select * from revenue where user_id = '$userid' and year= '".$users['year']."' and month= '".$users['month']."' ");
 		$users['status'] = 1;
-		echo $query->num_rows();
+		//echo $query->num_rows();
 		if($query->num_rows() > 0)
 		{
 			$this->db->where('user_id', $users['user_id']);
@@ -1891,8 +1892,8 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 	function getDebtPaymentDetails($debt_payment)
 	{
 		$this->db->where('usr_id', $debt_payment['usr_id']);
-		$this->db->where('month', $debt_payment['month']);
-		$this->db->where('year', $debt_payment['year']);
+		// $this->db->where('month', $debt_payment['month']);
+		// $this->db->where('year', $debt_payment['year']);
 		$this->db->where('status', 1);
 		
 		$query=$this->db->get("debt_payment");
@@ -1911,14 +1912,12 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 	
 		$row = $this->account_model->getDebtPaymentDetails($debt_payment);
 		
-		//$row = $this->getDebtPaymentDetails($debt_payment);
-		
         if($row != 'false')
 		{
 			$debt_payment_id = 	$row['id'];//debt_payment ID
 			
 			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_payment_id' and status = '1' ");
-			//echo $this->db->last_query();
+			
 			$result = $query->result_array();
 			
 			$query = $this->db->query("select sum(balance) as total_balance, sum(payment) as total_payment from dept_pay_detail where debt_id = '$debt_payment_id' and status = '1' ");
@@ -2141,7 +2140,8 @@ from liabilities left join assets on liabilities.month = assets.month and assets
 		}
 	}
 	function getTotalInvertoryValue($id = 0)
-	{	
+	{
+		
 		if($id == 0)
 		{
 			$id = $this->session->userdata('usr_id');

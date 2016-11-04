@@ -466,7 +466,7 @@ class Api extends REST_Controller {
 		$a[$this->router->fetch_method()]=array();
 		$b=array();
 		
-		$users['usr_id'] = trim(urldecode($_REQUEST['user_id']));	
+		$users['user_id'] = trim(urldecode($_REQUEST['user_id']));	
 		$users['wife_revenue'] = trim(urldecode($_REQUEST['wife_revenue']));	
 		$users['husband_revenue'] = trim(urldecode($_REQUEST['husband_revenue']));	
 		$users['bonuses'] = trim(urldecode($_REQUEST['bonuses']));	
@@ -521,6 +521,9 @@ class Api extends REST_Controller {
 		$users['personal_loan'] = trim(urldecode($_REQUEST['personal_loan']));	
 		$users['credit_card'] = trim(urldecode($_REQUEST['credit_card']));	
 		$users['student_loan'] = trim(urldecode($_REQUEST['student_loan']));	
+		
+		$users['year'] = trim(urldecode($_REQUEST['year']));	
+		$users['month'] = trim(urldecode($_REQUEST['month']));	
 		
 		$result = $this->account_model->insert_expenses($users);
 		
@@ -871,13 +874,13 @@ class Api extends REST_Controller {
 			$resultArray['user_loans'] = $result;
 			$resultArray['user_loans_Total'] = $result2;
 
-			if($maindetails['strategy'] == 'Avalanche'){
+			if(strtolower($maindetails['strategy']) == 'avalanche'){
 			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_payment_id' order by rate desc ");
 			}
-			if($maindetails['strategy'] == 'snowball'){
+			if(strtolower($maindetails['strategy']) == 'snowball'){
 			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_payment_id' order by balance asc ");
 			}
-			if($maindetails['strategy'] == 'nosnowball'){
+			if(strtolower($maindetails['strategy']) == 'nosnowball'){
 			$query = $this->db->query("select * from dept_pay_detail where debt_id = '$debt_payment_id' ");
 			}
 			$dept_pay_detail = $query->result_array();
@@ -1126,13 +1129,13 @@ class Api extends REST_Controller {
 	{
 		$a[$this->router->fetch_method()] = array();
 		
-		$debt_payment['year'] = trim(urldecode($_REQUEST['year']));
-		$debt_payment['month'] = trim(urldecode($_REQUEST['month']));
+		// $debt_payment['year'] = trim(urldecode($_REQUEST['year']));
+		// $debt_payment['month'] = trim(urldecode($_REQUEST['month']));
 		$debt_payment['usr_id'] = trim(urldecode($_REQUEST['user_id']));
 		
 		$this->db->where('usr_id',  $debt_payment['usr_id']);
-		$this->db->where('month',  $debt_payment['month']);
-		$this->db->where('year',  $debt_payment['year']);
+		// $this->db->where('month',  $debt_payment['month']);
+		// $this->db->where('year',  $debt_payment['year']);
 		
 		$query=$this->db->get("debt_payment");
 		
