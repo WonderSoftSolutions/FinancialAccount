@@ -331,17 +331,21 @@ swal({
 						id_datetimepicker1: $("#datepicker").val()
 					},
 					success: function(data){
+					//alert(data);
+						//alert(data);
+						//getActiveUserGoals();
 						if(data != '0' && data != 'alreadyexists')
 						{
 							swal({
 								title: "Goal Updated", 
+								//text: "Would you like to add more goal?", 
 								type: "success",
 								showCancelButton: false,
 								closeOnConfirm: true,
-								closeOnCancel: true,
 								confirmButtonText: "Ok",
 								confirmButtonColor: btnColor['success'] 
 							}, function() { 
+								//alert('asdsad'); 
 								$('#goaladdingform')[0].reset();
 								location.reload();
 							});
